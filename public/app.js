@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Elements
   const smsInput = document.getElementById('smsInput');
   const charCount = document.getElementById('charCount');
   const clearBtn = document.getElementById('clearBtn');
@@ -7,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnIcon = document.getElementById('btnIcon');
 
   const resultsSection = document.getElementById('resultsSection');
-  const verdictCard = document.getElementById('verdictCard');
   const verdictBadge = document.getElementById('verdictBadge');
   const scoreCircle = document.getElementById('scoreCircle');
   const riskScoreNumber = document.getElementById('riskScoreNumber');
@@ -20,12 +20,121 @@ document.addEventListener('DOMContentLoaded', () => {
   const triggersContainer = document.getElementById('triggersContainer');
   const deobfRaw = document.getElementById('deobfRaw');
   const deobfClean = document.getElementById('deobfClean');
+  const copyJsonBtn = document.getElementById('copyJsonBtn');
+  const urlBox = document.getElementById('urlBox');
+  const urlDetails = document.getElementById('urlDetails');
 
+  // Stats Elements
+  const statTotalScanned = document.getElementById('statTotalScanned');
+  const statScamsBlocked = document.getElementById('statScamsBlocked');
+
+  // Feed Elements
   const feedTableBody = document.getElementById('feedTableBody');
   const refreshFeedBtn = document.getElementById('refreshFeedBtn');
+  const exportLogsBtn = document.getElementById('exportLogsBtn');
+  const feedSearchInput = document.getElementById('feedSearchInput');
+  const feedFilterChips = document.querySelectorAll('.filter-btn');
   const presetChips = document.querySelectorAll('.preset-chip');
 
-  // Update character count
+  // Sandbox Elements
+  const sandboxInput = document.getElementById('sandboxInput');
+  const testWordBtn = document.getElementById('testWordBtn');
+  const sbLeet = document.getElementById('sbLeet');
+  const sbThreat = document.getElementById('sbThreat');
+  const sbDist = document.getElementById('sbDist');
+  const sbVerdict = document.getElementById('sbVerdict');
+
+  let currentAnalysisData = null;
+  let cachedFlags = [];
+  let activeFilterType = 'ALL';
+
+  // Client-side threat dictionary for sandbox
+  const CLIENT_THREAT_LEXICON = [
+    'block', 'blocked', 'band', 'bandh', 'rok', 'suspend', 'suspended', 
+    'deactivate', 'deactivated', 'expire', 'expired', 'disconnect', 'disconnected', 
+    'terminate', 'freeze', 'frozen', 'penalty', 'challan', 'kyc', 'pan', 'aadhaar', 
+    'aadhar', 'pancard', 'update', 'updated', 'verify', 'verification', 're-kyc', 
+    'submit', 'document', 'otp', 'pin', 'password', 'passcode', 'cvv', 'credential',
+    'bank', 'account', 'khata', 'paisa', 'balance', 'yono', 'sbi', 'hdfc', 'icici', 
+    'pnb', 'axis', 'bob', 'paytm', 'phonepe', 'gpay', 'urgent', 'turant', 'jaldi', 
+    'immediate', 'immediately', 'warning', 'warn', 'hours', 'ghante', 'today',
+    'lottery', 'inam', 'reward', 'cashback', 'bonus', 'refund', 'winner', 'won', 
+    'claim', 'crore', 'lakh', 'prize', 'bijli', 'electricity', 'ebill', 'power', 
+    'bill', 'officer', 'police', 'cbi', 'trai', 'customs', 'click', 'download', 
+    'install', 'link', 'apk', 'login'
+  ];
+
+  const CLIENT_LEET_MAP = {
+    '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b',
+    '@': 'a', '$': 's', '!': 'i', '+': 't', '|': 'i'
+  };
+
+  function clientLevenshtein(a, b) {
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
+          );
+        }
+      }
+    }
+    return matrix[b.length][a.length];
+  }
+
+  function runSandbox(rawWord) {
+    if (!rawWord || !rawWord.trim()) return;
+    const cleanRaw = rawWord.trim();
+
+    // 1. Separation collapse
+    let collapsed = cleanRaw.replace(/(?<=\b[a-zA-Z0-9])[.\-_/|\\](?=[a-zA-Z0-9]\b)/g, '');
+
+    // 2. Leet translation
+    let leet = '';
+    for (let i = 0; i < collapsed.length; i++) {
+      const c = collapsed[i].toLowerCase();
+      leet += CLIENT_LEET_MAP[c] || c;
+    }
+    sbLeet.textContent = `"${leet}"`;
+
+    // 3. Levenshtein search
+    let bestMatch = 'None';
+    let minDist = Infinity;
+
+    for (const threat of CLIENT_THREAT_LEXICON) {
+      const dist = clientLevenshtein(leet, threat);
+      if (dist < minDist) {
+        minDist = dist;
+        bestMatch = threat;
+      }
+    }
+
+    sbThreat.textContent = `"${bestMatch}"`;
+    sbDist.textContent = `d = ${minDist} (${minDist <= 2 ? 'Match ≤ 2' : 'No Match'})`;
+
+    if (minDist <= 2) {
+      sbVerdict.innerHTML = '<span style="color: var(--accent-rose);">🚨 Obfuscation Caught</span>';
+    } else {
+      sbVerdict.innerHTML = '<span style="color: var(--accent-emerald);">🟢 Safe / Unmatched</span>';
+    }
+  }
+
+  sandboxInput.addEventListener('input', () => {
+    runSandbox(sandboxInput.value);
+  });
+  testWordBtn.addEventListener('click', () => {
+    runSandbox(sandboxInput.value);
+  });
+  // Initial sandbox run
+  runSandbox('BLCK');
+
+  // Character counter
   smsInput.addEventListener('input', () => {
     charCount.textContent = `${smsInput.value.length} characters`;
   });
@@ -38,13 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
     smsInput.focus();
   });
 
-  // Preset chips click
+  // Preset chips
   presetChips.forEach(chip => {
     chip.addEventListener('click', () => {
       const msg = chip.getAttribute('data-msg');
       smsInput.value = msg;
       charCount.textContent = `${msg.length} characters`;
-      // Trigger scan automatically on preset click
       runClassification(msg);
     });
   });
@@ -60,9 +168,19 @@ document.addEventListener('DOMContentLoaded', () => {
     runClassification(text);
   });
 
+  // Copy JSON Button
+  copyJsonBtn.addEventListener('click', () => {
+    if (!currentAnalysisData) return;
+    navigator.clipboard.writeText(JSON.stringify(currentAnalysisData, null, 2)).then(() => {
+      copyJsonBtn.textContent = '✅ Copied!';
+      setTimeout(() => {
+        copyJsonBtn.textContent = '📋 Copy JSON';
+      }, 2000);
+    });
+  });
+
   // Main Classification Function
   async function runClassification(message) {
-    // Set loading state
     scanBtn.disabled = true;
     btnText.textContent = 'Analyzing Threat...';
     btnIcon.textContent = '⏳';
@@ -79,9 +197,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const data = await res.json();
+      currentAnalysisData = data;
       displayResults(data);
-      // Refresh feed to show the newly logged message
+      // Refresh live threat feed & live stats
       fetchRecentFlags();
+      fetchStats();
     } catch (err) {
       console.error('Classification error:', err);
       alert('Classification failed: ' + err.message);
@@ -97,19 +217,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const { risk_score, verdict, scam_type, trigger_phrases, breakdown, reasoning, message } = data;
     const percentage = Math.round(risk_score * 100);
 
-    // Show section with animation
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    // Set Risk Score Number
     riskScoreNumber.textContent = `${percentage}%`;
 
-    // Calculate circle dashoffset (Circumference ~ 377 for r=60)
     const circumference = 377;
     const offset = circumference - (circumference * (percentage / 100));
     scoreCircle.style.strokeDashoffset = offset;
 
-    // Verdict Badge & Gauge Color
     verdictBadge.className = `verdict-badge ${verdict}`;
     if (verdict === 'high_risk') {
       verdictBadge.innerHTML = '<span>🚨 HIGH RISK PHISHING</span>';
@@ -122,10 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
       scoreCircle.style.stroke = '#10b981';
     }
 
-    // Scam Type Pill
     scamTypePill.textContent = `Category: ${scam_type || 'GENERAL'}`;
 
-    // Dual Meter Bars
     const rulePercent = Math.round((breakdown?.rule_score || 0) * 100);
     const aiPercent = Math.round((breakdown?.gemini_confidence || 0) * 100);
 
@@ -135,10 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
     aiScoreVal.textContent = `${aiPercent}%`;
     aiBar.style.width = `${aiPercent}%`;
 
-    // AI Reasoning
     aiReasoning.textContent = reasoning || 'No reasoning details available.';
 
-    // Render Trigger Phrases
+    // Trigger phrases
     triggersContainer.innerHTML = '';
     if (trigger_phrases && trigger_phrases.length > 0) {
       trigger_phrases.forEach(phrase => {
@@ -157,6 +270,34 @@ document.addEventListener('DOMContentLoaded', () => {
       triggersContainer.appendChild(tag);
     }
 
+    // URL Inspection
+    const urlAnalysis = breakdown?.url_analysis;
+    if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
+      urlBox.style.display = 'block';
+      let badgesHtml = '';
+      if (urlAnalysis.hasShortener) {
+        badgesHtml += '<span class="url-badge warning">⚠️ URL Shortener Detected</span>';
+      }
+      if (urlAnalysis.hasSuspiciousTld) {
+        badgesHtml += '<span class="url-badge danger">🚨 High-Risk Suspicious TLD</span>';
+      }
+      if (urlAnalysis.hasApkDownload) {
+        badgesHtml += '<span class="url-badge danger">⚠️ Malicious APK Download Link</span>';
+      }
+      if (!urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
+        badgesHtml += '<span class="url-badge safe">Standard Web URL</span>';
+      }
+
+      urlDetails.innerHTML = `
+        <div style="margin-bottom: 0.3rem;">${badgesHtml}</div>
+        <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-cyan); word-break: break-all;">
+          ${urlAnalysis.urls.join(', ')}
+        </div>
+      `;
+    } else {
+      urlBox.style.display = 'none';
+    }
+
     // Deobfuscation Box
     deobfRaw.textContent = `"${message}"`;
     if (breakdown?.fuzzy_matches && breakdown.fuzzy_matches.length > 0) {
@@ -169,13 +310,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Fetch Live DB Stats
+  async function fetchStats() {
+    try {
+      const res = await fetch('/api/stats');
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json?.stats) {
+        if (statTotalScanned) statTotalScanned.textContent = json.stats.total_scanned;
+        if (statScamsBlocked) statScamsBlocked.textContent = json.stats.scams_blocked;
+      }
+    } catch (e) {
+      console.warn('Stats fetch error:', e);
+    }
+  }
+
   // Fetch Recent Flags from Turso Cloud DB
   async function fetchRecentFlags() {
     try {
-      const res = await fetch('/api/recent-flags?limit=10');
+      const res = await fetch('/api/recent-flags?limit=25');
       if (!res.ok) throw new Error('Failed to fetch flags');
       const json = await res.json();
-      renderFeed(json.data || []);
+      cachedFlags = json.data || [];
+      filterAndRenderFeed();
     } catch (err) {
       console.warn('Feed fetch error:', err);
       feedTableBody.innerHTML = `
@@ -188,13 +345,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Render Table
+  // Filter and Render Feed Table
+  function filterAndRenderFeed() {
+    const searchQuery = (feedSearchInput?.value || '').toLowerCase().trim();
+    let filtered = cachedFlags;
+
+    if (activeFilterType !== 'ALL') {
+      filtered = filtered.filter(f => f.scam_type === activeFilterType);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter(f => 
+        (f.message || '').toLowerCase().includes(searchQuery) ||
+        (f.scam_type || '').toLowerCase().includes(searchQuery)
+      );
+    }
+
+    renderFeed(filtered);
+  }
+
   function renderFeed(flags) {
     if (!flags || flags.length === 0) {
       feedTableBody.innerHTML = `
         <tr>
           <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
-            No suspicious threats logged yet.
+            No matching threat logs found in Turso Cloud.
           </td>
         </tr>
       `;
@@ -230,14 +405,46 @@ document.addEventListener('DOMContentLoaded', () => {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  // Feed Filter chips click
+  feedFilterChips.forEach(btn => {
+    btn.addEventListener('click', () => {
+      feedFilterChips.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilterType = btn.getAttribute('data-type');
+      filterAndRenderFeed();
+    });
+  });
+
+  // Search input in Feed
+  if (feedSearchInput) {
+    feedSearchInput.addEventListener('input', () => {
+      filterAndRenderFeed();
+    });
+  }
+
   // Refresh Feed Button
   refreshFeedBtn.addEventListener('click', () => {
     refreshFeedBtn.textContent = '⏳ Refreshing...';
     fetchRecentFlags().finally(() => {
       refreshFeedBtn.textContent = '🔄 Refresh Feed';
     });
+    fetchStats();
   });
 
-  // Initial load of feed
+  // Export JSON Logs
+  if (exportLogsBtn) {
+    exportLogsBtn.addEventListener('click', () => {
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(cachedFlags, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', dataStr);
+      downloadAnchor.setAttribute('download', `kavach_threat_logs_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    });
+  }
+
+  // Initial loads
   fetchRecentFlags();
+  fetchStats();
 });

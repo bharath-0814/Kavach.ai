@@ -1,4 +1,4 @@
-const { getRecentFlags } = require('../lib/db');
+const { getDbStats } = require('../lib/db');
 
 /**
  * Enable CORS headers for cross-origin frontend requests.
@@ -29,20 +29,18 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const limit = Math.min(Math.max(parseInt(req.query?.limit, 10) || 10, 1), 50);
-    const scamType = req.query?.scam_type || null;
-    const flags = await getRecentFlags(limit, scamType);
+    const stats = await getDbStats();
 
     return res.status(200).json({
       success: true,
-      count: flags.length,
-      data: flags
+      stats,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Unhandled error in /api/recent-flags:', error);
+    console.error('Unhandled error in /api/stats:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to retrieve recent flags from database.',
+      error: 'Failed to retrieve database statistics.',
       details: error.message
     });
   }

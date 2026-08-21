@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const classifyHandler = require('./api/classify');
 const recentFlagsHandler = require('./api/recent-flags');
+const statsHandler = require('./api/stats');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -60,6 +61,8 @@ const server = http.createServer(async (req, res) => {
           await classifyHandler(req, res);
         } else if (pathname === '/api/recent-flags') {
           await recentFlagsHandler(req, res);
+        } else if (pathname === '/api/stats') {
+          await statsHandler(req, res);
         } else {
           res.status(404).json({ error: 'API route not found' });
         }

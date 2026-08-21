@@ -97,7 +97,9 @@ module.exports = async function handler(req, res) {
         gemini_confidence: geminiConfidence,
         rule_matches: ruleResult.matchedLabels,
         fuzzy_matches: ruleResult.fuzzyMatches,
-        ai_fallback_used: geminiResult.fallback
+        url_analysis: ruleResult.urlAnalysis,
+        ai_fallback_used: geminiResult.fallback,
+        model_used: geminiResult.model_used || 'rule_heuristics'
       },
       reasoning: geminiResult.reasoning,
       timestamp: new Date().toISOString()

@@ -711,16 +711,210 @@ body {
   margin-bottom: 4rem;
 }
 
-.code-box {
-  background: #060913;
-  border: 1px solid var(--border-color);
-  border-radius: 0.85rem;
+/* Live Stats Counter Strip */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 800px) {
+  .stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-item {
   padding: 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  color: #38bdf8;
-  overflow-x: auto;
+  text-align: center;
+  border-radius: 1rem;
+}
+
+.stat-num {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--accent-cyan);
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.2rem;
+}
+
+/* URL Analysis Card */
+.url-analysis-box {
+  background: rgba(10, 15, 29, 0.6);
+  border: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
   margin-top: 1rem;
+  font-size: 0.88rem;
+}
+
+.url-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.url-badge.danger {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid var(--accent-rose);
+  color: var(--accent-rose);
+}
+
+.url-badge.warning {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber);
+}
+
+.url-badge.safe {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--accent-emerald);
+  color: var(--accent-emerald);
+}
+
+/* Deobfuscation Sandbox */
+.sandbox-card {
+  padding: 2rem;
+  margin-bottom: 3.5rem;
+}
+
+.sandbox-input-wrap {
+  display: flex;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+@media (max-width: 650px) {
+  .sandbox-input-wrap {
+    flex-direction: column;
+  }
+}
+
+.sandbox-input {
+  flex: 1;
+  background: rgba(10, 15, 29, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.65rem;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--accent-cyan);
+  outline: none;
+}
+
+.sandbox-input:focus {
+  border-color: var(--accent-cyan);
+}
+
+.sandbox-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sandbox-box {
+  background: rgba(10, 15, 29, 0.6);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.sandbox-box h5 {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.sandbox-val {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Feed Filters & Search */
+.feed-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.feed-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.35rem 0.85rem;
+  border-radius: 2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.feed-search {
+  background: rgba(10, 15, 29, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 2rem;
+  padding: 0.35rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  outline: none;
+  width: 200px;
+}
+
+.feed-search:focus {
+  border-color: var(--accent-cyan);
+}
+
+/* Copy button */
+.copy-json-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.copy-json-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
 }
 
 /* Footer */
@@ -731,3 +925,4 @@ body {
   color: var(--text-muted);
   font-size: 0.9rem;
 }
+

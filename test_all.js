@@ -102,6 +102,15 @@ async function runComprehensiveTests() {
     console.log('Sample entry from DB:', JSON.stringify(getRes.body.data[0], null, 2));
   }
 
+  console.log('\n--- 3. Testing /api/stats (Aggregated Metrics) ---');
+  const statsHandler = require('./api/stats');
+  const statsReq = { method: 'GET' };
+  const statsRes = mockResponse();
+
+  await statsHandler(statsReq, statsRes);
+  console.log(`Status: ${statsRes.statusCode}`);
+  console.log('Live Database Stats:', JSON.stringify(statsRes.body?.stats, null, 2));
+
   console.log('\n' + '='.repeat(70));
   console.log('✅ ALL TEST SUITE CHECKS COMPLETED SUCCESSFULLY');
   console.log('='.repeat(70));

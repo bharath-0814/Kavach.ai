@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultsSection = document.getElementById('resultsSection');
   const verdictBadge = document.getElementById('verdictBadge');
   const scoreCircle = document.getElementById('scoreCircle');
-  const riskScoreNumber = document.getElementById('riskScoreNumber');
-  const scamTypePill = document.getElementById('scamTypePill');
+  const riskScoreNumber = document.getElementById('riskPercent') || document.getElementById('riskScoreNumber');
+  const scamTypePill = document.getElementById('scamTypeBadge') || document.getElementById('scamTypePill');
   const ruleScoreVal = document.getElementById('ruleScoreVal');
   const ruleBar = document.getElementById('ruleBar');
   const aiScoreVal = document.getElementById('aiScoreVal');
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const refreshFeedBtn = document.getElementById('refreshFeedBtn');
   const exportLogsBtn = document.getElementById('exportLogsBtn');
   const feedSearchInput = document.getElementById('feedSearchInput');
-  const feedFilterChips = document.querySelectorAll('.filter-btn');
+  const feedFilterChips = document.querySelectorAll('.filter-pill, .filter-btn');
   const loadMoreFeedBtn = document.getElementById('loadMoreFeedBtn');
   const feedCountInfo = document.getElementById('feedCountInfo');
-  const presetChips = document.querySelectorAll('.preset-chip');
+  const presetChips = document.querySelectorAll('.chip-btn, .preset-chip');
 
   // Sandbox Elements
   const sandboxInput = document.getElementById('sandboxInput');
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const offset = circumference - (circumference * (percentage / 100));
     scoreCircle.style.strokeDashoffset = offset;
 
-    verdictBadge.className = `verdict-badge ${verdict}`;
+    verdictBadge.className = `threat-verdict-pill ${verdict}`;
     if (verdict === 'high_risk') {
       verdictBadge.innerHTML = '<span>🚨 HIGH RISK PHISHING</span>';
       scoreCircle.style.stroke = '#f43f5e';
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       scoreCircle.style.stroke = '#10b981';
     }
 
-    scamTypePill.textContent = `Category: ${scam_type || 'GENERAL'}`;
+    scamTypePill.textContent = `CATEGORY: ${scam_type || 'GENERAL'}`;
 
     const rulePercent = Math.round((breakdown?.rule_score || 0) * 100);
     const aiPercent = Math.round((breakdown?.gemini_confidence || 0) * 100);
@@ -261,13 +261,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (trigger_phrases && trigger_phrases.length > 0) {
       trigger_phrases.forEach(phrase => {
         const tag = document.createElement('span');
-        tag.className = 'trigger-tag';
+        tag.className = 'threat-tag';
         tag.textContent = phrase;
         triggersContainer.appendChild(tag);
       });
     } else {
       const tag = document.createElement('span');
-      tag.className = 'trigger-tag';
+      tag.className = 'threat-tag';
       tag.style.borderColor = 'rgba(16, 185, 129, 0.3)';
       tag.style.color = '#6ee7b7';
       tag.style.background = 'rgba(16, 185, 129, 0.1)';
@@ -424,11 +424,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <tr>
-          <td><strong style="color: ${item.verdict === 'high_risk' ? 'var(--accent-rose)' : 'var(--accent-amber)'}">${scorePct}%</strong></td>
-          <td><span class="verdict-badge ${badgeClass}" style="margin: 0; padding: 0.2rem 0.6rem; font-size: 0.72rem;">${badgeLabel}</span></td>
-          <td><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);">${item.scam_type || 'SCAM'}</span></td>
-          <td><div class="feed-msg" title="${escapeHtml(item.message)}">${escapeHtml(item.message)}</div></td>
-          <td style="color: var(--text-muted); font-size: 0.8rem;">${item.created_at || 'Just now'}</td>
+          <td><strong style="color: ${item.verdict === 'high_risk' ? 'var(--accent-rose)' : (item.verdict === 'suspicious' ? 'var(--accent-amber)' : 'var(--accent-emerald)')}; font-family: var(--font-mono); font-weight: 800;">${scorePct}%</strong></td>
+          <td><span class="threat-verdict-pill ${badgeClass}" style="margin: 0; padding: 0.2rem 0.55rem; font-size: 0.7rem;">${badgeLabel}</span></td>
+          <td><span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-cyan);">${item.scam_type || 'SCAM'}</span></td>
+          <td><div class="feed-text-msg" title="${escapeHtml(item.message)}">${escapeHtml(item.message)}</div></td>
+          <td style="color: var(--text-muted); font-size: 0.78rem; font-family: var(--font-mono);">${item.created_at || 'Just now'}</td>
         </tr>
       `;
     }).join('');

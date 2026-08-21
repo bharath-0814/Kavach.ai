@@ -300,6 +300,7 @@ body {
 .stat-rose { color: var(--accent-rose) !important; }
 .stat-emerald { color: var(--accent-emerald) !important; }
 .stat-amber { color: var(--accent-amber) !important; }
+.stat-cyan { color: var(--accent-cyan) !important; }
 
 .stat-label {
   font-size: clamp(0.68rem, 0.85vw, 0.76rem);

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Stats Elements
   const statTotalScanned = document.getElementById('statTotalScanned');
   const statScamsBlocked = document.getElementById('statScamsBlocked');
+  const statThreatWords = document.getElementById('statThreatWords');
 
   // Feed Elements
   const feedTableBody = document.getElementById('feedTableBody');
@@ -323,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (json?.stats) {
         if (statTotalScanned) statTotalScanned.textContent = json.stats.total_scanned;
         if (statScamsBlocked) statScamsBlocked.textContent = json.stats.scams_blocked;
+        if (statThreatWords) statThreatWords.textContent = json.stats.total_threat_words ? `${json.stats.total_threat_words}+` : '200+';
       }
     } catch (e) {
       console.warn('Stats fetch error:', e);

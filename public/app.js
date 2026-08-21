@@ -447,4 +447,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial loads
   fetchRecentFlags();
   fetchStats();
+
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+        .catch(err => console.warn('Service Worker registration failed:', err));
+    });
+  }
+
+  // Handle PWA Install Prompt
+  let deferredPrompt;
+  const installPwaBtn = document.getElementById('installPwaBtn');
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installPwaBtn) {
+      installPwaBtn.style.display = 'inline-flex';
+    }
+  });
+
+  if (installPwaBtn) {
+    installPwaBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installPwaBtn.style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    if (installPwaBtn) installPwaBtn.style.display = 'none';
+    console.log('Kavach PWA successfully installed!');
+  });
 });

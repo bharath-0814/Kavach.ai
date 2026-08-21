@@ -277,41 +277,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // URL Inspection
     const urlAnalysis = breakdown?.url_analysis;
-    if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
-      urlBox.style.display = 'block';
-      let badgesHtml = '';
-      if (urlAnalysis.hasShortener) {
-        badgesHtml += '<span class="url-badge warning">⚠️ URL Shortener Detected</span>';
-      }
-      if (urlAnalysis.hasSuspiciousTld) {
-        badgesHtml += '<span class="url-badge danger">🚨 High-Risk Suspicious TLD</span>';
-      }
-      if (urlAnalysis.hasApkDownload) {
-        badgesHtml += '<span class="url-badge danger">⚠️ Malicious APK Download Link</span>';
-      }
-      if (!urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
-        badgesHtml += '<span class="url-badge safe">Standard Web URL</span>';
-      }
+    if (urlBox && urlDetails) {
+      if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
+        urlBox.style.display = 'block';
+        let badgesHtml = '';
+        if (urlAnalysis.hasShortener) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: var(--accent-amber);">⚠️ Shortener Detected</span>';
+        }
+        if (urlAnalysis.hasSuspiciousTld) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.15); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Suspicious TLD</span>';
+        }
+        if (urlAnalysis.hasApkDownload) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.15); border-color: var(--accent-rose); color: var(--accent-rose);">⚠️ Malicious APK Download</span>';
+        }
+        if (!urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald); color: var(--accent-emerald);">Standard Web Link</span>';
+        }
 
-      urlDetails.innerHTML = `
-        <div style="margin-bottom: 0.3rem;">${badgesHtml}</div>
-        <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-cyan); word-break: break-all;">
-          ${urlAnalysis.urls.join(', ')}
-        </div>
-      `;
-    } else {
-      urlBox.style.display = 'none';
+        urlDetails.innerHTML = `
+          <div style="margin-bottom: 0.35rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">${badgesHtml}</div>
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-cyan); word-break: break-all;">
+            ${urlAnalysis.urls.join(', ')}
+          </div>
+        `;
+      } else {
+        urlBox.style.display = 'none';
+      }
     }
 
     // Deobfuscation Box
-    deobfRaw.textContent = `"${message}"`;
-    if (breakdown?.fuzzy_matches && breakdown.fuzzy_matches.length > 0) {
-      const matchText = breakdown.fuzzy_matches
-        .map(fm => `${fm.original} ➔ "${fm.matchedWord}" (dist: ${fm.distance})`)
-        .join(', ');
-      deobfClean.textContent = matchText;
-    } else {
-      deobfClean.textContent = 'Clean / Standard Text (No Levenshtein Obfuscation Detected)';
+    if (deobfRaw) deobfRaw.textContent = `"${message}"`;
+    if (deobfClean) {
+      if (breakdown?.fuzzy_matches && breakdown.fuzzy_matches.length > 0) {
+        const matchText = breakdown.fuzzy_matches
+          .map(fm => `${fm.original} ➔ "${fm.matchedWord}" (dist: ${fm.distance})`)
+          .join(', ');
+        deobfClean.textContent = matchText;
+      } else {
+        deobfClean.textContent = 'Clean / Standard Text (No Levenshtein Obfuscation Detected)';
+      }
     }
   }
 

@@ -1,4 +1,62 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Interactive Subtle Particle Background Canvas
+  const canvas = document.getElementById('bgCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    const particles = [];
+    const particleCount = Math.min(width > 768 ? 45 : 25, 50);
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.35)';
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.05)';
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(renderParticles);
+    }
+    renderParticles();
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+  }
+
   // Elements
   const smsInput = document.getElementById('smsInput');
   const charCount = document.getElementById('charCount');
@@ -34,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const refreshFeedBtn = document.getElementById('refreshFeedBtn');
   const exportLogsBtn = document.getElementById('exportLogsBtn');
   const feedSearchInput = document.getElementById('feedSearchInput');
-  const feedFilterChips = document.querySelectorAll('.filter-pill, .filter-btn');
+  const feedFilterChips = document.querySelectorAll('.filter-btn-item, .filter-pill, .filter-btn');
   const loadMoreFeedBtn = document.getElementById('loadMoreFeedBtn');
   const feedCountInfo = document.getElementById('feedCountInfo');
-  const presetChips = document.querySelectorAll('.chip-btn, .preset-chip');
+  const presetChips = document.querySelectorAll('.preset-tag, .chip-btn, .preset-chip');
 
   // Sandbox Elements
   const sandboxInput = document.getElementById('sandboxInput');

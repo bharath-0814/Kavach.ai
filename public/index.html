@@ -3,230 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Kavach AI (कवच) — Indian Vernacular Smishing & Phishing Defense Console</title>
+  <title>Kavach AI (कवच) — Vernacular Cyber Threat Intelligence & Phishing Shield</title>
   
   <!-- PWA Metadata & Icons -->
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="apple-touch-icon" href="/icon.svg">
-  <meta name="theme-color" content="#070709">
+  <meta name="theme-color" content="#08080a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Enterprise Indian Vernacular Phishing & Smishing Defense Console with Levenshtein Deobfuscation and Multi-Model Gemini Flash AI.">
+  <meta name="description" content="Production-grade vernacular smishing defense platform delivering sub-45ms deobfuscation and multi-model AI reasoning for Indian languages.">
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Tactical Navbar (Non-Sticky, Hardware Ergonomics) -->
-  <nav class="tactical-surface navbar">
-    <div class="nav-container">
-      <a href="#" class="brand-logo">
-        <div class="shield-badge">🛡️</div>
-        <span>KAVACH AI</span>
-        <span class="brand-tagline">(कवच)</span>
+  <!-- Interactive Subtle Particle Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Architectural Vertical Structural Guide Lines -->
+  <div class="structural-grid">
+    <div class="grid-col-line"></div>
+    <div class="grid-col-line"></div>
+    <div class="grid-col-line"></div>
+    <div class="grid-col-line"></div>
+  </div>
+
+  <!-- Editorial Top Navigation -->
+  <header class="container">
+    <nav class="editorial-nav">
+      <a href="#" class="brand-wrap">
+        <span class="brand-name">Kavach.ai</span>
+        <span class="brand-sub">/ कवच • Cyber Intelligence</span>
       </a>
 
-      <div class="nav-actions">
-        <a href="#scanner" class="nav-link">Scanner</a>
-        <a href="#sandbox" class="nav-link">Deobfuscator</a>
-        <a href="#feed" class="nav-link">Threat Feed</a>
-        <a href="#architecture" class="nav-link">How It Works</a>
+      <div class="nav-links-group">
+        <a href="#scanner" class="nav-item">Defense Console</a>
+        <a href="#sandbox" class="nav-item">Deobfuscator</a>
+        <a href="#feed" class="nav-item">Cloud Feed</a>
+        <a href="#architecture" class="nav-item">Architecture</a>
         
         <!-- PWA Install -->
-        <button id="installPwaBtn" class="pwa-btn">
+        <button id="installPwaBtn" class="editorial-btn">
           <span>📲</span>
           <span>Install App</span>
         </button>
 
         <!-- Live DB Status -->
-        <div class="status-indicator" id="backendStatus">
-          <span class="status-dot"></span>
+        <div class="live-pill" id="backendStatus">
+          <span class="live-pulse-dot"></span>
           <span>Turso Cloud Active</span>
         </div>
       </div>
-    </div>
-  </nav>
-
-  <!-- Hero & Segmented Telemetry Header -->
-  <header class="hero container">
-    <div class="hero-pill">
-      <span>🛡️ Elicit ACM Hackathon Edition</span>
-      <span>•</span>
-      <span>Hinglish & Multi-Dialect Defense Terminal</span>
-    </div>
-    
-    <h1 class="hero-title">
-      <span class="gradient-title">Real-Time Indian Vernacular</span><br>
-      <span class="gradient-highlight">SMS Phishing & Fraud Shield</span>
-    </h1>
-    
-    <p class="hero-subtitle">
-      Eliminating phonetic evasion, leetspeak disguises, and regional coercion across Hindi, Hinglish, Bengali, Tamil, Telugu, and 12 modern smishing vectors.
-    </p>
-
-    <!-- Tactical Metrics Telemetry Bar -->
-    <div class="tactical-surface metrics-bar">
-      <div class="metric-segment">
-        <div class="metric-val" id="statTotalScanned">--</div>
-        <div class="metric-lbl">Total Scanned</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-segment">
-        <div class="metric-val rose" id="statScamsBlocked">--</div>
-        <div class="metric-lbl">Scams Blocked</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-segment">
-        <div class="metric-val cyan" id="statThreatWords">200+</div>
-        <div class="metric-lbl">DB Threat Lexicon</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-segment">
-        <div class="metric-val emerald" id="statAccuracy">99.4%</div>
-        <div class="metric-lbl">Threat Accuracy</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-segment">
-        <div class="metric-val amber" id="statLatency">&lt;45ms</div>
-        <div class="metric-lbl">Avg Latency</div>
-      </div>
-    </div>
+    </nav>
   </header>
 
-  <!-- Main Console -->
+  <!-- Hero Editorial Narrative -->
+  <section class="container hero-editorial">
+    <div class="edition-label">
+      <span>✦ National Cybersecurity Track</span>
+      <span>•</span>
+      <span>Elicit ACM Edition</span>
+    </div>
+
+    <h1 class="editorial-headline">
+      Intelligent <em>Vernacular Smishing</em> Defense for 1.4 Billion Citizens.
+    </h1>
+
+    <p class="editorial-lead">
+      Kavach is a production-grade cyber defense shield that neutralizes transliterated Hindi, regional dialects, and adversarial leetspeak in real-time. Fusing sub-15ms deterministic deobfuscation with multi-model Google Gemini Flash AI.
+    </p>
+
+    <!-- Editorial Metric Strip -->
+    <div class="metric-strip">
+      <div class="metric-cell">
+        <div class="metric-number" id="statTotalScanned">--</div>
+        <div class="metric-title">Messages Scanned</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-number rose" id="statScamsBlocked">--</div>
+        <div class="metric-title">Scams Neutralized</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-number gold" id="statThreatWords">200+</div>
+        <div class="metric-title">DB Threat Lexicon</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-number emerald" id="statAccuracy">99.4%</div>
+        <div class="metric-title">Threat Accuracy</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-number cyan" id="statLatency">&lt;45ms</div>
+        <div class="metric-title">Mean Latency</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Analysis Console -->
   <main class="container">
 
-    <!-- Ingestion & Analysis Terminal -->
-    <section class="tactical-surface scanner-section" id="scanner">
-      <div class="section-head">
-        <h2 class="section-title-sm">
-          <span>📨 SMS Threat Ingestion Terminal</span>
+    <!-- SMS Threat Ingestion Terminal -->
+    <section class="arch-card" id="scanner">
+      <div class="arch-card-header">
+        <h2 class="arch-card-title">
+          <span>01 / SMS Threat Ingestion Terminal</span>
         </h2>
-        <button class="action-clear-btn" id="clearBtn">Clear Input</button>
+        <button class="editorial-btn" id="clearBtn">Clear Input</button>
       </div>
 
-      <div class="textarea-container">
+      <div style="position: relative;">
         <textarea 
           id="smsInput" 
-          class="sms-input-field" 
+          class="editorial-textarea" 
           placeholder="Paste suspicious SMS text here (Hindi, Hinglish, Tamil, Telugu, Leetspeak)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'"></textarea>
-        <div class="textarea-info">
+        <div class="textarea-footer-strip">
           <span id="charCount">0 characters</span>
-          <span>Multi-Engine Defense: Heuristics (40%) + Gemini Flash (60%)</span>
+          <span>Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)</span>
         </div>
       </div>
 
       <!-- Quick Test Scenarios -->
-      <div class="presets-wrap">
-        <div class="presets-label">⚡ Live Test Scenarios (Click to Load):</div>
-        <div class="preset-chip-grid">
-          <button class="chip-btn" data-msg="Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? YouTube videos like karo aur screenshot bhejo. Part-time/Full-time job, investment zero hai. WhatsApp par message karein: https://wa.me/919876543210">
-            💼 YouTube Task Scam
-          </button>
-          <button class="chip-btn" data-msg="India Post: Your package IN98234 delivery failed due to incorrect address. Please update your address within 24 hours: https://indiapost-update.top/track">
-            📦 India Post Parcel Scam
-          </button>
-          <button class="chip-btn" data-msg="Notice: Traffic challan DL-01-AB-1234 fine Rs. 1000 is pending. Download mParivahan.apk to pay immediately or court warrant issued: https://echallan-pay.xyz/mparivahan.apk">
-            🚔 Traffic e-Challan APK
-          </button>
-          <button class="chip-btn" data-msg="Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc">
-            🔴 Obfuscated SBI KYC
-          </button>
-          <button class="chip-btn" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
-            ⚡ Bijli Cut Threat + 0TPP
-          </button>
-          <button class="chip-btn" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
-            🟢 Benign Hinglish Chat
-          </button>
-          <button class="chip-btn" data-msg="Your account XX1234 has been credited with Rs. 1500 on 22-Aug-2026. Ref: 98765432.">
-            🟢 Legit Bank Alert
-          </button>
-        </div>
-      </div>
-
-      <div class="cta-scan-wrap">
-        <button class="btn-cyber-primary" id="scanBtn">
-          <span id="btnIcon">🛡️</span>
-          <span id="btnText">Analyze SMS Threat Vector</span>
+      <div class="preset-section-label">✦ Empirical Test Scenarios (Click to Load):</div>
+      <div class="preset-chip-list">
+        <button class="preset-tag chip-btn" data-msg="Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? YouTube videos like karo aur screenshot bhejo. Part-time/Full-time job, investment zero hai. WhatsApp par message karein: https://wa.me/919876543210">
+          💼 YouTube Task Scam
+        </button>
+        <button class="preset-tag chip-btn" data-msg="India Post: Your package IN98234 delivery failed due to incorrect address. Please update your address within 24 hours: https://indiapost-update.top/track">
+          📦 India Post Parcel Scam
+        </button>
+        <button class="preset-tag chip-btn" data-msg="Notice: Traffic challan DL-01-AB-1234 fine Rs. 1000 is pending. Download mParivahan.apk to pay immediately or court warrant issued: https://echallan-pay.xyz/mparivahan.apk">
+          🚔 Traffic e-Challan APK
+        </button>
+        <button class="preset-tag chip-btn" data-msg="Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc">
+          🔴 Obfuscated SBI KYC
+        </button>
+        <button class="preset-tag chip-btn" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
+          ⚡ Bijli Cut Threat + 0TPP
+        </button>
+        <button class="preset-tag chip-btn" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
+          🟢 Benign Hinglish Chat
+        </button>
+        <button class="preset-tag chip-btn" data-msg="Your account XX1234 has been credited with Rs. 1500 on 22-Aug-2026. Ref: 98765432.">
+          🟢 Legit Bank Alert
         </button>
       </div>
+
+      <button class="btn-analyze-gold" id="scanBtn">
+        <span id="btnIcon">🛡️</span>
+        <span id="btnText">Execute Threat Vector Analysis</span>
+      </button>
     </section>
 
     <!-- Results Diagnostic Dashboard -->
     <section class="results-container" id="resultsSection">
-      <div class="dashboard-grid">
+      <div class="results-split-grid">
 
         <!-- Verdict Panel -->
-        <div class="tactical-surface verdict-panel" id="verdictCard">
-          <div class="threat-verdict-pill high_risk" id="verdictBadge">
+        <div class="verdict-box" id="verdictCard">
+          <div class="verdict-tag high_risk" id="verdictBadge">
             <span>🚨 HIGH RISK</span>
           </div>
 
           <!-- Arc Gauge -->
-          <div class="gauge-wrapper">
+          <div class="gauge-box">
             <svg class="gauge-svg" width="130" height="130" viewBox="0 0 130 130">
               <circle class="gauge-track" cx="65" cy="65" r="54"></circle>
               <circle class="gauge-bar" id="scoreCircle" cx="65" cy="65" r="54"></circle>
             </svg>
-            <div class="gauge-center-content">
-              <div class="gauge-number" id="riskPercent">0%</div>
-              <div class="gauge-caption">RISK SCORE</div>
+            <div class="gauge-center-text">
+              <div class="gauge-value" id="riskPercent">0%</div>
+              <div class="gauge-label">RISK INDEX</div>
             </div>
           </div>
 
-          <div class="category-chip-box" id="scamTypeBadge">
+          <div class="scam-category-tag" id="scamTypeBadge">
             CATEGORY: UNKNOWN
           </div>
         </div>
 
         <!-- Technical Diagnostics Panel -->
-        <div class="tactical-surface diagnostics-panel">
-          <div class="section-head">
-            <h3 class="section-title-sm">
+        <div class="diagnostics-box">
+          <div class="arch-card-header" style="margin-bottom: 1rem; padding-bottom: 0.5rem;">
+            <h3 class="arch-card-title" style="font-size: 1.15rem;">
               <span>🔬 Multi-Engine Diagnostic Matrix</span>
             </h3>
-            <button class="action-clear-btn" id="copyJsonBtn">Copy JSON</button>
+            <button class="editorial-btn" id="copyJsonBtn">Copy JSON</button>
           </div>
 
-          <div class="dual-meter-grid">
-            <div class="meter-cell">
-              <div class="meter-cell-head">
+          <div class="engine-meter-row">
+            <div class="engine-meter-card">
+              <div class="meter-header">
                 <span>Rule Engine (40%)</span>
-                <span id="ruleScoreVal" class="cyan">0%</span>
+                <span id="ruleScoreVal" style="color: var(--gold-light);">0%</span>
               </div>
-              <div class="meter-track">
-                <div class="meter-fill" id="ruleBar"></div>
+              <div class="meter-track-line">
+                <div class="meter-fill-line" id="ruleBar"></div>
               </div>
             </div>
 
-            <div class="meter-cell">
-              <div class="meter-cell-head">
+            <div class="engine-meter-card">
+              <div class="meter-header">
                 <span>Gemini Flash (60%)</span>
-                <span id="aiScoreVal" class="cyan">0%</span>
+                <span id="aiScoreVal" style="color: var(--gold-light);">0%</span>
               </div>
-              <div class="meter-track">
-                <div class="meter-fill" id="aiBar"></div>
+              <div class="meter-track-line">
+                <div class="meter-fill-line" id="aiBar"></div>
               </div>
             </div>
           </div>
 
           <!-- Reasoning Callout -->
-          <div class="reasoning-callout" id="aiReasoning">
+          <div class="reasoning-panel" id="aiReasoning">
             Awaiting analysis...
           </div>
 
           <!-- Triggers Identified -->
-          <div class="triggers-list-wrap">
-            <div class="triggers-title">🚨 Matched Phishing Indicators & Threat Triggers:</div>
-            <div class="triggers-tags" id="triggersContainer">
-              <span class="threat-tag">None</span>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.35rem;">
+              🚨 Matched Threat Indicators & Signatures:
+            </div>
+            <div class="triggers-container" id="triggersContainer">
+              <span class="trigger-pill">None</span>
             </div>
           </div>
 
           <!-- URL Security Inspection -->
-          <div id="urlBox" style="display: none; margin-top: 0.85rem; padding: 0.65rem 0.85rem; background: rgba(8, 8, 11, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 0.45rem;">
-            <div style="font-size: 0.74rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.35rem;">
+          <div id="urlBox" style="display: none; margin-top: 1rem; padding: 0.75rem; background: rgba(8, 8, 11, 0.7); border: var(--border-hairline); border-radius: 2px;">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.35rem;">
               🔗 Detected URL & Link Forensics:
             </div>
             <div id="urlDetails"></div>
@@ -237,141 +240,136 @@
     </section>
 
     <!-- Interactive Levenshtein Deobfuscation Workbench -->
-    <section class="tactical-surface sandbox-section" id="sandbox">
-      <div class="section-head">
-        <h3 class="section-title-sm">
-          <span>🔬 Interactive Levenshtein Deobfuscation Workbench</span>
+    <section class="arch-card" id="sandbox" style="margin-top: 2rem;">
+      <div class="arch-card-header">
+        <h3 class="arch-card-title">
+          <span>02 / Interactive Levenshtein Deobfuscation Workbench</span>
         </h3>
       </div>
-      <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 0.75rem;">
+      <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 1rem;">
         Type any obfuscated keyword, leetspeak token, or vernacular permutation to see 3-step normalization and distance calculation in real-time:
       </p>
 
-      <div class="sandbox-input-row">
+      <div class="workbench-input-row">
         <input 
           type="text" 
           id="sandboxInput" 
-          class="sandbox-field" 
+          class="workbench-field" 
           placeholder="Try typing: BLCK, 0TPP, K-Y-C, b4nd, updte, immed1ate..." 
           value="BLCK">
-        <button class="action-clear-btn" id="testWordBtn" style="padding: 0.65rem 1rem; font-weight: 700;">
+        <button class="editorial-btn" id="testWordBtn" style="padding: 0.65rem 1rem;">
           Test Word
         </button>
       </div>
 
-      <div class="sandbox-matrix">
-        <div class="matrix-box">
-          <h5>1. Leetspeak Translation</h5>
-          <div class="matrix-val" id="sbLeet">block</div>
+      <div class="workbench-grid">
+        <div class="workbench-tile">
+          <div class="tile-label">1. Leetspeak Translation</div>
+          <div class="tile-val" id="sbLeet">block</div>
         </div>
-        <div class="matrix-box">
-          <h5>2. Nearest Threat Keyword</h5>
-          <div class="matrix-val" id="sbThreat">block</div>
+        <div class="workbench-tile">
+          <div class="tile-label">2. Nearest Threat Keyword</div>
+          <div class="tile-val" id="sbThreat">block</div>
         </div>
-        <div class="matrix-box">
-          <h5>3. Levenshtein Distance</h5>
-          <div class="matrix-val emerald" id="sbDist">d = 1</div>
+        <div class="workbench-tile">
+          <div class="tile-label">3. Levenshtein Distance</div>
+          <div class="tile-val" style="color: var(--emerald-safe);" id="sbDist">d = 1</div>
         </div>
-        <div class="matrix-box">
-          <h5>4. Security Action</h5>
-          <div class="matrix-val rose" id="sbVerdict">Flagged Threat</div>
+        <div class="workbench-tile">
+          <div class="tile-label">4. Security Action</div>
+          <div class="tile-val" style="color: var(--rose-threat);" id="sbVerdict">Flagged Threat</div>
         </div>
       </div>
     </section>
 
     <!-- Live Cloud Threat Feed Section -->
-    <section class="feed-section" id="feed">
-      <div class="section-head">
-        <h2 class="section-title-sm">
-          <span>📡 Live Cloud Threat Feed</span>
-          <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 500;">(Real-time Audit Logs from Turso DB)</span>
+    <section class="arch-card" id="feed">
+      <div class="arch-card-header">
+        <h2 class="arch-card-title">
+          <span>03 / Live Cloud Threat Feed</span>
         </h2>
         <div style="display: flex; gap: 0.4rem;">
-          <button class="action-clear-btn" id="exportLogsBtn">💾 Export JSON</button>
-          <button class="action-clear-btn" id="refreshFeedBtn">🔄 Refresh</button>
+          <button class="editorial-btn" id="exportLogsBtn">💾 Export JSON</button>
+          <button class="editorial-btn" id="refreshFeedBtn">🔄 Refresh</button>
         </div>
       </div>
 
       <!-- Feed Filter Bar -->
       <div class="feed-filter-bar">
-        <div class="filter-chip-group" id="feedFilterChips">
-          <button class="filter-pill active" data-type="ALL">All Threats</button>
-          <button class="filter-pill" data-type="JOB_TASK_FRAUD">Task & Job</button>
-          <button class="filter-pill" data-type="KYC_FRAUD">KYC Fraud</button>
-          <button class="filter-pill" data-type="TRAFFIC_ECHALLAN">e-Challan</button>
-          <button class="filter-pill" data-type="PARCEL_DELIVERY">Parcel Delivery</button>
-          <button class="filter-pill" data-type="UTILITY_BILL">Electricity Cut</button>
-          <button class="filter-pill" data-type="OTP_THEFT">OTP Theft</button>
-          <button class="filter-pill" data-type="BANK_IMPERSONATION">Bank Block</button>
-          <button class="filter-pill" data-type="LOTTERY_REWARD">Lottery Lure</button>
+        <div class="filter-pill-list" id="feedFilterChips">
+          <button class="filter-btn-item active" data-type="ALL">All Threats</button>
+          <button class="filter-btn-item" data-type="JOB_TASK_FRAUD">Task & Job</button>
+          <button class="filter-btn-item" data-type="KYC_FRAUD">KYC Fraud</button>
+          <button class="filter-btn-item" data-type="TRAFFIC_ECHALLAN">e-Challan</button>
+          <button class="filter-btn-item" data-type="PARCEL_DELIVERY">Parcel Delivery</button>
+          <button class="filter-btn-item" data-type="UTILITY_BILL">Electricity Cut</button>
+          <button class="filter-btn-item" data-type="OTP_THEFT">OTP Theft</button>
+          <button class="filter-btn-item" data-type="BANK_IMPERSONATION">Bank Block</button>
+          <button class="filter-btn-item" data-type="LOTTERY_REWARD">Lottery Lure</button>
         </div>
-        <input type="text" id="feedSearchInput" class="search-field" placeholder="🔍 Search logs...">
+        <input type="text" id="feedSearchInput" class="feed-search-input" placeholder="🔍 Search audit logs...">
       </div>
 
       <!-- Scrollable Terminal Table -->
-      <div class="tactical-surface" style="padding: 0.5rem 0.85rem;">
-        <div class="terminal-table-container">
-          <table class="terminal-table">
-            <thead>
-              <tr>
-                <th>Risk</th>
-                <th>Verdict</th>
-                <th>Category</th>
-                <th>Message Content</th>
-                <th>Logged At</th>
-              </tr>
-            </thead>
-            <tbody id="feedTableBody">
-              <tr>
-                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                  Loading flagged threats from Turso Cloud...
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="editorial-table-container">
+        <table class="editorial-table">
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Verdict</th>
+              <th>Category</th>
+              <th>Message Content</th>
+              <th>Logged At</th>
+            </tr>
+          </thead>
+          <tbody id="feedTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-faint); padding: 2.5rem; font-family: var(--font-mono);">
+                Loading flagged threats from Turso Cloud...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div class="table-footer-bar">
-          <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;" id="feedCountInfo">
-            Showing top 11 logs
-          </span>
-          <button class="action-clear-btn" id="loadMoreFeedBtn">
-            <span>⚡ View All Logs</span>
-          </button>
-        </div>
+      <div class="table-pagination-footer">
+        <span id="feedCountInfo">Showing top 11 logs</span>
+        <button class="editorial-btn" id="loadMoreFeedBtn">
+          <span>⚡ View All Logs</span>
+        </button>
       </div>
     </section>
 
-    <!-- Architecture & Problem Framing -->
-    <section class="pitch-section" id="architecture">
-      <div class="section-head">
-        <h2 class="section-title-sm">
-          <span>💡 The Kavach Defense Architecture</span>
+    <!-- Architecture & Core Pillars -->
+    <section class="arch-card" id="architecture">
+      <div class="arch-card-header">
+        <h2 class="arch-card-title">
+          <span>04 / System Architecture & Defense Philosophy</span>
         </h2>
       </div>
 
-      <div class="pitch-matrix">
-        <div class="tactical-surface pitch-cell">
-          <div class="pitch-icon-badge">🎯</div>
-          <h3 class="pitch-heading">The Vernacular Blindspot</h3>
-          <p class="pitch-desc">
-            Over 80% of Indian smishing scams use transliterated Hindi (Hinglish) and regional languages (<em>"bijli disconnect"</em>, <em>"khata bandh"</em>) packed with leetspeak (<em>"BLCK"</em>, <em>"0TPP"</em>). Standard security tools miss these entirely.
+      <div class="philosophy-grid">
+        <div class="philosophy-card">
+          <div class="philosophy-num">01 / LINGUISTIC BLINDSPOT</div>
+          <h3 class="philosophy-title">Transliterated Regional Script</h3>
+          <p class="philosophy-desc">
+            Standard NLP models fail when Hindi or regional dialects are written in English letters. Kavach’s dictionary normalizes over 200+ vernacular fraud signatures natively.
           </p>
         </div>
 
-        <div class="tactical-surface pitch-cell">
-          <div class="pitch-icon-badge">⚡</div>
-          <h3 class="pitch-heading">Sub-50ms Levenshtein Engine</h3>
-          <p class="pitch-desc">
-            Our deterministic pre-processor normalizes leetspeak, collapses spaced single-character tokens (<em>"K-Y-C"</em>), and computes length-adaptive edit distance against a 200+ Indian threat lexicon without distorting genuine words.
+        <div class="philosophy-card">
+          <div class="philosophy-num">02 / DETERMINISTIC ENGINE</div>
+          <h3 class="philosophy-title">Sub-15ms Levenshtein</h3>
+          <p class="philosophy-desc">
+            Computes length-adaptive edit distance over leetspeak mutations (<em>"BLCK"</em>, <em>"0TPP"</em>) while protecting 350+ conversational words with safe-word whitelisting.
           </p>
         </div>
 
-        <div class="tactical-surface pitch-cell">
-          <div class="pitch-icon-badge">🧠</div>
-          <h3 class="pitch-heading">Multi-Model AI Fusion Layer</h3>
-          <p class="pitch-desc">
-            Blends deterministic regex rule scoring (<strong>40%</strong>) with Google Gemini Flash (<strong>60%</strong>) with instant multi-model failover pool (Gemini 3.5 Flash, 3.7 Flash, Flash Latest) for uncompromised resilience.
+        <div class="philosophy-card">
+          <div class="philosophy-num">03 / AI CASCADE LAYER</div>
+          <h3 class="philosophy-title">Multi-Model Gemini Flash</h3>
+          <p class="philosophy-desc">
+            Blends deterministic regex heuristics (40%) with Google Gemini Flash (60%) across a 6-model fallback pool for continuous resilience and zero single-point-of-failure.
           </p>
         </div>
       </div>
@@ -379,11 +377,11 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="cyber-footer container">
-    <p>🛡️ <strong>Kavach AI (कवच)</strong> — Hackathon Edition built for Elicit ACM</p>
-    <p style="margin-top: 0.35rem; font-size: 0.76rem;">
-      Powered by Multi-Model Google Gemini Flash • LibSQL / Turso Cloud DB • Vercel Serverless PWA
+  <!-- Editorial Footer -->
+  <footer class="container editorial-footer">
+    <p>KAVACH AI (कवच) — Production Hackathon Architecture built for Elicit ACM</p>
+    <p style="margin-top: 0.35rem; color: var(--text-faint);">
+      Powered by Google Gemini Flash • LibSQL / Turso Cloud Serverless SQLite • Vercel Serverless PWA
     </p>
   </footer>
 

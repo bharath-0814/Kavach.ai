@@ -894,8 +894,32 @@ body {
 }
 
 .feed-table-wrap {
+  max-height: 520px;
+  overflow-y: auto;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  position: relative;
+  border-radius: 0.65rem;
+}
+
+/* Sleek Liquid Glass Scrollbar */
+.feed-table-wrap::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.feed-table-wrap::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.feed-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
+.feed-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .feed-table {
@@ -906,6 +930,11 @@ body {
 }
 
 .feed-table th {
+  position: sticky;
+  top: 0;
+  background: rgba(18, 18, 24, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 10;
   padding: clamp(0.75rem, 1.2vw, 1rem);
   font-size: clamp(0.74rem, 0.85vw, 0.8rem);
   font-weight: 800;
@@ -929,6 +958,24 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Feed Footer Controls */
+.feed-footer-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0.5rem 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.feed-count-info {
+  font-size: clamp(0.74rem, 0.85vw, 0.8rem);
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 /* Pitch & Architecture Section */

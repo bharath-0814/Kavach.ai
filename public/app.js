@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const exportLogsBtn = document.getElementById('exportLogsBtn');
   const feedSearchInput = document.getElementById('feedSearchInput');
   const feedFilterChips = document.querySelectorAll('.filter-btn');
+  const loadMoreFeedBtn = document.getElementById('loadMoreFeedBtn');
+  const feedCountInfo = document.getElementById('feedCountInfo');
   const presetChips = document.querySelectorAll('.preset-chip');
 
   // Sandbox Elements
@@ -47,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentAnalysisData = null;
   let cachedFlags = [];
   let activeFilterType = 'ALL';
+  let showAllLogs = false;
+  const INITIAL_FEED_LIMIT = 11;
 
   // Client-side threat dictionary for sandbox
   const CLIENT_THREAT_LEXICON = [
@@ -373,10 +377,38 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
         </tr>
       `;
+      if (feedCountInfo) feedCountInfo.textContent = '0 logs';
+      if (loadMoreFeedBtn) loadMoreFeedBtn.style.display = 'none';
       return;
     }
 
-    feedTableBody.innerHTML = flags.map(item => {
+    const totalCount = flags.length;
+    const itemsToDisplay = showAllLogs ? flags : flags.slice(0, INITIAL_FEED_LIMIT);
+
+    // Update count info text
+    if (feedCountInfo) {
+      if (totalCount > INITIAL_FEED_LIMIT) {
+        feedCountInfo.textContent = showAllLogs 
+          ? `Showing all ${totalCount} logs` 
+          : `Showing top ${Math.min(INITIAL_FEED_LIMIT, totalCount)} of ${totalCount} logs`;
+      } else {
+        feedCountInfo.textContent = `Showing ${totalCount} log${totalCount === 1 ? '' : 's'}`;
+      }
+    }
+
+    // Update Load More button
+    if (loadMoreFeedBtn) {
+      if (totalCount > INITIAL_FEED_LIMIT) {
+        loadMoreFeedBtn.style.display = 'inline-flex';
+        loadMoreFeedBtn.innerHTML = showAllLogs 
+          ? '<span>▲ Show Less (Top 11)</span>' 
+          : `<span>⚡ View All (${totalCount}) Logs</span>`;
+      } else {
+        loadMoreFeedBtn.style.display = 'none';
+      }
+    }
+
+    feedTableBody.innerHTML = itemsToDisplay.map(item => {
       const scorePct = Math.round((item.risk_score || 0) * 100);
       let badgeClass = 'high_risk';
       let badgeLabel = 'HIGH RISK';
@@ -398,6 +430,14 @@ document.addEventListener('DOMContentLoaded', () => {
         </tr>
       `;
     }).join('');
+  }
+
+  // Load More / Show Less Toggle
+  if (loadMoreFeedBtn) {
+    loadMoreFeedBtn.addEventListener('click', () => {
+      showAllLogs = !showAllLogs;
+      filterAndRenderFeed();
+    });
   }
 
   function escapeHtml(text) {

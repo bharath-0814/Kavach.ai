@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kavach AI (कवच) — AI-Powered Vernacular SMS Phishing Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo">
+        <div class="shield-icon">🛡️</div>
+        <span>KAVACH AI <span style="font-weight: 400; font-size: 0.95rem; color: var(--accent-cyan);">(कवच)</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#scanner">Scanner</a>
+        <a href="#feed">Threat Feed</a>
+        <a href="#pitch">How It Works</a>
+        <a href="#api">API</a>
+        <div class="status-badge" id="backendStatus">
+          <span class="status-dot"></span>
+          <span>Turso Cloud Active</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero container">
+    <div class="hero-pill">
+      <span>⚡ Hackathon Edition</span>
+      <span>•</span>
+      <span>Vernacular Phishguard</span>
+    </div>
+    <h1 class="hero-title">
+      Defend Against <span>Vernacular SMS Phishing</span>
+    </h1>
+    <p class="hero-subtitle">
+      Next-generation Indian cybersecurity shield. Fuses Levenshtein fuzzy deobfuscation, phonetic Hinglish heuristics, and Gemini 2.5 Flash to stop regional smishing scams.
+    </p>
+  </header>
+
+  <!-- Main App Container -->
+  <main class="container">
+
+    <!-- SMS Scanner Input Section -->
+    <section class="glass-card scanner-card" id="scanner">
+      <div class="input-header">
+        <div class="input-label">
+          <span>📨 Paste or Enter SMS Message</span>
+        </div>
+        <button class="btn btn-outline" id="clearBtn" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;">
+          Clear
+        </button>
+      </div>
+
+      <div class="sms-textarea-wrap">
+        <textarea 
+          id="smsInput" 
+          class="sms-textarea" 
+          placeholder="Paste suspicious Hinglish SMS here... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'"></textarea>
+        <div class="textarea-footer">
+          <span id="charCount">0 characters</span>
+          <span>Supports: Hindi, Hinglish, Bengali, Tamil/Telugu English, Leetspeak</span>
+        </div>
+      </div>
+
+      <!-- Quick Test Presets -->
+      <div class="sample-presets">
+        <div class="presets-title">⚡ Quick Test Scenarios (Click to load):</div>
+        <div class="preset-chips">
+          <button class="preset-chip" data-msg="Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc">
+            🔴 Obfuscated SBI KYC (BLCK / K-Y-C)
+          </button>
+          <button class="preset-chip" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
+            ⚡ Bijli Cut Threat + 0TPP
+          </button>
+          <button class="preset-chip" data-msg="Dear user apka bank acct b4nd ho jayega. Pls updte ur pan card here: https://fake-bank.xyz">
+            💳 Bank Account Bandh (b4nd / updte)
+          </button>
+          <button class="preset-chip" data-msg="Badhai ho! Aapne Rs. 50,000 ka cashback jeeta hai. Claim link: https://fake-reward.xyz">
+            🎁 Lottery / Cashback Lure
+          </button>
+          <button class="preset-chip" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
+            🟢 Benign Hinglish Chat
+          </button>
+          <button class="preset-chip" data-msg="Your account XX1234 has been credited with Rs. 1500 on 22-Aug-2026. Ref: 98765432.">
+            🟢 Legit Bank Transaction Alert
+          </button>
+        </div>
+      </div>
+
+      <div class="scan-btn-wrap">
+        <button class="btn btn-primary" id="scanBtn">
+          <span id="btnIcon">🛡️</span>
+          <span id="btnText">Analyze SMS Threat</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Dashboard Section -->
+    <section class="results-section" id="resultsSection">
+      <div class="results-grid">
+
+        <!-- Verdict Card -->
+        <div class="glass-card verdict-card" id="verdictCard">
+          <div class="verdict-badge high_risk" id="verdictBadge">
+            <span>🚨 HIGH RISK</span>
+          </div>
+
+          <!-- Circular Gauge -->
+          <div class="score-circle-wrap">
+            <svg class="score-circle" width="140" height="140" viewBox="0 0 140 140">
+              <circle class="score-circle-bg" cx="70" cy="70" r="60"></circle>
+              <circle class="score-circle-progress" id="scoreCircle" cx="70" cy="70" r="60"></circle>
+            </svg>
+            <div class="score-text-inner">
+              <div class="score-number" id="riskScoreNumber">94%</div>
+              <div class="score-label">Risk Score</div>
+            </div>
+          </div>
+
+          <div class="scam-type-pill" id="scamTypePill">
+            Category: KYC_FRAUD
+          </div>
+        </div>
+
+        <!-- Detail Breakdown Card -->
+        <div class="glass-card detail-card">
+          <div class="detail-header">
+            <span>🔬 Multi-Engine AI Fusion Analysis</span>
+          </div>
+
+          <!-- Dual Meters -->
+          <div class="dual-meter-section">
+            <div class="meter-box">
+              <div class="meter-label">
+                <span>Rule Engine (40%)</span>
+                <span id="ruleScoreVal">90%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="ruleBar" style="width: 90%;"></div>
+              </div>
+            </div>
+
+            <div class="meter-box">
+              <div class="meter-label">
+                <span>Gemini 2.5 Flash (60%)</span>
+                <span id="aiScoreVal">96%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="aiBar" style="width: 96%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Reasoning -->
+          <div class="reasoning-box" id="aiReasoning">
+            Analyzing security vectors...
+          </div>
+
+          <!-- Detected Triggers -->
+          <div>
+            <div class="triggers-title">🚨 Matched Phishing Indicators & Triggers:</div>
+            <div class="triggers-container" id="triggersContainer">
+              <span class="trigger-tag">BLCK (obfuscated "block")</span>
+              <span class="trigger-tag">update kyc</span>
+              <span class="trigger-tag">http://</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Obfuscation Visualizer Box -->
+      <div class="glass-card deobfuscation-card" id="deobfBox">
+        <h3 style="font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🔍 Deobfuscation & Levenshtein Normalization Breakdown</span>
+        </h3>
+        <div class="deobf-grid">
+          <div class="deobf-box">
+            <h4>1. Raw Obfuscated Input</h4>
+            <div class="deobf-content" id="deobfRaw">"..."</div>
+          </div>
+          <div class="deobf-box">
+            <h4>2. Clean Canonical Normalized Representation</h4>
+            <div class="deobf-content" id="deobfClean">"..."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Threat Feed (Turso Cloud DB) -->
+    <section class="feed-section" id="feed">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📡 Live Cloud Threat Feed</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">(Real-time logs from Turso DB)</span>
+        </h2>
+        <button class="btn btn-outline" id="refreshFeedBtn" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
+          🔄 Refresh Feed
+        </button>
+      </div>
+
+      <div class="glass-card" style="padding: 0.5rem 1rem;">
+        <div class="feed-table-wrap">
+          <table class="feed-table">
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Verdict</th>
+                <th>Category</th>
+                <th>Message Content</th>
+                <th>Logged At</th>
+              </tr>
+            </thead>
+            <tbody id="feedTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                  Loading flagged threats from Turso Cloud...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Pitch & Architecture Section -->
+    <section class="pitch-section" id="pitch">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>💡 What Problem is Kavach Solving & How?</span>
+        </h2>
+      </div>
+
+      <div class="pitch-grid">
+        <div class="glass-card pitch-card">
+          <div class="pitch-icon">🎯</div>
+          <h3 class="pitch-title">The Problem in India</h3>
+          <p class="pitch-text">
+            Over <strong>80% of Indian SMS phishing scams</strong> exploit Latin-script Hindi (Hinglish) and regional languages (e.g. <em>"Aapka bijli cut ho jayega"</em>, <em>"khata bandh"</em>). Standard security models are trained on English text and completely miss phonetic variations, intentional leetspeak, and regional urgency coercion.
+          </p>
+        </div>
+
+        <div class="glass-card pitch-card">
+          <div class="pitch-icon">🔬</div>
+          <h3 class="pitch-title">Fuzzy Levenshtein Engine</h3>
+          <p class="pitch-text">
+            Attackers intentionally bypass keyword filters by writing <code>BLCK</code>, <code>0TPP</code>, <code>K-Y-C</code>, or <code>b4nd</code>. Kavach's deobfuscation pipeline normalizes leetspeak and uses Levenshtein distance ($\le 2$) matching against an Indian threat lexicon without causing false positives on natural Hindi chat.
+          </p>
+        </div>
+
+        <div class="glass-card pitch-card">
+          <div class="pitch-icon">🧠</div>
+          <h3 class="pitch-title">AI Fusion Layer</h3>
+          <p class="pitch-text">
+            Combines the deterministic speed of our vernacular regex rule engine (<strong>40%</strong>) with the multilingual reasoning power of <strong>Google Gemini 2.5 Flash</strong> (<strong>60%</strong>). It operates with automatic retry exponential backoff and graceful heuristic fallback.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer API Playground Section -->
+    <section class="api-section" id="api">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📡 REST API Integration</span>
+        </h2>
+      </div>
+
+      <div class="glass-card" style="padding: 2rem;">
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Easily integrate Kavach SMS Phishing Classifier into any mobile application, SMS gateway, or backend microservice.
+        </p>
+
+        <div class="code-box">
+<pre><code># Classify an SMS message
+curl -X POST https://kavach-ai-ten.vercel.app/api/classify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc"
+  }'</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer container">
+    <p>🛡️ <strong>Kavach AI (कवच)</strong> — Hackathon Project built for Elicit ACM</p>
+    <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.8rem;">
+      Powered by Google Gemini 2.5 Flash • LibSQL / Turso Cloud DB • Vercel Serverless
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

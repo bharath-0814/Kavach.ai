@@ -1,0 +1,33 @@
+{
+  "name": "kavach-sms-phishing-detector",
+  "version": "1.0.0",
+  "description": "AI-Powered Vernacular SMS Phishing Classifier with Levenshtein fuzzy deobfuscation and Gemini 2.5 Flash fusion.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test_all.js",
+    "test:fuzzy": "node test_levenshtein.js"
+  },
+  "keywords": [
+    "sms-phishing",
+    "smishing",
+    "vernacular",
+    "hinglish",
+    "gemini",
+    "cybersecurity",
+    "turso"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "dotenv": "^17.4.2",
+    "fast-levenshtein": "^3.0.0"
+  },
+  "directories": {
+    "lib": "lib",
+    "api": "api"
+  }
+}

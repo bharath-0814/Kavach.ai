@@ -98,14 +98,13 @@ body {
   box-shadow: var(--liquid-shadow-hover);
 }
 
-/* Floating Apple Navbar */
+/* Floating Apple Navbar (Top Non-Sticky) */
 .navbar {
-  position: sticky;
-  top: 0.75rem;
-  z-index: 100;
+  position: relative;
+  z-index: 50;
   width: 100%;
   max-width: min(1160px, 96vw);
-  margin: 0 auto 1.25rem;
+  margin: 1rem auto 1.5rem;
   padding: clamp(0.5rem, 1.2vw, 0.75rem) clamp(0.85rem, 2vw, 1.5rem);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(14, 14, 18, 0.82);
   backdrop-filter: blur(32px) saturate(200%);
@@ -1078,18 +1077,31 @@ body {
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 0.6rem 1rem;
-    border-radius: 1.5rem;
+    position: relative;
+    padding: 0.6rem 0.85rem;
+    border-radius: 1.25rem;
+    margin: 0.5rem auto 1rem;
   }
   
   .nav-container {
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
   
   .nav-links {
-    justify-content: center;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
     width: 100%;
-    gap: 0.4rem;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.2rem 0;
+    gap: 0.35rem;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
   }
 
   .stats-bar {

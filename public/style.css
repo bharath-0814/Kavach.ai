@@ -894,32 +894,39 @@ body {
 }
 
 .feed-table-wrap {
-  max-height: 520px;
-  overflow-y: auto;
+  height: 380px;
+  max-height: 380px;
+  overflow-y: scroll !important;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
   border-radius: 0.65rem;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.05);
 }
 
-/* Sleek Liquid Glass Scrollbar */
+/* High-Contrast Visible Scrollbar */
 .feed-table-wrap::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px !important;
+  height: 8px !important;
+  display: block !important;
 }
 
 .feed-table-wrap::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 6px;
+  margin: 4px 0;
 }
 
 .feed-table-wrap::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 6px;
+  border: 2px solid rgba(18, 18, 24, 0.8);
 }
 
 .feed-table-wrap::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.5) !important;
 }
 
 .feed-table {

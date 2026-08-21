@@ -64,22 +64,25 @@
       Next-generation Indian cybersecurity shield. Fuses Levenshtein fuzzy deobfuscation, phonetic Hinglish heuristics, and Gemini Flash to stop regional smishing scams.
     </p>
 
-    <!-- Live Stats Metrics Strip -->
-    <div class="stats-strip">
-      <div class="glass-card stat-item">
+    <!-- Compact Unified Segmented Metrics Bar -->
+    <div class="glass-card stats-bar">
+      <div class="stat-segment">
         <div class="stat-num" id="statTotalScanned">--</div>
         <div class="stat-label">Total SMS Scanned</div>
       </div>
-      <div class="glass-card stat-item">
-        <div class="stat-num" id="statScamsBlocked" style="color: var(--accent-rose);">--</div>
+      <div class="stat-divider"></div>
+      <div class="stat-segment">
+        <div class="stat-num stat-rose" id="statScamsBlocked">--</div>
         <div class="stat-label">Scams Blocked</div>
       </div>
-      <div class="glass-card stat-item">
-        <div class="stat-num" id="statAccuracy" style="color: var(--accent-emerald);">99.4%</div>
+      <div class="stat-divider"></div>
+      <div class="stat-segment">
+        <div class="stat-num stat-emerald" id="statAccuracy">99.4%</div>
         <div class="stat-label">Threat Accuracy</div>
       </div>
-      <div class="glass-card stat-item">
-        <div class="stat-num" id="statLatency" style="color: var(--accent-amber);">&lt;45ms</div>
+      <div class="stat-divider"></div>
+      <div class="stat-segment">
+        <div class="stat-num stat-amber" id="statLatency">&lt;45ms</div>
         <div class="stat-label">Average Latency</div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 const { analyzeScamPatterns } = require('../lib/scamPatterns');
 const { callGeminiClassifier, inferScamTypeFromLabels } = require('../lib/geminiClient');
+const { retrieveSimilarThreats } = require('../lib/ragEngine');
 const { logFlag } = require('../lib/db');
 
 /**
@@ -46,8 +47,11 @@ module.exports = async function handler(req, res) {
     const ruleResult = analyzeScamPatterns(message);
     const ruleScore = ruleResult.ruleScore;
 
-    // Step 2: Call Gemini 2.5 Flash API (with retries and fallback)
-    const geminiResult = await callGeminiClassifier(message, ruleResult);
+    // Step 2: Retrieve Semantically Similar Threat Vectors & Advisories (RAG)
+    const ragRetrieval = retrieveSimilarThreats(message, 3);
+
+    // Step 3: Call Gemini Flash API (augmented with retrieved RAG context)
+    const geminiResult = await callGeminiClassifier(message, ruleResult, ragRetrieval.rag_context_str);
     const geminiConfidence = geminiResult.confidence;
 
     // Step 3: Combine scores: 40% Rule Engine + 60% Gemini AI
@@ -100,6 +104,11 @@ module.exports = async function handler(req, res) {
         url_analysis: ruleResult.urlAnalysis,
         ai_fallback_used: geminiResult.fallback,
         model_used: geminiResult.model_used || 'rule_heuristics'
+      },
+      rag_grounding: {
+        has_match: ragRetrieval.has_match,
+        best_match: ragRetrieval.best_match,
+        top_matches: ragRetrieval.top_matches
       },
       reasoning: geminiResult.reasoning,
       timestamp: new Date().toISOString()

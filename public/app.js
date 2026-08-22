@@ -568,6 +568,41 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Populate RAG Threat Intelligence & Advisory Grounding
+    const ragGrounding = data.rag_grounding;
+    const ragBox = document.getElementById('ragGroundingBox');
+    const ragSimilarityBadge = document.getElementById('ragSimilarityBadge');
+    const ragAdvisoryTitle = document.getElementById('ragAdvisoryTitle');
+    const ragModus = document.getElementById('ragModus');
+    const ragBulletinPill = document.getElementById('ragBulletinPill');
+    const ragLegalPill = document.getElementById('ragLegalPill');
+    const ragActionText = document.getElementById('ragActionText');
+
+    if (ragBox && ragGrounding && ragGrounding.has_match && ragGrounding.best_match && verdict !== 'safe') {
+      const match = ragGrounding.best_match;
+      ragBox.style.display = 'block';
+      if (ragSimilarityBadge) {
+        ragSimilarityBadge.textContent = `${Math.round(match.similarity * 100)}% Vector Match`;
+      }
+      if (ragAdvisoryTitle) {
+        ragAdvisoryTitle.textContent = `🚨 ${match.title}`;
+      }
+      if (ragModus) {
+        ragModus.textContent = match.modus_operandi;
+      }
+      if (ragBulletinPill) {
+        ragBulletinPill.textContent = `📋 ${match.i4c_advisory || match.cert_in_bulletin}`;
+      }
+      if (ragLegalPill) {
+        ragLegalPill.textContent = `⚖️ ${match.legal_sections ? match.legal_sections[0] : 'IT Act § 66D'}`;
+      }
+      if (ragActionText) {
+        ragActionText.textContent = match.action_plan || 'Do not engage. Report immediately to 1930.';
+      }
+    } else if (ragBox) {
+      ragBox.style.display = 'none';
+    }
+
     // Deobfuscation Box
     if (deobfRaw) deobfRaw.textContent = `"${message}"`;
     if (deobfClean) {

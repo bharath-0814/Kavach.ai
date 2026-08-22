@@ -240,6 +240,39 @@
             </div>
             <div id="urlDetails"></div>
           </div>
+
+          <!-- RAG Threat Intelligence & Official Advisory Grounding -->
+          <div id="ragGroundingBox" style="display: none; margin-top: 1rem; padding: 0.85rem; background: rgba(10, 10, 16, 0.9); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem;">
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--gold-light); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <span>🧠</span> RAG Vector Threat Grounding
+              </span>
+              <span id="ragSimilarityBadge" style="font-family: var(--font-mono); font-size: 0.68rem; background: rgba(212,175,55,0.15); color: var(--gold-light); border: 1px solid rgba(212,175,55,0.3); padding: 1px 6px; border-radius: 3px;">
+                98.4% Match
+              </span>
+            </div>
+
+            <div id="ragAdvisoryTitle" style="font-size: 0.88rem; font-weight: 700; color: var(--text-pure); margin-bottom: 0.25rem;">
+              --
+            </div>
+
+            <div style="font-size: 0.78rem; color: var(--text-body); margin-bottom: 0.4rem; line-height: 1.4;" id="ragModus">
+              --
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.4rem; font-family: var(--font-mono); font-size: 0.68rem;">
+              <span id="ragBulletinPill" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan-accent); border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 6px; border-radius: 3px;">
+                Advisory: --
+              </span>
+              <span id="ragLegalPill" style="background: rgba(244, 63, 94, 0.15); color: var(--rose-threat); border: 1px solid rgba(244, 63, 94, 0.3); padding: 2px 6px; border-radius: 3px;">
+                Law: --
+              </span>
+            </div>
+
+            <div id="ragActionBox" style="margin-top: 0.5rem; padding: 0.45rem 0.6rem; background: rgba(16, 185, 129, 0.08); border-left: 2px solid var(--emerald-safe); font-size: 0.75rem; color: #a7f3d0; line-height: 1.4;">
+              <strong>🛡️ Citizen Action:</strong> <span id="ragActionText">--</span>
+            </div>
+          </div>
         </div>
 
       </div>

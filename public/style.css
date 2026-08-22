@@ -850,6 +850,66 @@ body {
   color: #94a3b8;
 }
 
+.workbench-input-row {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.workbench-field {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  min-height: 46px;
+  background: rgba(14, 15, 22, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--text-pure);
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.workbench-field:focus {
+  border-color: var(--gold-light);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+  background: rgba(18, 20, 28, 0.98);
+}
+
+#testWordBtn {
+  flex-shrink: 0;
+  min-height: 46px;
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: var(--gold-light);
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#testWordBtn:hover {
+  background: var(--gold-primary);
+  color: #08090d;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}
+
 .deobf-diff-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1206,7 +1266,7 @@ body {
 }
 
 /* ==========================================================================
-   MOBILE RESPONSIVENESS & BREAKPOINTS
+   MOBILE RESPONSIVENESS & ZERO-OVERFLOW BREAKPOINTS
    ========================================================================== */
 @media (max-width: 960px) {
   .results-split-grid {
@@ -1223,10 +1283,24 @@ body {
 }
 
 @media (max-width: 768px) {
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .editorial-nav {
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-3);
+    padding: 0.75rem 0.5rem;
   }
 
   .nav-links-group {
@@ -1242,13 +1316,77 @@ body {
   }
 
   .arch-card {
-    padding: var(--space-5);
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .deobf-diff-card,
+  .threat-ingestion-card,
+  .batch-results-container {
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .engine-meter-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .workbench-input-row {
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .workbench-field {
+    min-width: 0;
+    flex: 1 1 auto;
+    font-size: 0.88rem;
+    padding: 8px 10px;
+  }
+
+  #testWordBtn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    min-height: 44px;
   }
 }
 
 @media (max-width: 480px) {
+  .brand-wrap {
+    gap: 6px;
+  }
+
+  .brand-title-en {
+    font-size: 1.15rem;
+  }
+
+  .brand-title-hi {
+    font-size: 1.08rem;
+  }
+
+  .brand-badge {
+    font-size: 0.6rem;
+    padding: 1px 4px;
+  }
+
   .metric-strip {
     grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .metric-cell {
+    padding: 10px 8px;
+  }
+
+  .metric-val {
+    font-size: 1.15rem;
   }
 
   .preset-chip-list {
@@ -1257,6 +1395,37 @@ body {
 
   .preset-tag {
     width: 100%;
+    min-height: 38px;
+    font-size: 0.72rem;
+  }
+
+  .btn-analyze-gold {
+    width: 100%;
+    font-size: 0.92rem;
+    padding: 12px 14px;
+  }
+
+  .deobf-threshold-strip {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .threshold-slider-wrap {
+    width: 100%;
+    order: 3;
+    margin-top: 4px;
+  }
+
+  .threat-ingestion-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .threat-ingestion-body {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    word-break: break-word;
   }
 
   .feed-filter-bar {

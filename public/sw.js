@@ -1,5 +1,5 @@
 // Kavach AI — Production Service Worker with Automatic Cache Bumping
-const BUILD_TIMESTAMP = '2026-08-22T22:52:00Z';
+const BUILD_TIMESTAMP = '2026-08-22T22:58:00Z';
 const CACHE_NAME = `kavach-cache-${BUILD_TIMESTAMP}`;
 
 const STATIC_ASSETS = [
@@ -39,8 +39,8 @@ self.addEventListener('activate', event => {
 
 // Fetch Strategy:
 // 1. /api/* -> Network-Only (Live Fresh Telemetry)
-// 2. HTML / Navigation -> Network-First with Cache Fallback
-// 3. CSS/JS/Assets -> Stale-While-Revalidate with Auto-Update
+// 2. HTML / CSS / JS -> Network-First with Cache Fallback (Never serve stale code)
+// 3. Static Media / Fonts / Other -> Stale-While-Revalidate
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
@@ -50,13 +50,15 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Network-First for Navigation (HTML)
-  if (event.request.mode === 'navigate') {
+  // Network-First for Navigation (HTML) and Core Scripts/Styles (app.js, style.css)
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
     event.respondWith(
       fetch(event.request)
         .then(networkResponse => {
-          const clone = networkResponse.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
           return networkResponse;
         })
         .catch(() => caches.match(event.request) || caches.match('/index.html'))
@@ -64,7 +66,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Stale-While-Revalidate for Static Assets
+  // Stale-While-Revalidate for Other Static Assets (icons, manifest)
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       const fetchPromise = fetch(event.request)

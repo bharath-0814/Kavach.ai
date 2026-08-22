@@ -823,10 +823,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Unified Reset Function for Text, Batch, Image, and OCR states
   function clearAllInputs() {
     triggerHaptic('light');
-    if (smsInput) smsInput.value = '';
+    if (smsInput) {
+      smsInput.value = '';
+    }
     updateInputCount();
-    if (imagePreviewStrip) imagePreviewStrip.style.display = 'none';
-    if (imageFileInput) imageFileInput.value = '';
+    if (imagePreviewStrip) {
+      imagePreviewStrip.style.cssText = 'display: none !important;';
+    }
+    if (imageFileInput) {
+      imageFileInput.value = '';
+    }
     if (imagePreviewThumbnail) {
       imagePreviewThumbnail.src = '';
       imagePreviewThumbnail.removeAttribute('src');

@@ -221,15 +221,30 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+### Milestone 19: Network-First SW Cache Strategy & Query-Busted Script Loading for Instant State Clearing
+- **Problem:** Service Worker's stale-while-revalidate strategy served older cached `app.js` before revalidation, requiring manual page refreshes to pick up the new image clearing code.
+- **Solution:**
+  1. **Network-First Service Worker Strategy (`public/sw.js`):**
+     - Upgraded fetch handler for `.js`, `.css`, and navigation requests to **Network-First** (falling back to cache only when completely offline).
+     - Bypasses stale cache so all new features and fixes are immediately active on first visit without needing a manual refresh.
+  2. **Cache-Busting Asset Versioning (`public/index.html`):**
+     - Tagged `style.css?v=20260822-2258` and `app.js?v=20260822-2258`.
+  3. **Strict CSS Text Image Reset (`public/app.js`):**
+     - `imagePreviewStrip.style.cssText = 'display: none !important;'` and removed image `src` attribute completely.
+
+---
+
 ## 📊 Live Verification Status
 
-All 18 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 19 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
-✅ Live Telemetry Stats: 712 Scanned | 675 Neutralized
+✅ Live Telemetry Stats: 714 Scanned | 676 Neutralized
+✅ Service Worker Strategy: Network-First for JS/CSS (No Refresh Needed)
+✅ Image Clear Input: Unconditional !important Display Reset + Source Removal
 ✅ Similar Scams Intelligence: Rich Cyber Cards + Trigger Chips + Load & Test Active
 ✅ Clear Input Reset: Unified Text, Image, File & OCR State Wiper Active
 ✅ Image Dimension Bounds: Strict 60x60px Thumbnail Containment Active
@@ -245,6 +260,7 @@ All 18 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

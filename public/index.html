@@ -247,7 +247,7 @@
             </div>
           </div>
 
-          <!-- Inline Leetspeak & Threat Trigger Ingestion Inspector (Image 1) -->
+          <!-- Inline Leetspeak & Threat Trigger Ingestion Inspector (Exact Image 1 Layout) -->
           <div class="threat-ingestion-card" id="threatIngestionCard">
             <div class="threat-ingestion-header">
               <span class="threat-ingestion-tag">SMS threat ingestion</span>
@@ -256,12 +256,16 @@
               Awaiting SMS analysis...
             </div>
             <div class="threat-ingestion-footer">
-              <span class="risk-index-label">Risk index</span>
+              <div class="threat-ingestion-meta-row">
+                <span class="risk-index-label">Risk index</span>
+                <div class="risk-index-val-group">
+                  <span class="risk-index-pct" id="riskIndexPct">0%</span>
+                  <span class="threat-verdict-pill safe" id="riskIndexVerdict">safe</span>
+                </div>
+              </div>
               <div class="risk-index-bar-track">
                 <div class="risk-index-bar-fill" id="riskIndexProgress" style="width: 0%;"></div>
               </div>
-              <span class="risk-index-pct" id="riskIndexPct">0%</span>
-              <span class="threat-verdict-pill safe" id="riskIndexVerdict">safe</span>
             </div>
           </div>
 

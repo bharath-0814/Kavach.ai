@@ -237,9 +237,10 @@
       <div class="results-split-grid">
 
         <!-- Verdict Panel -->
+        <!-- Left Verdict Panel & Intelligence Summary -->
         <div class="verdict-box" id="verdictCard">
           <div class="verdict-tag high_risk" id="verdictBadge">
-            <span>🚨 HIGH RISK</span>
+            <span>🚨 HIGH RISK PHISHING</span>
           </div>
 
           <!-- Arc Gauge -->
@@ -256,6 +257,46 @@
 
           <div class="scam-category-tag" id="scamTypeBadge">
             CATEGORY: UNKNOWN
+          </div>
+
+          <!-- Sentence Highlight Color Legend Key -->
+          <div class="threat-color-legend-card">
+            <div class="legend-header">
+              <span>🎨 Sentence Highlight Meaning</span>
+            </div>
+            <div class="legend-items-list">
+              <div class="legend-item">
+                <span class="legend-color-sample red"></span>
+                <div class="legend-item-desc">
+                  <strong>Crimson / Red:</strong> Direct Threat, Financial Demand, or Malicious Link
+                </div>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color-sample amber"></span>
+                <div class="legend-item-desc">
+                  <strong>Amber / Gold:</strong> Social Engineering Bait (Fake Earnings / Urgency)
+                </div>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color-sample cyan"></span>
+                <div class="legend-item-desc">
+                  <strong>Cyan / Blue:</strong> Impersonated Target Entity (Bank / Gov / Brand)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommended Citizen Cyber Response Shield -->
+          <div class="action-shield-card" id="actionShieldCard">
+            <div class="action-shield-header">
+              <span id="actionShieldIcon">🛡️</span>
+              <span id="actionShieldTitle">Recommended Response</span>
+            </div>
+            <ul class="action-shield-list" id="actionShieldList">
+              <li>🚫 <strong>Do NOT Click or Reply:</strong> Never open suspicious URLs or send OTPs.</li>
+              <li>📞 <strong>Report Incident:</strong> Call <strong>1930</strong> (National Cybercrime Helpline).</li>
+              <li>🛡️ <strong>Block & Mark Spam:</strong> Blacklist sender in your messaging app.</li>
+            </ul>
           </div>
         </div>
 
@@ -294,6 +335,11 @@
           <div class="threat-ingestion-card" id="threatIngestionCard">
             <div class="threat-ingestion-header">
               <span class="threat-ingestion-tag">SMS threat ingestion</span>
+              <div class="threat-mini-legend">
+                <span class="mini-legend-pill red">● Direct Threat / Link</span>
+                <span class="mini-legend-pill amber">● Scam Bait</span>
+                <span class="mini-legend-pill cyan">● Target Entity</span>
+              </div>
             </div>
             <div class="threat-ingestion-body" id="highlightedMessageDisplay">
               Awaiting SMS analysis...

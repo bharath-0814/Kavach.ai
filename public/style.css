@@ -689,6 +689,161 @@ input, textarea {
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-sm);
   font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+/* Left Sidebar Threat Color Legend Key */
+.threat-color-legend-card {
+  width: 100%;
+  background: rgba(10, 11, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: var(--space-4);
+  text-align: left;
+}
+
+.legend-header {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 4px;
+}
+
+.legend-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.legend-color-sample {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.legend-color-sample.red {
+  background: #f43f5e;
+  box-shadow: 0 0 6px rgba(244, 63, 94, 0.6);
+}
+
+.legend-color-sample.amber {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.legend-color-sample.cyan {
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+}
+
+.legend-item-desc {
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  line-height: 1.35;
+  color: var(--text-body);
+}
+
+.legend-item-desc strong {
+  color: var(--text-pure);
+}
+
+/* Recommended Cyber Response Shield */
+.action-shield-card {
+  width: 100%;
+  background: rgba(18, 12, 14, 0.95);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.action-shield-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--rose-threat);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(244, 63, 94, 0.15);
+  padding-bottom: 4px;
+}
+
+.action-shield-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-shield-list li {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--text-body);
+}
+
+.action-shield-list li strong {
+  color: var(--text-pure);
+}
+
+/* Inline Ingestion Header Mini Legend */
+.threat-mini-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mini-legend-pill {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.mini-legend-pill.red {
+  color: #fda4af;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.mini-legend-pill.amber {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.mini-legend-pill.cyan {
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.inline-threat-tag.cyan {
+  background: rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #7dd3fc;
 }
 
 /* Right Diagnostics Box */

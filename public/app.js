@@ -1058,10 +1058,20 @@ document.addEventListener('DOMContentLoaded', () => {
       // Sort by length descending to prevent partial match conflicts
       triggers.sort((a, b) => b.length - a.length);
 
-      triggers.forEach((trig, idx) => {
+      const BRAND_ENTITIES = ['sbi', 'sb1', 'yono', 'hdfc', 'icici', 'axis', 'pnb', 'india post', 'indiapost', 'parivahan', 'mparivahan', 'electricity', 'bijli', 'uppcl', 'bses', 'income tax', 'incometax', 'uidai', 'aadhaar', 'paytm', 'phonepe', 'gpay'];
+
+      triggers.forEach(trig => {
         if (!trig || trig.trim().length === 0) return;
         const escapedTrig = escapeHtml(trig).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const colorClass = (idx % 2 === 0) ? 'red' : 'amber';
+        const lowerTrig = trig.toLowerCase();
+
+        let colorClass = 'amber';
+        if (BRAND_ENTITIES.some(b => lowerTrig.includes(b))) {
+          colorClass = 'cyan';
+        } else if (lowerTrig.includes('block') || lowerTrig.includes('blck') || lowerTrig.includes('cut') || lowerTrig.includes('otp') || lowerTrig.includes('kyc') || lowerTrig.includes('arrest') || lowerTrig.includes('urgent') || lowerTrig.includes('apk') || lowerTrig.includes('http') || lowerTrig.includes('wa.me')) {
+          colorClass = 'red';
+        }
+
         const regex = new RegExp(`(${escapedTrig})`, 'gi');
         highlightedHtml = highlightedHtml.replace(regex, `<span class="inline-threat-tag ${colorClass}">$1</span>`);
       });
@@ -1070,11 +1080,43 @@ document.addEventListener('DOMContentLoaded', () => {
         urlAnalysis.urls.forEach(u => {
           const escapedU = escapeHtml(u).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const regex = new RegExp(`(${escapedU})`, 'gi');
-          highlightedHtml = highlightedHtml.replace(regex, `<span class="inline-threat-tag amber">$1</span>`);
+          highlightedHtml = highlightedHtml.replace(regex, `<span class="inline-threat-tag red">$1</span>`);
         });
       }
 
       highlightedMessageDisplay.innerHTML = highlightedHtml || 'Awaiting SMS analysis...';
+    }
+
+    // Dynamic Cyber Response Shield Action List
+    const actionShieldCard = document.getElementById('actionShieldCard');
+    const actionShieldTitle = document.getElementById('actionShieldTitle');
+    const actionShieldList = document.getElementById('actionShieldList');
+    if (actionShieldCard && actionShieldTitle && actionShieldList) {
+      if (verdict === 'high_risk') {
+        actionShieldCard.style.borderColor = 'rgba(244, 63, 94, 0.4)';
+        actionShieldTitle.style.color = 'var(--rose-threat)';
+        actionShieldTitle.textContent = '🚨 Recommended Defense Protocol';
+        actionShieldList.innerHTML = `
+          <li>🚫 <strong>Do NOT Click or Reply:</strong> Never open links, send OTPs, or install APK files.</li>
+          <li>📞 <strong>Report Incident:</strong> Call <strong>1930</strong> (National Cybercrime Helpline) or visit <strong>cybercrime.gov.in</strong>.</li>
+          <li>🛡️ <strong>Block Sender:</strong> Add sender ID to your telecom spam blacklist immediately.</li>
+        `;
+      } else if (verdict === 'suspicious') {
+        actionShieldCard.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        actionShieldTitle.style.color = 'var(--amber-warn)';
+        actionShieldTitle.textContent = '⚠️ Cautionary Protocol';
+        actionShieldList.innerHTML = `
+          <li>🔍 <strong>Verify Directly:</strong> Contact official bank/department via verified app only.</li>
+          <li>🛡️ <strong>Never Share Credentials:</strong> Refuse any OTP, PIN, or remote app installation requests.</li>
+        `;
+      } else {
+        actionShieldCard.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        actionShieldTitle.style.color = 'var(--emerald-safe)';
+        actionShieldTitle.textContent = '✅ Verified Safe Communication';
+        actionShieldList.innerHTML = `
+          <li>🟢 <strong>No Coercion Detected:</strong> Message contains no malicious URLs, financial coercion, or disguised leetspeak.</li>
+        `;
+      }
     }
 
     if (riskIndexProgress) {

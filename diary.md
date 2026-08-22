@@ -173,16 +173,35 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+### Milestone 16: Sentence Highlight Meaning Key & Left Panel Cyber Defense Action Shield
+- **Objective:** Provide a clear, unmistakable color identification guide explaining highlight colors and intelligently utilize the empty left sidebar space.
+- **Solution:**
+  1. **Visual Highlight Color Legend Card (`.threat-color-legend-card`):**
+     - 🔴 **Crimson / Red:** Direct Threat, Financial Extortion, Account Blockage, or Malicious Link (`wa.me`, `.apk`, `bit.ly`, `block`, `otp`, `kyc`).
+     - 🟡 **Amber / Gold:** Social Engineering Bait (Fake earnings like `Rs 3000-5000`, YouTube task, zero investment lure).
+     - 🔵 **Cyan / Blue:** Targeted / Impersonated Entity (`SBI`, `India Post`, `Electricity / UPPCL`, `Traffic Police`, `HDFC`).
+  2. **Inline Mini Legend Indicator Strip (`.threat-mini-legend`):**
+     - Positioned right above the threat ingestion text frame so users immediately understand every highlight.
+  3. **Intelligent Left Space Utilization — Citizen Cyber Response Shield (`.action-shield-card`):**
+     - Populated the previously empty left column with dynamic, verdict-aware action protocols:
+       - 🛑 **Do NOT Click or Reply:** Disconnect communication immediately.
+       - 📞 **Report Incident:** Dial **1930** (National Cybercrime Helpline) or visit **cybercrime.gov.in**.
+       - 🛡️ **Block & Blacklist:** Blacklist sender ID on mobile device.
+
+---
+
 ## 📊 Live Verification Status
 
-All 15 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 16 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
 ✅ Live Telemetry Stats: 708 Scanned | 671 Neutralized
-✅ Deobfuscation Workbench: Plain-English Sensitivity Controller & Live Explanations Active
+✅ Sentence Color Highlights: Semantic Color Mapper + Visual Legend Active
+✅ Left Sidebar Utilization: Color Key + Citizen Cyber Response Shield Active
+✅ Deobfuscation Workbench: Plain-English Sensitivity Controller Active
 ✅ QR Code & Screenshot Ingestion: Client-Side jsQR + Gemini Vision OCR Active
 ✅ URL Threat Forensics: Google Safe Browsing API v4 + Domain Spoofing Active
 ✅ Mobile Responsiveness: 0 Horizontal Overflow (320px - 1440px)
@@ -192,6 +211,7 @@ All 15 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

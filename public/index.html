@@ -20,7 +20,7 @@
   <!-- jsQR High-Speed Client-Side QR Code Decoder Engine -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260822-2258">
+  <link rel="stylesheet" href="style.css?v=20260822-2300">
 </head>
 <body>
 
@@ -126,19 +126,23 @@
       <!-- Mode Selector Tabs (Single, Batch, Screenshot/QR, URL Scan) -->
       <div class="mode-tab-group" role="tablist">
         <button class="mode-tab-btn active" id="tabSingleMode" data-mode="single" role="tab" aria-selected="true">
-          <span>✉️ Single Message</span>
+          <span class="tab-icon">✉️</span>
+          <span class="tab-label">Single SMS</span>
         </button>
         <button class="mode-tab-btn" id="tabBatchMode" data-mode="batch" role="tab" aria-selected="false">
-          <span>📑 Batch Check (Multi-SMS)</span>
-          <span class="mode-pill-tag">Round 2</span>
+          <span class="tab-icon">📑</span>
+          <span class="tab-label">Batch Scan</span>
+          <span class="mode-pill-tag">R2</span>
         </button>
         <button class="mode-tab-btn" id="tabImageMode" data-mode="image" role="tab" aria-selected="false">
-          <span>📷 Screenshot & QR Code</span>
-          <span class="mode-pill-tag" style="background: rgba(56, 189, 248, 0.2); color: var(--cyan-accent); border-color: rgba(56, 189, 248, 0.4);">New</span>
+          <span class="tab-icon">📷</span>
+          <span class="tab-label">QR / Photo</span>
+          <span class="mode-pill-tag new">New</span>
         </button>
         <button class="mode-tab-btn" id="tabUrlMode" data-mode="url" role="tab" aria-selected="false">
-          <span>🌐 URL Threat Checker</span>
-          <span class="mode-pill-tag" style="background: rgba(244, 63, 94, 0.2); color: var(--rose-threat); border-color: rgba(244, 63, 94, 0.4);">Google DB</span>
+          <span class="tab-icon">🌐</span>
+          <span class="tab-label">URL Forensics</span>
+          <span class="mode-pill-tag db">Safe DB</span>
         </button>
       </div>
 
@@ -653,6 +657,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260822-2258"></script>
+  <script src="app.js?v=20260822-2300"></script>
 </body>
 </html>

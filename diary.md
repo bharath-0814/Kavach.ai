@@ -234,15 +234,32 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+---
+
+### Milestone 20: Mobile 2x2 App Grid for Mode Selectors (100% Visibility, No Overflow)
+- **Problem:** On mobile portrait screens, the 4 mode selector tabs (`Single Message`, `Batch Check`, `Screenshot & QR`, `URL Threat Checker`) were forced into a single horizontal row, clipping the 3rd tab and pushing the 4th tab completely off-screen.
+- **Solution:**
+  1. **2x2 Mobile App Grid Layout (`.mode-tab-group`):**
+     - On mobile screens ($\le 768px$), converted the tab bar into a **clean 2x2 grid** (`grid-template-columns: 1fr 1fr; gap: 8px;`).
+     - **Row 1:** `[ ✉️ Single SMS ]` | `[ 📑 Batch Scan R2 ]`
+     - **Row 2:** `[ 📷 QR / Photo New ]` | `[ 🌐 URL Forensics Safe DB ]`
+  2. **100% Visibility & Equal 50% Touch Targets:**
+     - All 4 tabs are fully visible, beautifully ordered, have 44px min-height touch ergonomic targets, and zero horizontal clipping.
+  3. **Textarea Footer Mobile Polish:**
+     - Set `.textarea-footer-strip` to a column layout on mobile to prevent character counter and engine badge overlap.
+
+---
+
 ## 📊 Live Verification Status
 
-All 19 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 20 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
 ✅ Live Telemetry Stats: 714 Scanned | 676 Neutralized
+✅ Mobile 2x2 App Grid: All 4 Mode Tabs 100% Visible & Ordered on Portrait
 ✅ Service Worker Strategy: Network-First for JS/CSS (No Refresh Needed)
 ✅ Image Clear Input: Unconditional !important Display Reset + Source Removal
 ✅ Similar Scams Intelligence: Rich Cyber Cards + Trigger Chips + Load & Test Active
@@ -260,6 +277,7 @@ All 19 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

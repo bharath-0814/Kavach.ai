@@ -664,6 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Preset chips (Single mode)
   presetChips.forEach(chip => {
     chip.addEventListener('click', () => {
+      triggerHaptic('light');
       const msg = chip.getAttribute('data-msg');
       if (msg) {
         smsInput.value = msg;
@@ -724,6 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Scan Button Click (Single / Batch Router)
   scanBtn.addEventListener('click', () => {
+    triggerHaptic('medium');
     const text = smsInput.value.trim();
     if (!text) {
       openEmptyModal();
@@ -788,6 +790,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Tactile Verdict Haptic Pulse
+    triggerHaptic(verdict === 'high_risk' ? 'threat' : (verdict === 'suspicious' ? 'medium' : 'safe'));
 
     // Trigger 3D WebGL Hologram Pulse Shockwave
     if (typeof pulse3dShield === 'function') {
@@ -1102,16 +1107,71 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Fetch Live DB Stats
+  // High-Refresh-Rate Tactile Feedback Engine (Haptics & Micro-Interactions)
+  function triggerHaptic(type = 'light') {
+    if (!('vibrate' in navigator)) return;
+    try {
+      if (type === 'light') {
+        navigator.vibrate(8); // Subtle 8ms micro-click
+      } else if (type === 'medium') {
+        navigator.vibrate(18); // Solid 18ms action feedback
+      } else if (type === 'threat') {
+        navigator.vibrate([25, 35, 20]); // High-priority pulse for threats
+      } else if (type === 'safe') {
+        navigator.vibrate(12);
+      }
+    } catch (e) {
+      // Ignore vibration errors if blocked by OS policy
+    }
+  }
+
+  // 120Hz/144Hz Display Interpolator (Apple / Linear Ease Curve)
+  function animateNumberTicker(el, start, end, duration = 1000, suffix = '') {
+    if (!el) return;
+    const startVal = parseInt(String(start).replace(/[^0-9]/g, '')) || 0;
+    const endVal = parseInt(String(end).replace(/[^0-9]/g, '')) || 0;
+    if (isNaN(endVal) || startVal === endVal) {
+      el.textContent = end + suffix;
+      return;
+    }
+    const startTime = performance.now();
+    const diff = endVal - startVal;
+
+    function frame(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Apple cubic-out easing curve: 1 - pow(1 - progress, 3.5)
+      const ease = 1 - Math.pow(1 - progress, 3.5);
+      const current = Math.round(startVal + diff * ease);
+      el.textContent = current.toLocaleString() + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        el.textContent = endVal.toLocaleString() + suffix;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Fetch Live DB Stats with 120Hz/144Hz Ticker Animation
   async function fetchStats() {
     try {
       const res = await fetch('/api/stats');
       if (!res.ok) return;
       const json = await res.json();
       if (json?.stats) {
-        if (statTotalScanned) statTotalScanned.textContent = json.stats.total_scanned;
-        if (statScamsBlocked) statScamsBlocked.textContent = json.stats.scams_blocked;
-        if (statThreatWords) statThreatWords.textContent = json.stats.total_threat_words ? `${json.stats.total_threat_words}+` : '200+';
+        if (statTotalScanned) {
+          const currentText = statTotalScanned.textContent;
+          animateNumberTicker(statTotalScanned, currentText === '--' ? 0 : currentText, json.stats.total_scanned);
+        }
+        if (statScamsBlocked) {
+          const currentText = statScamsBlocked.textContent;
+          animateNumberTicker(statScamsBlocked, currentText === '--' ? 0 : currentText, json.stats.scams_blocked);
+        }
+        if (statThreatWords) {
+          statThreatWords.textContent = json.stats.total_threat_words ? `${json.stats.total_threat_words}+` : '600+';
+        }
       }
     } catch (e) {
       console.warn('Stats fetch error:', e);

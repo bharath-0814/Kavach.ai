@@ -62,12 +62,15 @@
   --shadow-card: 0 16px 36px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-/* Reset & Ergonomics */
+/* Reset & High-Refresh Ergonomics (60Hz / 120Hz / 144Hz Optimization) */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html {
@@ -75,6 +78,7 @@ html {
   scroll-behavior: smooth;
   background: var(--bg-deep);
   color-scheme: dark;
+  overscroll-behavior: none;
 }
 
 body {
@@ -90,6 +94,46 @@ body {
   padding-bottom: max(var(--space-8), env(safe-area-inset-bottom));
   padding-left: max(var(--space-4), env(safe-area-inset-left));
   padding-right: max(var(--space-4), env(safe-area-inset-right));
+}
+
+/* Zero Touch Delay & Tactile Software Polish (Linear / Apple style) */
+button, a, [role="button"], .preset-tag, .filter-btn-item, .mode-tab-btn, .editorial-btn, .btn-analyze-gold {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              background-color 0.16s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.16s ease, 
+              color 0.16s ease;
+  will-change: transform;
+}
+
+button:active, 
+.editorial-btn:active, 
+.btn-analyze-gold:active, 
+.preset-tag:active, 
+.filter-btn-item:active, 
+.mode-tab-btn:active {
+  transform: scale(0.955) translateY(1px);
+  transition: transform 0.05s cubic-bezier(0.2, 0.9, 0.4, 1) !important;
+}
+
+input, textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  transform: translateZ(0);
+}
+
+/* Momentum Touch Scrolling with Zero Jitter */
+.editorial-table-container,
+.nav-links-group,
+.preset-chip-list,
+.filter-pill-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* Interactive 3D WebGL Canvas Layer (Three.js 3D Space) */

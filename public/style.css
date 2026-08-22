@@ -92,8 +92,8 @@ body {
   padding-right: max(var(--space-4), env(safe-area-inset-right));
 }
 
-/* Interactive Particle Canvas Layer */
-#bgCanvas {
+/* Interactive 3D WebGL Canvas Layer (Three.js 3D Space) */
+#webglCanvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -101,7 +101,7 @@ body {
   height: 100vh;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.55;
+  opacity: 0.95;
 }
 
 /* Master Container */

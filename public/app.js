@@ -1,92 +1,260 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Interactive 3D Particle Constellation Background Canvas
-  const canvas = document.getElementById('bgCanvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-    const particles = [];
-    const particleCount = Math.min(width > 768 ? 55 : 25, 60);
+  // =========================================================================
+  // DRIBBBLE-GRADE 3D WEBGL CYBER SHIELD ENGINE (THREE.JS)
+  // =========================================================================
+  let pulse3dShield = null;
+  const webglCanvas = document.getElementById('webglCanvas');
 
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: (Math.random() - 0.5) * width * 1.5,
-        y: (Math.random() - 0.5) * height * 1.5,
-        z: Math.random() * 1000 + 100,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        size: Math.random() * 1.8 + 0.8
+  if (typeof THREE !== 'undefined' && webglCanvas) {
+    try {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0, 16);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas: webglCanvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
       });
-    }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-    let scrollVel = 0;
-    let lastScrollY = window.scrollY;
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0x0a0f1d, 2.0);
+      scene.add(ambientLight);
 
-    window.addEventListener('scroll', () => {
-      const currentScrollY = window.scrollY;
-      scrollVel = (currentScrollY - lastScrollY) * 0.15;
-      lastScrollY = currentScrollY;
-    }, { passive: true });
+      const goldPointLight = new THREE.PointLight(0xd4af37, 3.5, 35);
+      goldPointLight.position.set(5, 5, 8);
+      scene.add(goldPointLight);
 
-    function renderParticles() {
-      ctx.clearRect(0, 0, width, height);
-      scrollVel *= 0.92; // Damping
+      const cyanPointLight = new THREE.PointLight(0x38bdf8, 3.0, 35);
+      cyanPointLight.position.set(-5, -5, 8);
+      scene.add(cyanPointLight);
 
-      const fov = 400;
-      const cx = width / 2;
-      const cy = height / 2;
-      const projected = [];
+      const threatPulseLight = new THREE.PointLight(0xf43f5e, 0, 30);
+      threatPulseLight.position.set(0, 0, 5);
+      scene.add(threatPulseLight);
 
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy - (scrollVel * 0.4);
-        p.z -= scrollVel * 1.2;
+      // Central Holographic Shield Group
+      const shieldGroup = new THREE.Group();
+      scene.add(shieldGroup);
 
-        if (p.z <= 50) p.z = 1100;
-        if (p.z > 1100) p.z = 50;
+      // 1. Outer Hologram Geodesic Shield (Gold Wireframe)
+      const outerGeo = new THREE.IcosahedronGeometry(2.8, 1);
+      const outerMat = new THREE.MeshStandardMaterial({
+        color: 0xd4af37,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.45,
+        roughness: 0.1,
+        metalness: 0.95
+      });
+      const outerMesh = new THREE.Mesh(outerGeo, outerMat);
+      shieldGroup.add(outerMesh);
 
-        const scale = fov / (fov + p.z);
-        const px = cx + p.x * scale;
-        const py = cy + p.y * scale;
+      // 2. Inner Faceted Dark Obsidian Core
+      const innerGeo = new THREE.OctahedronGeometry(1.6, 0);
+      const innerMat = new THREE.MeshPhysicalMaterial({
+        color: 0x070913,
+        emissive: 0x1e1b4b,
+        emissiveIntensity: 0.6,
+        roughness: 0.15,
+        metalness: 0.9,
+        flatShading: true,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.1
+      });
+      const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+      shieldGroup.add(innerMesh);
 
-        if (px < -50 || px > width + 50 || py < -50 || py > height + 50) {
-          p.x = (Math.random() - 0.5) * width * 1.5;
-          p.y = (Math.random() - 0.5) * height * 1.5;
-        }
+      // 3. Glowing Cyan Node Center
+      const coreGeo = new THREE.SphereGeometry(0.65, 24, 24);
+      const coreMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      shieldGroup.add(coreMesh);
 
-        projected.push({ x: px, y: py, scale, size: p.size * scale });
+      // 4. Orbiting Gyro Defense Rings
+      const ring1Geo = new THREE.TorusGeometry(3.6, 0.022, 16, 100);
+      const ring1Mat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.1 });
+      const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+      ring1.rotation.x = Math.PI / 3;
+      shieldGroup.add(ring1);
+
+      const ring2Geo = new THREE.TorusGeometry(3.1, 0.018, 16, 100);
+      const ring2Mat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.9, roughness: 0.1 });
+      const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+      ring2.rotation.y = Math.PI / 4;
+      shieldGroup.add(ring2);
+
+      const ring3Geo = new THREE.TorusGeometry(2.4, 0.015, 16, 100);
+      const ring3Mat = new THREE.MeshStandardMaterial({ color: 0xc084fc, metalness: 0.9, roughness: 0.1 });
+      const ring3 = new THREE.Mesh(ring3Geo, ring3Mat);
+      ring3.rotation.z = Math.PI / 6;
+      shieldGroup.add(ring3);
+
+      // 5. 3D Floating Particle Cloud
+      const particleCount = 700;
+      const particleGeo = new THREE.BufferGeometry();
+      const particlePos = new Float32Array(particleCount * 3);
+      const particleColors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        particlePos[i * 3] = (Math.random() - 0.5) * 50;
+        particlePos[i * 3 + 1] = (Math.random() - 0.5) * 50;
+        particlePos[i * 3 + 2] = (Math.random() - 0.5) * 30;
+
+        const isGold = Math.random() > 0.4;
+        particleColors[i * 3] = isGold ? 0.83 : 0.22;
+        particleColors[i * 3 + 1] = isGold ? 0.68 : 0.74;
+        particleColors[i * 3 + 2] = isGold ? 0.21 : 0.97;
       }
 
-      ctx.fillStyle = 'rgba(212, 175, 55, 0.45)';
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.06)';
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+      particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
-      for (let i = 0; i < projected.length; i++) {
-        const p = projected[i];
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.6, p.size), 0, Math.PI * 2);
-        ctx.fill();
+      const particleMat = new THREE.PointsMaterial({
+        size: 0.09,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
+      });
+      const particlePoints = new THREE.Points(particleGeo, particleMat);
+      scene.add(particlePoints);
 
-        for (let j = i + 1; j < projected.length; j++) {
-          const p2 = projected[j];
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
+      // Mouse Parallax & Inertia
+      let mouseX = 0;
+      let mouseY = 0;
+      let targetRotX = 0;
+      let targetRotY = 0;
+      let scrollFraction = 0;
+      let pulseIntensity = 0;
+
+      window.addEventListener('mousemove', e => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        targetRotY = mouseX * 0.4;
+        targetRotX = mouseY * 0.4;
+
+        goldPointLight.position.x = mouseX * 8 + 5;
+        goldPointLight.position.y = -mouseY * 8 + 5;
+      });
+
+      window.addEventListener('scroll', () => {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        scrollFraction = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      }, { passive: true });
+
+      // Pulse function for live scans
+      pulse3dShield = function(verdict) {
+        pulseIntensity = 1.0;
+        if (verdict === 'high_risk') {
+          threatPulseLight.color.setHex(0xf43f5e);
+          coreMat.color.setHex(0xf43f5e);
+          innerMat.emissive.setHex(0x881337);
+        } else if (verdict === 'suspicious') {
+          threatPulseLight.color.setHex(0xf59e0b);
+          coreMat.color.setHex(0xf59e0b);
+          innerMat.emissive.setHex(0x78350f);
+        } else {
+          threatPulseLight.color.setHex(0x10b981);
+          coreMat.color.setHex(0x10b981);
+          innerMat.emissive.setHex(0x064e3b);
         }
+      };
+
+      // Animation Loop
+      let clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        // 3D Model Choreography across Scroll Stages
+        let targetX, targetY, targetZ, targetScale;
+
+        if (scrollFraction < 0.2) {
+          // Hero Section: Majestic Center-Right
+          const t = scrollFraction / 0.2;
+          targetX = 3.6 + t * 0.8;
+          targetY = 0.5 - t * 0.8;
+          targetZ = 0 - t * 1.5;
+          targetScale = 1.05;
+        } else if (scrollFraction < 0.5) {
+          // Terminal Section: Floating beside input
+          const t = (scrollFraction - 0.2) / 0.3;
+          targetX = 4.4 - t * 7.5; // Glides to left
+          targetY = -0.3 + t * 0.6;
+          targetZ = -1.5 + t * 0.5;
+          targetScale = 0.95 + t * 0.15;
+        } else if (scrollFraction < 0.8) {
+          // Deobfuscator & Feed Section: Orbiting
+          const t = (scrollFraction - 0.5) / 0.3;
+          targetX = -3.1 + t * 6.5;
+          targetY = 0.3 - t * 0.8;
+          targetZ = -1.0 - t * 1.5;
+          targetScale = 1.1 - t * 0.2;
+        } else {
+          // Architecture & Footer: Centered deep space
+          const t = (scrollFraction - 0.8) / 0.2;
+          targetX = 3.4 - t * 3.4;
+          targetY = -0.5 - t * 1.5;
+          targetZ = -2.5 - t * 2.0;
+          targetScale = 0.9 + t * 0.3;
+        }
+
+        // Smooth Lerp Transitions
+        shieldGroup.position.x += (targetX - shieldGroup.position.x) * 0.06;
+        shieldGroup.position.y += (targetY - shieldGroup.position.y) * 0.06;
+        shieldGroup.position.z += (targetZ - shieldGroup.position.z) * 0.06;
+
+        const currentScale = targetScale * (1 + pulseIntensity * 0.3);
+        shieldGroup.scale.set(currentScale, currentScale, currentScale);
+
+        // Rotations
+        const spinSpeed = 1 + pulseIntensity * 3.5;
+        outerMesh.rotation.y += 0.005 * spinSpeed;
+        outerMesh.rotation.x += 0.003 * spinSpeed;
+
+        innerMesh.rotation.y -= 0.008 * spinSpeed;
+        innerMesh.rotation.z += 0.004 * spinSpeed;
+
+        ring1.rotation.z += 0.012 * spinSpeed;
+        ring2.rotation.x += 0.015 * spinSpeed;
+        ring3.rotation.y += 0.01 * spinSpeed;
+
+        // Mouse Parallax
+        shieldGroup.rotation.y += (targetRotY - shieldGroup.rotation.y) * 0.05;
+        shieldGroup.rotation.x += (targetRotX - shieldGroup.rotation.x) * 0.05;
+
+        // Particle field drift
+        particlePoints.rotation.y = elapsedTime * 0.02;
+        particlePoints.rotation.x = elapsedTime * 0.01;
+
+        // Decay pulse
+        if (pulseIntensity > 0.01) {
+          pulseIntensity *= 0.94;
+          threatPulseLight.intensity = pulseIntensity * 4.0;
+        } else {
+          pulseIntensity = 0;
+          threatPulseLight.intensity = 0;
+        }
+
+        renderer.render(scene, camera);
       }
 
-      requestAnimationFrame(renderParticles);
-    }
-    renderParticles();
+      animate();
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+    } catch (err) {
+      console.warn('[Three.js 3D] Failed to init WebGL:', err);
+    }
   }
 
   // Elements
@@ -314,6 +482,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Trigger 3D WebGL Hologram Pulse Shockwave
+    if (typeof pulse3dShield === 'function') {
+      pulse3dShield(verdict);
+    }
 
     riskScoreNumber.textContent = `${percentage}%`;
 

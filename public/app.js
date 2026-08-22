@@ -552,12 +552,24 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchRecentFlags();
   fetchStats();
 
-  // PWA Service Worker Registration
+  // PWA Service Worker Registration with Auto-Bumping
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('PWA Service Worker registered:', reg.scope))
-        .catch(err => console.warn('Service Worker registration failed:', err));
+        .then(reg => {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+          reg.update();
+        })
+        .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          console.log('[PWA] New version detected, auto-reloading UI...');
+          window.location.reload();
+        }
+      });
     });
   }
 

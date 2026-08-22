@@ -820,15 +820,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Unified Reset Function for Text, Batch, Image, and OCR states
+  function clearAllInputs() {
+    triggerHaptic('light');
+    if (smsInput) smsInput.value = '';
+    updateInputCount();
+    if (imagePreviewStrip) imagePreviewStrip.style.display = 'none';
+    if (imageFileInput) imageFileInput.value = '';
+    if (imagePreviewThumbnail) {
+      imagePreviewThumbnail.src = '';
+      imagePreviewThumbnail.removeAttribute('src');
+    }
+    if (imageOcrStatus) imageOcrStatus.textContent = '';
+    if (imagePreviewName) imagePreviewName.textContent = '';
+    if (resultsSection) resultsSection.style.display = 'none';
+    if (batchResultsSection) batchResultsSection.style.display = 'none';
+    if (smsInput) smsInput.focus();
+  }
+
   if (clearImageBtn) {
     clearImageBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (imagePreviewStrip) imagePreviewStrip.style.display = 'none';
-      if (imageFileInput) imageFileInput.value = '';
-      if (imagePreviewThumbnail) imagePreviewThumbnail.src = '';
-      if (imageOcrStatus) imageOcrStatus.textContent = '';
-      smsInput.value = '';
-      updateInputCount();
+      clearAllInputs();
     });
   }
 
@@ -865,13 +878,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateInputCount();
   });
 
-  // Clear button
+  // Clear button (Removes text, pasted images, and diagnostics)
   clearBtn.addEventListener('click', () => {
-    smsInput.value = '';
-    updateInputCount();
-    resultsSection.style.display = 'none';
-    if (batchResultsSection) batchResultsSection.style.display = 'none';
-    smsInput.focus();
+    clearAllInputs();
   });
 
   // Preset chips (Single mode)

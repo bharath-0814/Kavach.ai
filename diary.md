@@ -190,15 +190,33 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+### Milestone 17: Fixed Clear Input Image State Reset & Strict Preview Dimension Containment
+- **Problem:** Tapping "Clear Input" cleared textarea text but left pasted image files and thumbnail strips displayed. Additionally, full-resolution 4K phone screenshots expanded beyond container bounds.
+- **Solution:**
+  1. **Unified `clearAllInputs()` Reset Handler:**
+     - Clears `smsInput.value = ''`.
+     - Hides `#imagePreviewStrip` (`display: none`).
+     - Resets `#imageFileInput.value = ''`.
+     - Completely removes image source: `#imagePreviewThumbnail.removeAttribute('src')` and `src = ''`.
+     - Clears `#imageOcrStatus` and `#imagePreviewName`.
+     - Hides diagnostics results and refocuses input.
+  2. **Strict Global Image Containment & Dropzone Thumbnail Bounds:**
+     - Added global reset rule: `img { max-width: 100%; height: auto; display: block; }`.
+     - Constrained `#imagePreviewThumbnail` and `.dropzone-thumb` to exact bounds (`60px x 60px`, `object-fit: cover`, `border-radius: 6px`).
+
+---
+
 ## 📊 Live Verification Status
 
-All 16 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 17 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
 ✅ Live Telemetry Stats: 708 Scanned | 671 Neutralized
+✅ Clear Input Reset: Unified Text, Image, File & OCR State Wiper Active
+✅ Image Dimension Bounds: Strict 60x60px Thumbnail Containment Active
 ✅ Sentence Color Highlights: Semantic Color Mapper + Visual Legend Active
 ✅ Left Sidebar Utilization: Color Key + Citizen Cyber Response Shield Active
 ✅ Deobfuscation Workbench: Plain-English Sensitivity Controller Active
@@ -211,6 +229,7 @@ All 16 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

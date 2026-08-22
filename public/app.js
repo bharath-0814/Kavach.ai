@@ -532,37 +532,52 @@ document.addEventListener('DOMContentLoaded', () => {
     diffNormalizedVal.innerHTML = `<span class="diff-char-clean">${escapeHtml(bestMatch.toUpperCase())}</span>`;
 
     if (thresholdReadout) {
-      thresholdReadout.textContent = `d = ${minDist}`;
+      thresholdReadout.textContent = `d = ${minDist} edit${minDist !== 1 ? 's' : ''} (closest: "${bestMatch.toUpperCase()}")`;
     }
 
     if (thresholdStatusBadge) {
       if (minDist <= thresh) {
         thresholdStatusBadge.className = 'threshold-status-badge flagged';
-        thresholdStatusBadge.textContent = 'flagged';
+        thresholdStatusBadge.textContent = '🚨 Flagged as Scam Keyword';
       } else {
         thresholdStatusBadge.className = 'threshold-status-badge clean';
-        thresholdStatusBadge.textContent = 'clean';
+        thresholdStatusBadge.textContent = '🟢 Clean (Within Tolerance)';
+      }
+    }
+
+    const deobfExplanationText = document.getElementById('deobfExplanationText');
+    if (deobfExplanationText) {
+      if (minDist <= thresh) {
+        deobfExplanationText.innerHTML = `<strong>How it works:</strong> Disguised word <code>'${escapeHtml(cleanRaw)}'</code> requires <strong>${minDist} letter edit${minDist !== 1 ? 's' : ''}</strong> to match threat keyword <strong>"${escapeHtml(bestMatch.toUpperCase())}"</strong> (≤ sensitivity threshold ${thresh}). Kavach normalizes and flags it as smishing.`;
+      } else {
+        deobfExplanationText.innerHTML = `<strong>How it works:</strong> Disguised word <code>'${escapeHtml(cleanRaw)}'</code> is <strong>${minDist} edits away</strong> from closest keyword "${escapeHtml(bestMatch.toUpperCase())}" which exceeds threshold (${thresh}), so it is marked clean.`;
       }
     }
   }
 
+  let currentDeobfThreshold = 2;
+  const sensitivityPills = document.querySelectorAll('.sensitivity-btn');
+
+  sensitivityPills.forEach(btn => {
+    btn.addEventListener('click', () => {
+      triggerHaptic('light');
+      sensitivityPills.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDeobfThreshold = parseInt(btn.getAttribute('data-thresh'), 10) || 2;
+      renderDiffWorkbench(sandboxInput ? sandboxInput.value : '0TPP', currentDeobfThreshold);
+    });
+  });
+
   if (sandboxInput) {
     sandboxInput.addEventListener('input', () => {
-      const thresh = thresholdSlider ? thresholdSlider.value : 2;
-      renderDiffWorkbench(sandboxInput.value, thresh);
+      renderDiffWorkbench(sandboxInput.value, currentDeobfThreshold);
     });
   }
 
   if (testWordBtn) {
     testWordBtn.addEventListener('click', () => {
-      const thresh = thresholdSlider ? thresholdSlider.value : 2;
-      renderDiffWorkbench(sandboxInput.value, thresh);
-    });
-  }
-
-  if (thresholdSlider) {
-    thresholdSlider.addEventListener('input', () => {
-      renderDiffWorkbench(sandboxInput.value, thresholdSlider.value);
+      triggerHaptic('light');
+      renderDiffWorkbench(sandboxInput.value, currentDeobfThreshold);
     });
   }
 

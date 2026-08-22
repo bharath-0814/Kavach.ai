@@ -403,14 +403,38 @@
           </div>
         </div>
 
-        <!-- Match Threshold Interactive Slider (Image 2) -->
-        <div class="deobf-threshold-strip">
-          <span class="threshold-label">Match threshold</span>
-          <div class="threshold-slider-wrap">
-            <input type="range" id="thresholdSlider" min="0" max="4" value="2" step="1" class="cyber-slider">
+        <!-- Upgraded Explanatory Sensitivity & Edit Distance Controller -->
+        <div class="deobf-sensitivity-panel">
+          <div class="sensitivity-header-row">
+            <div class="sensitivity-title-block">
+              <span class="sensitivity-title">🛡️ Fuzzy Matching Sensitivity (Levenshtein Edit Distance)</span>
+              <span class="sensitivity-sub">Controls how many letter mutations or typos scammers can disguise before detection</span>
+            </div>
+            <div class="sensitivity-presets-pills" id="sensitivityPills" role="group" aria-label="Sensitivity Presets">
+              <button type="button" class="sensitivity-btn" data-thresh="1" title="Catches simple 1-char swaps (0TP -> OTP)">Strict (d=1)</button>
+              <button type="button" class="sensitivity-btn active" data-thresh="2" title="Recommended: Catches leetspeak (cr3d!t -> CREDIT)">Balanced (d=2) ★</button>
+              <button type="button" class="sensitivity-btn" data-thresh="3" title="Catches heavy phonetic obfuscation">Aggressive (d=3)</button>
+            </div>
           </div>
-          <span class="threshold-readout" id="thresholdReadout">d = 1</span>
-          <span class="threshold-status-badge flagged" id="thresholdStatusBadge">flagged</span>
+
+          <div class="sensitivity-metric-bar">
+            <div class="metric-bar-item">
+              <span class="metric-bar-label">Calculated Word Distance:</span>
+              <span class="metric-bar-value" id="thresholdReadout">d = 1 edit</span>
+            </div>
+            <div class="metric-bar-item">
+              <span class="metric-bar-label">Threat Decision:</span>
+              <span class="threshold-status-badge flagged" id="thresholdStatusBadge">🚨 Flagged as Scam Keyword</span>
+            </div>
+          </div>
+
+          <!-- Plain English Explanatory Guidance -->
+          <div class="deobf-explanation-box">
+            <span class="deobf-info-icon">💡</span>
+            <span id="deobfExplanationText" class="deobf-explanation-text">
+              <strong>How it works:</strong> Scammers disguise words to evade basic filters (e.g. <code>'0'</code> for <code>'O'</code> in <code>'0TPP'</code>). Levenshtein Distance calculates the exact number of character edits between the disguised word and our 600+ threat dictionary. With distance <strong>1</strong> (≤ threshold 2), Kavach unmasks it as <strong>"OTP"</strong>.
+            </span>
+          </div>
         </div>
       </div>
     </section>

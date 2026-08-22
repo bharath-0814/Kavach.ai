@@ -159,15 +159,30 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+### Milestone 15: Upgraded Explanatory Fuzzy Deobfuscation Sensitivity Controller
+- **Objective:** Replace the cryptic and confusing `Match threshold [───o───] d = 1 [ flagged ]` slider bar with a crystal-clear, understandable, and self-explanatory Sensitivity & Forensic Diagnostics Controller.
+- **Solution:**
+  1. **Replaced Raw Math Slider with Interactive Sensitivity Presets:**
+     - `Strict (d = 1)`: Catches simple character swaps (e.g. `0TP` $\to$ `OTP`, `BLCK` $\to$ `BLOCK`).
+     - `Balanced (d = 2 ★ — Recommended)`: Catches full leetspeak obfuscation (e.g. `cr3d!t` $\to$ `CREDIT`, `k-y-c` $\to$ `KYC`).
+     - `Aggressive (d = 3)`: Catches heavy phonetic mutations in vernacular smishing.
+  2. **Plain-English Explanatory Guidance Box (`.deobf-explanation-box`):**
+     - Dynamically explains in real time: *"Scammers disguise words to evade basic filters (e.g. '0' for 'O' in '0TPP'). Levenshtein Distance calculates the exact number of character edits between the disguised word and our 600+ threat dictionary. Distance of 1 (≤ threshold 2) unmasks it as 'OTP'."*
+  3. **High-Contrast Diagnostic Status Badges:**
+     - Displays `d = 1 edit (closest: "OTP")` alongside distinct `[ 🚨 Flagged as Scam Keyword ]` and `[ 🟢 Clean (Within Tolerance) ]` badges.
+
+---
+
 ## 📊 Live Verification Status
 
-All 14 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 15 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
-✅ Live Telemetry Stats: 706 Scanned | 669 Neutralized
+✅ Live Telemetry Stats: 708 Scanned | 671 Neutralized
+✅ Deobfuscation Workbench: Plain-English Sensitivity Controller & Live Explanations Active
 ✅ QR Code & Screenshot Ingestion: Client-Side jsQR + Gemini Vision OCR Active
 ✅ URL Threat Forensics: Google Safe Browsing API v4 + Domain Spoofing Active
 ✅ Mobile Responsiveness: 0 Horizontal Overflow (320px - 1440px)
@@ -177,5 +192,6 @@ All 14 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 

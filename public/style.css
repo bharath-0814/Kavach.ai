@@ -322,23 +322,37 @@ body {
   margin-bottom: var(--space-8);
 }
 
-/* Metric Strip (Strict 5-Column Grid with Mathematical Padding) */
+/* Metric Strip (Pixel-Perfect Unified Luxury Cards with Mathematical Alignment) */
 .metric-strip {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.08);
-  border: var(--border-hairline);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .metric-cell {
-  background: var(--bg-deep);
-  padding: var(--space-4) var(--space-5);
+  background: linear-gradient(180deg, rgba(16, 17, 24, 0.95) 0%, rgba(10, 11, 17, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid var(--gold-primary);
+  border-radius: 6px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.metric-cell:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  border-top-color: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 16px rgba(212, 175, 55, 0.1);
 }
 
 .metric-number {
@@ -2036,5 +2050,107 @@ body:not(.mode-3d) .spatial-status {
   padding: var(--space-3) var(--space-5);
   background: rgba(0, 0, 0, 0.3);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ==========================================================================
+   SERVICE WORKER "TAP TO UPDATE" TOAST NOTIFICATION
+   ========================================================================== */
+.sw-update-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 92vw;
+  width: auto;
+}
+
+.sw-update-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sw-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(13, 14, 20, 0.96);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(212, 175, 55, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 9999px;
+  padding: 8px 14px 8px 16px;
+}
+
+.sw-toast-icon {
+  font-size: 1.15rem;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+}
+
+.sw-toast-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sw-toast-title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.sw-toast-sub {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.sw-reload-btn {
+  background: var(--gold-primary);
+  color: #08090d;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sw-reload-btn:hover {
+  background: var(--gold-light);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.55);
+  transform: scale(1.04);
+}
+
+.sw-dismiss-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.sw-dismiss-btn:hover {
+  color: var(--text-pure);
 }
 

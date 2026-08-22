@@ -1,5 +1,5 @@
 // Kavach AI — Production Service Worker with Automatic Cache Bumping
-const BUILD_TIMESTAMP = '2026-08-22T21:15:00Z';
+const BUILD_TIMESTAMP = '2026-08-22T21:20:00Z';
 const CACHE_NAME = `kavach-cache-${BUILD_TIMESTAMP}`;
 
 const STATIC_ASSETS = [
@@ -80,4 +80,11 @@ self.addEventListener('fetch', event => {
       return cachedResponse || fetchPromise;
     })
   );
+});
+
+// Listen for SKIP_WAITING message from UI "Tap to Update" notification
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

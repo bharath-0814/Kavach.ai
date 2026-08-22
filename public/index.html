@@ -520,6 +520,20 @@
         </button>
       </div>
     </div>
+  <!-- Service Worker Update Toast Notification (Image / Tap to Update) -->
+  <div id="swUpdateToast" class="sw-update-toast" style="display: none;" role="alert" aria-live="polite">
+    <div class="sw-toast-content">
+      <span class="sw-toast-icon">⚡</span>
+      <div class="sw-toast-text">
+        <span class="sw-toast-title">Defense Update Available</span>
+        <span class="sw-toast-sub">Tap to reload with latest cyber intelligence</span>
+      </div>
+      <button id="swReloadBtn" class="sw-reload-btn">
+        <span>Update</span>
+        <span>🔄</span>
+      </button>
+      <button id="swDismissBtn" class="sw-dismiss-btn" aria-label="Dismiss">✕</button>
+    </div>
   </div>
 
   <script src="app.js"></script>

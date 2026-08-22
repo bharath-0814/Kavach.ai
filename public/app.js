@@ -1275,13 +1275,52 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchRecentFlags();
   fetchStats();
 
-  // PWA Service Worker Registration with Auto-Bumping
+  // Service Worker Registration with "Tap to Update" Notification
+  const swUpdateToast = document.getElementById('swUpdateToast');
+  const swReloadBtn = document.getElementById('swReloadBtn');
+  const swDismissBtn = document.getElementById('swDismissBtn');
+
+  function showSwUpdateToast(worker) {
+    if (!swUpdateToast) return;
+    swUpdateToast.style.display = 'block';
+    requestAnimationFrame(() => swUpdateToast.classList.add('show'));
+
+    if (swReloadBtn) {
+      swReloadBtn.onclick = () => {
+        if (worker) {
+          worker.postMessage({ type: 'SKIP_WAITING' });
+        }
+        window.location.reload();
+      };
+    }
+  }
+
+  if (swDismissBtn) {
+    swDismissBtn.addEventListener('click', () => {
+      if (swUpdateToast) {
+        swUpdateToast.classList.remove('show');
+        setTimeout(() => { swUpdateToast.style.display = 'none'; }, 300);
+      }
+    });
+  }
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
         .then(reg => {
           console.log('[PWA] Service Worker registered:', reg.scope);
           reg.update();
+
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showSwUpdateToast(newWorker);
+                }
+              });
+            }
+          });
         })
         .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
 
@@ -1289,7 +1328,6 @@ document.addEventListener('DOMContentLoaded', () => {
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!refreshing) {
           refreshing = true;
-          console.log('[PWA] New version detected, auto-reloading UI...');
           window.location.reload();
         }
       });

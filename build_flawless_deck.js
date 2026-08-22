@@ -54,20 +54,33 @@ async function buildFlawlessExecutiveDeck() {
     ]
   });
 
+  // Highlight Pill Badge Helper for Header Tags & Section Accents
+  function addHighlightBadge(slide, text, x = 1.45, y = 0.18, bg = '261F0A', border = 'E0B438', textCol = 'FFE885') {
+    const badgeWidth = Math.min(11.2, Math.max(2.8, (text.length * 0.088) + 0.35));
+    slide.addShape(pptx.ShapeType.rect, {
+      x, y, w: badgeWidth, h: 0.28,
+      fill: { color: bg },
+      line: { color: border, width: 1.2 },
+      rectRadius: 0.06
+    });
+
+    slide.addText(text, {
+      x: x + 0.12, y: y + 0.03, w: badgeWidth - 0.24, h: 0.22,
+      fontSize: 8.5, fontFace: FONT_MONO, color: textCol, bold: true,
+      margin: [0, 0, 0, 0]
+    });
+  }
+
   // Header Helper
   function createSlide(categoryTag, slideTitle) {
     const slide = pptx.addSlide({ masterName: 'MASTER_OBSIDIAN' });
 
-    // Category / Track Tag
-    slide.addText(categoryTag, {
-      x: 1.45, y: 0.22, w: 11.2, h: 0.25,
-      fontSize: 8.5, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    // Prominently Highlighted Category / Track Pill Badge
+    addHighlightBadge(slide, categoryTag, 1.45, 0.18, '241D09', 'E2B83B', 'FFF099');
 
     // Slide Title
     slide.addText(slideTitle, {
-      x: 1.45, y: 0.50, w: 11.2, h: 0.45,
+      x: 1.45, y: 0.52, w: 11.2, h: 0.45,
       fontSize: 16.5, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true,
       margin: [0, 0, 0, 0]
     });
@@ -118,11 +131,8 @@ async function buildFlawlessExecutiveDeck() {
       margin: [0, 0, 0, 0]
     });
 
-    slide.addText('👥 TEAM NULL POINTERS', {
-      x: 0.85, y: 3.28, w: 6.1, h: 0.20,
-      fontSize: 8.5, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    // Team Null Pointers Section Badge
+    addHighlightBadge(slide, '👥 TEAM NULL POINTERS', 0.85, 3.20, '241D09', 'E2B83B', 'FFF099');
 
     const team = [
       { name: 'G. Bharath Kumar Wesly', role: 'Team Leader & AI Architect', focus: 'Threat Modeling & Gemini Cascade' },
@@ -159,15 +169,11 @@ async function buildFlawlessExecutiveDeck() {
     addCard(slide, 7.4, 1.30, 5.33, 5.6);
     slide.addImage({
       path: HERO_IMG_PATH,
-      x: 7.55, y: 1.45, w: 5.03, h: 2.7,
+      x: 7.55, y: 1.45, w: 5.03, h: 2.65,
       sizing: { type: 'contain' }
     });
 
-    slide.addText('✦ Live Production Telemetry:', {
-      x: 7.55, y: 4.30, w: 4.9, h: 0.25,
-      fontSize: 10.5, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '✦ LIVE PRODUCTION TELEMETRY', 7.55, 4.22, '241D09', 'E2B83B', 'FFF099');
 
     slide.addText('• 202+ Indian threat keywords seeded in Turso Cloud Database.\n• 99.4% threat detection accuracy across 12 fraud categories.\n• Mean classification latency under 45ms with 0-downtime AI cascade.\n• Live URL: https://kavach-ai-ten.vercel.app/', {
       x: 7.55, y: 4.60, w: 4.9, h: 1.9,
@@ -208,11 +214,7 @@ async function buildFlawlessExecutiveDeck() {
     // Right Column: Realistic Attack Examples in India (x: 6.1, w: 6.63, h: 5.6)
     addCard(slide, 6.1, 1.30, 6.63, 5.6);
     
-    slide.addText('📱 Realistic Vernacular Attack Scenarios:', {
-      x: 6.35, y: 1.50, w: 6.1, h: 0.35,
-      fontSize: 13, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '📱 REALISTIC VERNACULAR SCENARIOS', 6.35, 1.48, '241D09', 'E2B83B', 'FFF099');
 
     const examples = [
       {
@@ -309,11 +311,7 @@ async function buildFlawlessExecutiveDeck() {
     // Concrete Evasion Proof Box (x: 0.6, y: 4.80, w: 12.133, h: 2.1)
     addCard(slide, 0.6, 4.80, 12.133, 2.1, CARD_HIGHLIGHT, CARD_HIGHLIGHT_BORDER);
     
-    slide.addText('💡 Concrete Evasion Proof ("The Aha! Moment"):', {
-      x: 0.85, y: 5.00, w: 11.6, h: 0.3,
-      fontSize: 11, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '💡 CONCRETE EVASION PROOF ("THE AHA! MOMENT")', 0.85, 4.95, '241D09', 'E2B83B', 'FFF099');
     
     slide.addText('Raw Input: "Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc"\n• Traditional Filter: PASS (0% keywords match standard English dictionary; "BLCK" and "SB1" are non-words).\n• Kavach AI: 100% HIGH RISK (Normalized: "block", "sbi", "kyc" | Malicious shortener flagged in 35ms).', {
       x: 0.85, y: 5.35, w: 11.6, h: 1.3,
@@ -388,11 +386,8 @@ async function buildFlawlessExecutiveDeck() {
       sizing: { type: 'contain' }
     });
 
-    slide.addText('✦ Live Threat Ingestion Terminal:', {
-      x: 6.8, y: 4.80, w: 5.7, h: 0.25,
-      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '✦ LIVE THREAT INGESTION TERMINAL', 6.8, 4.75, '241D09', 'E2B83B', 'FFF099');
+
     slide.addText('• Instant preset loading for YouTube scams, e-Challan APKs, SBI KYC, and Bijli cut threats.\n• Sub-pixel responsive input field supporting multi-dialect Indian text.\n• Dual-engine scoring trigger with real-time feedback.', {
       x: 6.8, y: 5.10, w: 5.7, h: 1.5,
       fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12,
@@ -520,11 +515,8 @@ async function buildFlawlessExecutiveDeck() {
     // Live Links Card (x: 0.6, y: 4.30, w: 5.6, h: 2.6)
     addCard(slide, 0.6, 4.30, 5.6, 2.6, CARD_HIGHLIGHT, CARD_HIGHLIGHT_BORDER);
     
-    slide.addText('🌐 Production Deployment Links:', {
-      x: 0.85, y: 4.50, w: 5.1, h: 0.25,
-      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '🌐 PRODUCTION DEPLOYMENT LINKS', 0.85, 4.45, '241D09', 'E2B83B', 'FFF099');
+
     slide.addText('• Live Web App: https://kavach-ai-ten.vercel.app/\n• Open Source Code: https://github.com/bharath-0814/Kavach.ai\n• Cloud Database: Turso Cloud LibSQL (AWS Mumbai)\n• Multi-Model Pool: Gemini 3.5, 3.7 & Flash-Latest', {
       x: 0.85, y: 4.80, w: 5.1, h: 1.9,
       fontSize: 8, fontFace: FONT_MONO, color: TEXT_MUTED, lineSpacing: 12,
@@ -535,17 +527,14 @@ async function buildFlawlessExecutiveDeck() {
     addCard(slide, 6.4, 1.30, 6.33, 5.6);
     slide.addImage({
       path: WORKBENCH_IMG_PATH,
-      x: 6.55, y: 1.45, w: 6.03, h: 4.0,
+      x: 6.55, y: 1.45, w: 6.03, h: 3.9,
       sizing: { type: 'contain' }
     });
 
-    slide.addText('✦ Live Deobfuscation Workbench & Cloud Threat Feed:', {
-      x: 6.6, y: 5.65, w: 5.9, h: 0.25,
-      fontSize: 9, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '✦ LIVE WORKBENCH & CLOUD THREAT AUDIT', 6.6, 5.50, '241D09', 'E2B83B', 'FFF099');
+
     slide.addText('Real-time Levenshtein distance matching + Turso Cloud audit trail with top-11 pagination.', {
-      x: 6.6, y: 5.95, w: 5.9, h: 0.75,
+      x: 6.6, y: 5.85, w: 5.9, h: 0.75,
       fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_MUTED,
       margin: [0, 0, 0, 0]
     });
@@ -559,11 +548,7 @@ async function buildFlawlessExecutiveDeck() {
 
     // Left Column: Edge-Native RAG (x: 0.6, w: 5.9, h: 5.6)
     addCard(slide, 0.6, 1.30, 5.9, 5.6);
-    slide.addText('🧠 1. Edge-Native RAG over Local Vector DB', {
-      x: 0.85, y: 1.50, w: 5.4, h: 0.3,
-      fontSize: 11.5, fontFace: FONT_SERIF, color: ACCENT_CYAN, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '🧠 EDGE-NATIVE LOCAL RAG (SQLITE-VSS)', 0.85, 1.48, '102030', '38BDF8', 'BAE6FD');
 
     slide.addText('• On-Device Vector Embeddings: An ultra-compact local vector database (SQLite-VSS / local HNSW index) stores semantic embeddings of known scam tactics, fraudulent APK signatures, and vernacular evasion patterns.\n\n• Sub-10ms Cosine Similarity: When an SMS arrives, the app performs a localized vector similarity lookup completely offline.\n\n• Contextual Threat Augmentation: An on-device quantized Small Language Model (SLM) retrieves matching threat tactics and explains the exact scam modus operandi without touching the cloud.\n\n• 100% Offline Capability: Operates seamlessly in flight mode or remote rural areas with zero internet connectivity.', {
       x: 0.85, y: 1.90, w: 5.4, h: 4.7,
@@ -573,11 +558,7 @@ async function buildFlawlessExecutiveDeck() {
 
     // Right Column: Privacy-Preserving Federated Self-Learning (x: 6.83, w: 5.9, h: 5.6)
     addCard(slide, 6.83, 1.30, 5.9, 5.6);
-    slide.addText('🔒 2. Privacy-First Federated Self-Learning', {
-      x: 7.08, y: 1.50, w: 5.4, h: 0.3,
-      fontSize: 11.5, fontFace: FONT_SERIF, color: ACCENT_EMERALD, bold: true,
-      margin: [0, 0, 0, 0]
-    });
+    addHighlightBadge(slide, '🔒 PRIVACY-FIRST FEDERATED LEARNING', 7.08, 1.48, '0D2818', '10B981', 'A7F3D0');
 
     slide.addText('• 100% DPDP Act 2023 Compliance: Personal SMS messages are never uploaded to any remote server, guaranteeing absolute citizen privacy.\n\n• Localized Dialect Adaptation: As users flag or verify emerging regional dialect SMS on their phones, the local model continuously adapts to user dialect habits.\n\n• Federated Weight Aggregation: Only encrypted mathematical gradient delta updates (not user text) are periodically synced across devices to improve the collective Indic vocabulary across India.\n\n• Hardware Secure Enclave: Executed strictly inside Apple Neural Engine / Android NNAPI.', {
       x: 7.08, y: 1.90, w: 5.4, h: 4.7,
@@ -648,10 +629,19 @@ async function buildFlawlessExecutiveDeck() {
     });
   }
 
-  // Save Presentation
-  const outputPath = path.join(__dirname, 'public', 'Kavach_AI_Master_Pitch_Deck.pptx');
-  await pptx.writeFile({ fileName: outputPath });
-  console.log(`✅ Flawless executive deck created successfully at: ${outputPath}`);
+  // Save Presentation with fallback if file is open in PowerPoint
+  const primaryPath = path.join(__dirname, 'public', 'Kavach_AI_Master_Pitch_Deck.pptx');
+  const highlightedPath = path.join(__dirname, 'public', 'Kavach_AI_Pitch_Deck_Highlighted.pptx');
+  
+  try {
+    await pptx.writeFile({ fileName: primaryPath });
+    console.log(`✅ Saved to: ${primaryPath}`);
+  } catch (e) {
+    console.warn(`[Notice] Primary file is open in PowerPoint. Writing to alternate path...`);
+  }
+
+  await pptx.writeFile({ fileName: highlightedPath });
+  console.log(`✅ Highlighted master deck created successfully at: ${highlightedPath}`);
 }
 
 buildFlawlessExecutiveDeck().catch(console.error);

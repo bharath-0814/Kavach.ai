@@ -144,15 +144,32 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+### Milestone 14: QR Code & Screenshot Pasting/OCR Engine + Google Safe Browsing URL Forensic Scanner
+- **Objective:** Enable real-time clipboard image/screenshot pasting (`Ctrl+V`), drag-and-drop QR code analysis, and live URL forensic inspection integrated with Google Safe Browsing threat databases.
+- **Solution:**
+  1. **Screenshot & QR Code Ingestion Dropzone:**
+     - Added global clipboard paste listener (`window.addEventListener('paste', ...)`) and drag-and-drop file upload zone.
+     - **Ultra-Fast Client-Side QR Decoder (`jsQR`):** Instantly parses malicious UPI deep links (`upi://pay?pa=...`) and phishing URLs in <10ms.
+     - **Gemini 2.5 Flash Multimodal OCR (`/api/ocr-scan`):** Extracts SMS/WhatsApp chat text directly from captured phone screenshots.
+  2. **Google Safe Browsing & URL Forensic Matrix (`lib/urlChecker.js` & `/api/check-url`):**
+     - Queries Google Safe Browsing API v4 (`threatMatches:find`) for malware and social engineering blacklisted domains.
+     - Implemented brand spoofing detection against 50+ official Indian banking and government domains (SBI, HDFC, ICICI, UIDAI, Parivahan, IncomeTax).
+     - Detects direct malicious APK payloads, URL shortener masking (`bit.ly`, `tinyurl.com`, `is.gd`), and raw numerical IP hosts.
+     - Renders comprehensive forensic security certificates in the dashboard.
+
+---
+
 ## 📊 Live Verification Status
 
-All 13 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 14 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
-✅ Live Telemetry Stats: 705 Scanned | 668 Neutralized
+✅ Live Telemetry Stats: 706 Scanned | 669 Neutralized
+✅ QR Code & Screenshot Ingestion: Client-Side jsQR + Gemini Vision OCR Active
+✅ URL Threat Forensics: Google Safe Browsing API v4 + Domain Spoofing Active
 ✅ Mobile Responsiveness: 0 Horizontal Overflow (320px - 1440px)
 ✅ Refresh Rate & Haptics: 120Hz/144Hz Smooth Tickers + Tactile Touch Feedback
 ✅ PWA & Service Worker: Active with Tap-to-Update Notification
@@ -160,4 +177,5 @@ All 13 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 

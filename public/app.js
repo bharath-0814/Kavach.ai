@@ -332,6 +332,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const riskIndexPct = document.getElementById('riskIndexPct');
   const riskIndexVerdict = document.getElementById('riskIndexVerdict');
 
+  // Image & QR Dropzone Elements
+  const tabImageMode = document.getElementById('tabImageMode');
+  const tabUrlMode = document.getElementById('tabUrlMode');
+  const imageDropzone = document.getElementById('imageDropzone');
+  const dropzoneTrigger = document.getElementById('dropzoneTrigger');
+  const imageFileInput = document.getElementById('imageFileInput');
+  const browseImageBtn = document.getElementById('browseImageBtn');
+  const imagePreviewStrip = document.getElementById('imagePreviewStrip');
+  const imagePreviewThumbnail = document.getElementById('imagePreviewThumbnail');
+  const imagePreviewName = document.getElementById('imagePreviewName');
+  const imageOcrStatus = document.getElementById('imageOcrStatus');
+  const clearImageBtn = document.getElementById('clearImageBtn');
+
   let currentAnalysisData = null;
   let cachedFlags = [];
   let activeFilterType = 'ALL';
@@ -556,48 +569,63 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial workbench run
   renderDiffWorkbench('0TPP', 2);
 
-  // Mode Switching Logic (Feature 2)
+  // Mode Switching Logic (Single, Batch, Screenshot/QR, URL)
   function updateModeUI() {
+    [tabSingleMode, tabBatchMode, tabImageMode, tabUrlMode].forEach(tab => {
+      if (tab) {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+      }
+    });
+
+    if (imageDropzone) imageDropzone.style.display = 'none';
+    if (singlePresetsWrap) singlePresetsWrap.style.display = 'none';
+    if (batchPresetsWrap) batchPresetsWrap.style.display = 'none';
+
     if (currentScanMode === 'single') {
       if (tabSingleMode) {
         tabSingleMode.classList.add('active');
         tabSingleMode.setAttribute('aria-selected', 'true');
       }
-      if (tabBatchMode) {
-        tabBatchMode.classList.remove('active');
-        tabBatchMode.setAttribute('aria-selected', 'false');
-      }
-
       if (singlePresetsWrap) singlePresetsWrap.style.display = 'block';
-      if (batchPresetsWrap) batchPresetsWrap.style.display = 'none';
-
       smsInput.placeholder = "Paste suspicious SMS text here (Hindi, Hinglish, Tamil, Telugu, Leetspeak)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'";
       btnText.textContent = 'Execute Threat Vector Analysis';
       if (engineBadgeText) engineBadgeText.textContent = 'Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)';
-      updateInputCount();
-    } else {
-      if (tabSingleMode) {
-        tabSingleMode.classList.remove('active');
-        tabSingleMode.setAttribute('aria-selected', 'false');
-      }
+    } else if (currentScanMode === 'batch') {
       if (tabBatchMode) {
         tabBatchMode.classList.add('active');
         tabBatchMode.setAttribute('aria-selected', 'true');
       }
-
-      if (singlePresetsWrap) singlePresetsWrap.style.display = 'none';
       if (batchPresetsWrap) batchPresetsWrap.style.display = 'block';
-
       smsInput.placeholder = "Paste multiple SMS messages here (1 message per line or separated by double newlines)...\n\nExample:\nMessage 1: Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? WhatsApp pe message karein\nMessage 2: Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant call karein aur 0TPP batayein\nMessage 3: Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE\nMessage 4: Bhai kal shaam ko milte hain market me, chai peeyenge.";
       btnText.textContent = 'Execute Batch Threat Analysis';
       if (engineBadgeText) engineBadgeText.textContent = 'Engine: Multi-Message Batch Processing & Threat Correlation';
-      updateInputCount();
+    } else if (currentScanMode === 'image') {
+      if (tabImageMode) {
+        tabImageMode.classList.add('active');
+        tabImageMode.setAttribute('aria-selected', 'true');
+      }
+      if (imageDropzone) imageDropzone.style.display = 'block';
+      if (singlePresetsWrap) singlePresetsWrap.style.display = 'block';
+      smsInput.placeholder = "Paste screenshot (Ctrl+V) or drop QR code image above. Extracted text will appear here automatically...";
+      btnText.textContent = 'Analyze Extracted Image Payload';
+      if (engineBadgeText) engineBadgeText.textContent = 'Engine: jsQR Client Decoder + Gemini 2.5 Flash Multimodal OCR';
+    } else if (currentScanMode === 'url') {
+      if (tabUrlMode) {
+        tabUrlMode.classList.add('active');
+        tabUrlMode.setAttribute('aria-selected', 'true');
+      }
+      if (singlePresetsWrap) singlePresetsWrap.style.display = 'block';
+      smsInput.placeholder = "Paste URL or domain to inspect against Google Safe Browsing & forensic database (e.g. 'https://sbi-kyc-update.xyz/mparivahan.apk')...";
+      btnText.textContent = 'Inspect URL against Google Safe Browsing';
+      if (engineBadgeText) engineBadgeText.textContent = 'Engine: Google Safe Browsing API v4 + Domain Spoofing Heuristics';
     }
+    updateInputCount();
   }
 
   function updateInputCount() {
     const text = smsInput.value;
-    if (currentScanMode === 'single') {
+    if (currentScanMode === 'single' || currentScanMode === 'image' || currentScanMode === 'url') {
       charCount.textContent = `${text.length} characters`;
     } else {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
@@ -607,6 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (tabSingleMode) {
     tabSingleMode.addEventListener('click', () => {
+      triggerHaptic('light');
       currentScanMode = 'single';
       updateModeUI();
     });
@@ -614,8 +643,177 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (tabBatchMode) {
     tabBatchMode.addEventListener('click', () => {
+      triggerHaptic('light');
       currentScanMode = 'batch';
       updateModeUI();
+    });
+  }
+
+  if (tabImageMode) {
+    tabImageMode.addEventListener('click', () => {
+      triggerHaptic('light');
+      currentScanMode = 'image';
+      updateModeUI();
+    });
+  }
+
+  if (tabUrlMode) {
+    tabUrlMode.addEventListener('click', () => {
+      triggerHaptic('light');
+      currentScanMode = 'url';
+      updateModeUI();
+    });
+  }
+
+  // Process Image File (Screenshot OCR + jsQR Decoding)
+  async function processImageFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    triggerHaptic('medium');
+
+    // Switch to image mode automatically
+    currentScanMode = 'image';
+    updateModeUI();
+
+    if (imagePreviewStrip) imagePreviewStrip.style.display = 'flex';
+    if (imagePreviewName) imagePreviewName.textContent = file.name || 'Pasted_Screenshot.png';
+    if (imageOcrStatus) imageOcrStatus.textContent = '🔍 Decoding QR code & scanning image...';
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const dataUrl = e.target.result;
+      if (imagePreviewThumbnail) imagePreviewThumbnail.src = dataUrl;
+
+      // 1. Attempt Client-Side Ultra-Fast QR Decoding (jsQR)
+      const img = new Image();
+      img.onload = async () => {
+        let qrDecoded = null;
+        if (typeof jsQR !== 'undefined') {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+              inversionAttempts: 'dontInvert'
+            });
+            if (code && code.data) {
+              qrDecoded = code.data;
+            }
+          } catch (qrErr) {
+            console.warn('jsQR decoding attempt:', qrErr.message);
+          }
+        }
+
+        if (qrDecoded) {
+          if (imageOcrStatus) imageOcrStatus.textContent = `✅ QR Payload Extracted: ${qrDecoded.substring(0, 40)}...`;
+          smsInput.value = qrDecoded;
+          updateInputCount();
+          runClassification(qrDecoded);
+          return;
+        }
+
+        // 2. If not a QR code, run Multimodal Gemini Flash OCR for Screenshots
+        if (imageOcrStatus) imageOcrStatus.textContent = '🤖 Extracting SMS / Chat text via Gemini Vision...';
+        try {
+          const res = await fetch('/api/ocr-scan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image: dataUrl,
+              mimeType: file.type || 'image/png'
+            })
+          });
+          const json = await res.json();
+          if (json.success && json.extracted_text) {
+            if (imageOcrStatus) imageOcrStatus.textContent = '✅ Text Extracted Successfully!';
+            smsInput.value = json.extracted_text;
+            updateInputCount();
+            runClassification(json.extracted_text);
+          } else {
+            if (imageOcrStatus) imageOcrStatus.textContent = '⚠️ No clear text or QR code detected in image.';
+          }
+        } catch (ocrErr) {
+          if (imageOcrStatus) imageOcrStatus.textContent = '⚠️ OCR extraction failed: ' + ocrErr.message;
+        }
+      };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Global Clipboard Paste Event Handler (Ctrl+V Image Support)
+  window.addEventListener('paste', (e) => {
+    const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          e.preventDefault();
+          processImageFile(file);
+          break;
+        }
+      }
+    }
+  });
+
+  // Dropzone Click & Drag-and-Drop Event Handlers
+  if (browseImageBtn && imageFileInput) {
+    browseImageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      imageFileInput.click();
+    });
+  }
+
+  if (dropzoneTrigger && imageFileInput) {
+    dropzoneTrigger.addEventListener('click', () => {
+      imageFileInput.click();
+    });
+  }
+
+  if (imageFileInput) {
+    imageFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        processImageFile(e.target.files[0]);
+      }
+    });
+  }
+
+  if (imageDropzone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      imageDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        imageDropzone.classList.add('drag-over');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      imageDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        imageDropzone.classList.remove('drag-over');
+      }, false);
+    });
+
+    imageDropzone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt?.files;
+      if (files && files[0]) {
+        processImageFile(files[0]);
+      }
+    });
+  }
+
+  if (clearImageBtn) {
+    clearImageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (imagePreviewStrip) imagePreviewStrip.style.display = 'none';
+      if (imageFileInput) imageFileInput.value = '';
+      if (imagePreviewThumbnail) imagePreviewThumbnail.src = '';
+      if (imageOcrStatus) imageOcrStatus.textContent = '';
+      smsInput.value = '';
+      updateInputCount();
     });
   }
 
@@ -898,41 +1096,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // URL Inspection
-    // URL Forensic Heuristics Inspection
+    // URL Forensic Heuristics & Google Safe Browsing Verification
     if (urlBox && urlDetails) {
       if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
         urlBox.style.display = 'block';
         let badgesHtml = '';
 
+        if (urlAnalysis.isGoogleBlacklisted) {
+          badgesHtml += `<span class="threat-tag" style="background: rgba(244, 63, 94, 0.3); border-color: var(--accent-rose); color: #fda4af; font-weight: 800;">🚨 Google Safe Browsing: ${escapeHtml(urlAnalysis.googleThreatType || 'BLACKLISTED')}</span>`;
+        }
         if (urlAnalysis.isAllowlisted) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald); color: var(--accent-emerald);">✅ Verified Official Allowlist Domain</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(16, 185, 129, 0.2); border-color: var(--accent-emerald); color: var(--accent-emerald); font-weight: 700;">✅ Verified Official Indian Domain</span>';
         }
         if (urlAnalysis.hasBrandMismatch) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.2); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Domain Spoofing / Entity Mismatch</span>';
+          badgesHtml += `<span class="threat-tag" style="background: rgba(244, 63, 94, 0.25); border-color: var(--accent-rose); color: var(--accent-rose); font-weight: 700;">🚨 Brand Impersonation: '${escapeHtml(urlAnalysis.spoofedBrand || 'BANK')}'</span>`;
         }
         if (urlAnalysis.hasShortener) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: var(--accent-amber);">⚠️ URL Shortener Masking</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(245, 158, 11, 0.2); border-color: var(--accent-amber); color: var(--accent-amber);">⚠️ URL Shortener Masking</span>';
         }
         if (urlAnalysis.hasSuspiciousTld) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.2); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 High-Risk TLD (.xyz / .top)</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.25); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Suspicious Unverified TLD</span>';
         }
         if (urlAnalysis.hasApkDownload) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.25); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Malicious APK Download Payload</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.3); border-color: var(--accent-rose); color: var(--accent-rose); font-weight: 800;">🚨 Direct Malicious APK Download Payload</span>';
         }
-        if (!urlAnalysis.isAllowlisted && !urlAnalysis.hasBrandMismatch && !urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(56, 189, 248, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan);">External Web Link</span>';
+        if (urlAnalysis.hasIpHost) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.25); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Numerical IP Host Address</span>';
+        }
+
+        let itemsHtml = '';
+        if (urlAnalysis.details && urlAnalysis.details.length > 0) {
+          itemsHtml = urlAnalysis.details.map(d => `
+            <div class="url-forensic-item">
+              <span style="color: ${d.status.includes('BLACKLIST') || d.status.includes('SPOOF') || d.status.includes('APK') ? '#fda4af' : (d.status === 'ALLOWLISTED' ? '#6ee7b7' : '#fcd34d')}; font-weight: 700;">
+                [ ${escapeHtml(d.status)} ]
+              </span>
+              <span style="color: var(--text-pure); word-break: break-all; margin-left: 4px;">${escapeHtml(d.url)}</span>
+              <span style="color: var(--text-muted); font-size: 0.72rem; margin-left: 6px;">— ${escapeHtml(d.note)}</span>
+            </div>
+          `).join('');
         }
 
         urlDetails.innerHTML = `
-          <div style="margin-bottom: 0.45rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">${badgesHtml}</div>
-          <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-cyan); word-break: break-all; margin-bottom: 0.25rem;">
-            ${urlAnalysis.urls.map(u => `🔗 <span>${escapeHtml(u)}</span>`).join('<br/>')}
+          <div style="margin-bottom: 0.55rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">${badgesHtml}</div>
+          <div class="url-forensic-card">
+            ${itemsHtml || urlAnalysis.urls.map(u => `<div>🔗 <span style="color: var(--accent-cyan); word-break: break-all;">${escapeHtml(u)}</span></div>`).join('')}
           </div>
-          ${urlAnalysis.domainVerdict ? `
-            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint); margin-top: 0.3rem;">
-              Verdict: <span style="color: var(--gold-light);">${escapeHtml(urlAnalysis.domainVerdict)}</span>
-            </div>
-          ` : ''}
         `;
       } else {
         urlBox.style.display = 'none';

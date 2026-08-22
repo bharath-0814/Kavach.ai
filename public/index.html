@@ -17,6 +17,9 @@
   <!-- Three.js 3D WebGL Library (Dribbble 3D Website Standard) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+  <!-- jsQR High-Speed Client-Side QR Code Decoder Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -120,7 +123,7 @@
         <button class="editorial-btn" id="clearBtn">Clear Input</button>
       </div>
 
-      <!-- Mode Selector Tabs (Feature 2: Single vs Batch) -->
+      <!-- Mode Selector Tabs (Single, Batch, Screenshot/QR, URL Scan) -->
       <div class="mode-tab-group" role="tablist">
         <button class="mode-tab-btn active" id="tabSingleMode" data-mode="single" role="tab" aria-selected="true">
           <span>✉️ Single Message</span>
@@ -129,16 +132,50 @@
           <span>📑 Batch Check (Multi-SMS)</span>
           <span class="mode-pill-tag">Round 2</span>
         </button>
+        <button class="mode-tab-btn" id="tabImageMode" data-mode="image" role="tab" aria-selected="false">
+          <span>📷 Screenshot & QR Code</span>
+          <span class="mode-pill-tag" style="background: rgba(56, 189, 248, 0.2); color: var(--cyan-accent); border-color: rgba(56, 189, 248, 0.4);">New</span>
+        </button>
+        <button class="mode-tab-btn" id="tabUrlMode" data-mode="url" role="tab" aria-selected="false">
+          <span>🌐 URL Threat Checker</span>
+          <span class="mode-pill-tag" style="background: rgba(244, 63, 94, 0.2); color: var(--rose-threat); border-color: rgba(244, 63, 94, 0.4);">Google DB</span>
+        </button>
+      </div>
+
+      <!-- Screenshot / QR Code Ingestion Dropzone & Clipboard Paste Buffer -->
+      <div class="image-dropzone-container" id="imageDropzone" style="display: none;">
+        <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+        <div class="image-dropzone-content" id="dropzoneTrigger">
+          <div class="dropzone-icon-wrap">
+            <span class="dropzone-icon">📷</span>
+          </div>
+          <div class="dropzone-text">
+            <span class="dropzone-title">Paste Screenshot (Ctrl+V) or Drop QR Code / Image Here</span>
+            <span class="dropzone-sub">Instant QR Decoding (UPI deep links / Phishing URLs) + Gemini Multimodal OCR</span>
+          </div>
+          <button type="button" class="editorial-btn dropzone-btn" id="browseImageBtn">
+            <span>Browse Image</span>
+            <span>📁</span>
+          </button>
+        </div>
+        <div class="image-preview-strip" id="imagePreviewStrip" style="display: none;">
+          <img id="imagePreviewThumbnail" class="dropzone-thumb" alt="Preview">
+          <div class="preview-meta">
+            <span id="imagePreviewName" class="preview-filename">screenshot.png</span>
+            <span id="imageOcrStatus" class="preview-status">🔍 Extracting text / QR code...</span>
+          </div>
+          <button type="button" id="clearImageBtn" class="clear-img-btn" aria-label="Remove image">✕</button>
+        </div>
       </div>
 
       <div style="position: relative;">
         <textarea 
           id="smsInput" 
           class="editorial-textarea" 
-          placeholder="Paste suspicious SMS text here (Hindi, Hinglish, Tamil, Telugu, Leetspeak)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'"></textarea>
+          placeholder="Paste suspicious SMS text, URL, or UPI link here (or paste screenshot with Ctrl+V)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'"></textarea>
         <div class="textarea-footer-strip">
           <span id="charCount">0 characters</span>
-          <span id="engineBadgeText">Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)</span>
+          <span id="engineBadgeText">Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%) + Google Safe Browsing</span>
         </div>
       </div>
 
@@ -160,6 +197,12 @@
           </button>
           <button class="preset-tag chip-btn" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
             ⚡ Bijli Cut Threat + 0TPP
+          </button>
+          <button class="preset-tag chip-btn" data-msg="upi://pay?pa=cyberfraudster@sbi&pn=SBI%20Refund%20Officer&am=25000&cu=INR">
+            📲 Malicious UPI QR Payload
+          </button>
+          <button class="preset-tag chip-btn" data-msg="https://sbi-card-reward-redeem.top/login.php?pan=update">
+            🌐 Spoofed SBI Reward URL
           </button>
           <button class="preset-tag chip-btn" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
             🟢 Benign Hinglish Chat

@@ -1,5 +1,6 @@
 const { analyzeScamPatterns } = require('../lib/scamPatterns');
 const { callGeminiClassifier, inferScamTypeFromLabels } = require('../lib/geminiClient');
+const { analyzeUrlForensics } = require('../lib/urlChecker');
 const { logFlag, getSimilarFlags } = require('../lib/db');
 
 /**
@@ -46,15 +47,28 @@ module.exports = async function handler(req, res) {
     const ruleResult = analyzeScamPatterns(message);
     const ruleScore = ruleResult.ruleScore;
 
-    // Step 2: Call Gemini 2.5 Flash API (with retries and fallback)
+    // Step 2: Run Live URL Threat Forensics & Google Safe Browsing Check
+    const urlForensics = await analyzeUrlForensics(message);
+
+    // Step 3: Call Gemini 2.5 Flash API (with retries and fallback)
     const geminiResult = await callGeminiClassifier(message, ruleResult);
     const geminiConfidence = geminiResult.confidence;
 
-    // Step 3: Combine scores: 40% Rule Engine + 60% Gemini AI
-    const rawFinalScore = (ruleScore * 0.4) + (geminiConfidence * 0.6);
+    // Step 4: Combine scores: 40% Rule Engine + 60% Gemini AI + URL Threat Multiplier
+    let rawFinalScore = (ruleScore * 0.4) + (geminiConfidence * 0.6);
+    
+    // Elevate score if Google Safe Browsing or severe URL heuristics triggered
+    if (urlForensics.isGoogleBlacklisted) {
+      rawFinalScore = Math.max(rawFinalScore, 0.98);
+    } else if (urlForensics.hasBrandMismatch || urlForensics.hasApkDownload) {
+      rawFinalScore = Math.max(rawFinalScore, 0.88);
+    } else if (urlForensics.urlRisk > 0) {
+      rawFinalScore = Math.max(rawFinalScore, rawFinalScore * 0.7 + urlForensics.urlRisk * 0.3);
+    }
+
     const finalScore = Number(Math.min(Math.max(rawFinalScore, 0.0), 1.0).toFixed(4));
 
-    // Step 4: Determine Verdict
+    // Step 5: Determine Verdict
     let verdict = 'safe';
     if (finalScore >= 0.65) {
       verdict = 'high_risk';
@@ -111,7 +125,7 @@ module.exports = async function handler(req, res) {
         gemini_confidence: geminiConfidence,
         rule_matches: ruleResult.matchedLabels,
         fuzzy_matches: ruleResult.fuzzyMatches,
-        url_analysis: ruleResult.urlAnalysis,
+        url_analysis: urlForensics,
         ai_fallback_used: geminiResult.fallback,
         model_used: geminiResult.model_used || 'rule_heuristics'
       },

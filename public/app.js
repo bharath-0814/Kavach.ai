@@ -697,6 +697,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         deobfClean.textContent = 'Clean / Standard Text (No Levenshtein Obfuscation Detected)';
       }
+    }
+
     // FEATURE 1: Render Similar Past Scams from Turso Threat Intelligence Feed
     if (similarScamsContainer && similarScamsList) {
       if (data.similar_flags && data.similar_flags.length > 0) {

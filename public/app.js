@@ -534,12 +534,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Custom Cyber Modal Controllers for Empty Input
+  const emptyInputModal = document.getElementById('emptyInputModal');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const modalDismissBtn = document.getElementById('modalDismissBtn');
+  const modalSampleBtn = document.getElementById('modalSampleBtn');
+
+  function openEmptyModal() {
+    if (emptyInputModal) {
+      emptyInputModal.style.display = 'flex';
+      requestAnimationFrame(() => {
+        emptyInputModal.classList.add('active');
+      });
+    }
+  }
+
+  function closeEmptyModal() {
+    if (emptyInputModal) {
+      emptyInputModal.classList.remove('active');
+      setTimeout(() => {
+        emptyInputModal.style.display = 'none';
+        smsInput.focus();
+      }, 220);
+    }
+  }
+
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeEmptyModal);
+  if (modalDismissBtn) modalDismissBtn.addEventListener('click', closeEmptyModal);
+  if (emptyInputModal) {
+    emptyInputModal.addEventListener('click', e => {
+      if (e.target === emptyInputModal) closeEmptyModal();
+    });
+  }
+
+  if (modalSampleBtn) {
+    modalSampleBtn.addEventListener('click', () => {
+      closeEmptyModal();
+      const sample = 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc';
+      smsInput.value = sample;
+      updateInputCount();
+      runClassification(sample);
+    });
+  }
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && emptyInputModal && emptyInputModal.classList.contains('active')) {
+      closeEmptyModal();
+    }
+  });
+
   // Scan Button Click (Single / Batch Router)
   scanBtn.addEventListener('click', () => {
     const text = smsInput.value.trim();
     if (!text) {
-      alert('Please enter or paste SMS message(s) to analyze.');
-      smsInput.focus();
+      openEmptyModal();
       return;
     }
     if (currentScanMode === 'single') {
@@ -751,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function runBatchClassification(rawText) {
     const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
     if (lines.length === 0) {
-      alert('Please enter at least one message for batch analysis.');
+      openEmptyModal();
       return;
     }
 

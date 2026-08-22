@@ -449,14 +449,39 @@
 
   </div> <!-- End #spatialViewport -->
 
-  <!-- Floating 3D Spatial Scroll Controller HUD (Laptop/Desktop View) -->
-  <div id="spatialHud" class="spatial-hud" role="region" aria-label="3D Spatial Controls">
-    <button id="toggle3dBtn" class="spatial-toggle-btn" title="Toggle 3D Spatial Scroll (Press 3 or D)">
-      <span class="spatial-indicator-dot"></span>
-      <span class="spatial-btn-label">3D Spatial View</span>
-      <span id="spatialStatusBadge" class="spatial-status">ON</span>
-    </button>
-    <div class="spatial-telemetry" id="spatialTelemetry">Pitch: 0.0° • Z: +0px</div>
+  <!-- Custom Cyber-Glass Alert Modal for Empty Input -->
+  <div id="emptyInputModal" class="cyber-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display: none;">
+    <div class="cyber-modal-card">
+      <div class="cyber-modal-header">
+        <div class="cyber-modal-icon-wrap">
+          <span class="cyber-modal-icon">⚠️</span>
+        </div>
+        <div class="cyber-modal-title-group">
+          <h3 id="modalTitle" class="cyber-modal-title">Input Buffer Empty</h3>
+          <span class="cyber-modal-subtitle">SMS Threat Ingestion Required</span>
+        </div>
+        <button id="closeModalBtn" class="cyber-modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="cyber-modal-body">
+        <p class="cyber-modal-text">
+          No SMS message content was detected in the ingestion terminal. Please paste suspicious text or choose one of the pre-configured empirical test scenarios below to execute threat vector analysis.
+        </p>
+        <div class="cyber-modal-recommendation">
+          <span class="rec-pill">💡 Tip</span>
+          <span>Click any <strong>Empirical Test Scenario</strong> chip to auto-load real-world smishing vectors.</span>
+        </div>
+      </div>
+
+      <div class="cyber-modal-footer">
+        <button id="modalDismissBtn" class="editorial-btn" style="padding: 6px 14px; font-size: 0.78rem;">
+          <span>Dismiss</span>
+        </button>
+        <button id="modalSampleBtn" class="editorial-btn" style="padding: 6px 14px; font-size: 0.78rem; background: var(--gold-primary); color: #08090d; border-color: var(--gold-light); font-weight: 700;">
+          <span>⚡ Load Sample KYC Phishing</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

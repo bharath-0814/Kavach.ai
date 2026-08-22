@@ -22,14 +22,9 @@ async function createKavachPresentation() {
   const FONT_BODY = 'Calibri';
   const FONT_MONO = 'Consolas';
 
-  // Helper for slide background & logo
+  // Helper for slide background
   function setDarkSlide(slide) {
     slide.background = { color: BG_DARK };
-    // Top-left subtle ACM logo
-    slide.addImage({
-      path: path.join(__dirname, 'public', 'acm-logo.png'),
-      x: 0.8, y: 0.35, w: 0.45, h: 0.45
-    });
   }
 
   // Helper for card boxes
@@ -49,51 +44,50 @@ async function createKavachPresentation() {
     const slide = pptx.addSlide();
     setDarkSlide(slide);
 
-    // Pill Badge & Team Name
-    slide.addText('⚡ ELICIT ACM HACKATHON • TEAM: NULL POINTERS', {
-      x: 1.4, y: 0.45, w: 9.0, h: 0.35,
-      fontSize: 10.5, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
+    // Pill Badge
+    slide.addText('⚡ ELICIT ACM HACKATHON • NATIONAL CYBERSECURITY TRACK', {
+      x: 0.8, y: 0.6, w: 8.0, h: 0.35,
+      fontSize: 10, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
     });
 
     // Main Hook
     slide.addText('Over ₹1,750+ Crore Lost to SMS Fraud in India — Because 80% of Scam Texts Dodge Firewalls by Writing Hindi in English Letters.', {
-      x: 0.8, y: 0.95, w: 11.5, h: 1.1,
-      fontSize: 20, fontFace: FONT_TITLE, color: TEXT_WHITE, bold: true
+      x: 0.8, y: 1.05, w: 11.5, h: 1.2,
+      fontSize: 22, fontFace: FONT_TITLE, color: TEXT_WHITE, bold: true
     });
 
     // Product Title Callout
-    addCard(slide, 0.8, 2.15, 11.7, 1.7, '101016', '28283C');
-    slide.addText('🛡️ KAVACH AI (कवच) — Team: Null Pointers', {
-      x: 1.1, y: 2.3, w: 8.0, h: 0.35,
-      fontSize: 16, fontFace: FONT_TITLE, color: ACCENT_CYAN, bold: true
+    addCard(slide, 0.8, 2.4, 11.7, 1.8, '101016', '28283C');
+    slide.addText('🛡️ KAVACH AI (कवच)', {
+      x: 1.1, y: 2.6, w: 6.0, h: 0.4,
+      fontSize: 18, fontFace: FONT_TITLE, color: ACCENT_CYAN, bold: true
     });
     slide.addText('India’s First Real-Time Dual-Engine Vernacular SMS Phishing Defense Shield.\nDeobfuscates Latin-script regional dialects (Hinglish, Tanglish, Benglish) and adversarial leetspeak in <45ms by blending deterministic Levenshtein heuristics (40%) with multi-model Google Gemini Flash AI (60%).', {
-      x: 1.1, y: 2.7, w: 11.0, h: 0.95,
-      fontSize: 11, fontFace: FONT_BODY, color: TEXT_MUTED
+      x: 1.1, y: 3.05, w: 11.0, h: 0.95,
+      fontSize: 12, fontFace: FONT_BODY, color: TEXT_MUTED
     });
 
-    // Team Information Cards (4 members)
+    // Team Information Cards
     const teamMembers = [
-      { name: 'Gummadi Bharath Kumar Wesly', role: 'Team Leader • AI Architect', focus: 'Threat Modeling & Gemini Cascade' },
-      { name: 'Swarnim Sulekh', role: 'Full-Stack & Backend Engineer', focus: 'Serverless APIs & Turso Cloud DB' },
-      { name: 'Krrish', role: 'Frontend & PWA Developer', focus: 'Editorial UI & Service Worker' },
-      { name: 'Jayaditya De', role: 'Linguistic & NLP Researcher', focus: 'Vernacular Lexicon & Deobfuscation' }
+      { name: 'Bharath & Team', role: 'Lead AI & Security Architect', focus: 'Threat Modeling, Indic NLP & Multi-Model Cascade' },
+      { name: 'Core Engineering', role: 'Full-Stack & Systems Engineer', focus: 'Low-Latency Serverless, Edge PWA & Turso DB' },
+      { name: 'Linguistic Research', role: 'Data & Phonetics Lead', focus: 'Vernacular Dialect Lexicon & Adversarial Mutation Analysis' }
     ];
 
     teamMembers.forEach((member, idx) => {
-      const xPos = 0.8 + (idx * 2.95);
-      addCard(slide, xPos, 4.0, 2.85, 2.7);
+      const xPos = 0.8 + (idx * 4.0);
+      addCard(slide, xPos, 4.5, 3.7, 1.9);
       slide.addText(`👤 ${member.name}`, {
-        x: xPos + 0.15, y: 4.15, w: 2.55, h: 0.65,
-        fontSize: 10.5, fontFace: FONT_TITLE, color: TEXT_WHITE, bold: true
+        x: xPos + 0.2, y: 4.7, w: 3.3, h: 0.3,
+        fontSize: 13, fontFace: FONT_TITLE, color: TEXT_WHITE, bold: true
       });
       slide.addText(member.role, {
-        x: xPos + 0.15, y: 4.85, w: 2.55, h: 0.45,
-        fontSize: 9, fontFace: FONT_MONO, color: ACCENT_PURPLE, bold: true
+        x: xPos + 0.2, y: 5.05, w: 3.3, h: 0.25,
+        fontSize: 10, fontFace: FONT_MONO, color: ACCENT_PURPLE, bold: true
       });
       slide.addText(member.focus, {
-        x: xPos + 0.15, y: 5.35, w: 2.55, h: 1.1,
-        fontSize: 9.5, fontFace: FONT_BODY, color: TEXT_MUTED
+        x: xPos + 0.2, y: 5.4, w: 3.3, h: 0.8,
+        fontSize: 10, fontFace: FONT_BODY, color: TEXT_MUTED
       });
     });
   }

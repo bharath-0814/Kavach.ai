@@ -37,6 +37,7 @@ seed_*.js
 scratch/
 tmp/
 temp/
+/Kavach_AI_Hackathon_Pitch_Deck.pptx
 
 # OS & Editor Files
 .DS_Store

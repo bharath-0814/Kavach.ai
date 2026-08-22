@@ -250,15 +250,34 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+---
+
+### Milestone 21: Full-Scope Mobile UI/UX Hardening & Ergonomic Polish
+- **Objective:** Perform end-to-end visual, ergonomic, and interaction audit across all mobile viewports (320px to 480px).
+- **Solution:**
+  1. **iOS Auto-Zoom Elimination:**
+     - Set `font-size: 16px !important;` on `.editorial-textarea`, `.workbench-field`, and `.feed-search-input` to prevent iOS viewport distortion on focus.
+  2. **Image Dropzone Ergonomics on Mobile:**
+     - Stacked content vertically (`flex-direction: column !important;`) with 100% width button for easy single-thumb browsing.
+  3. **Full-Width Sensitivity Bar:**
+     - `.sensitivity-presets-pills` scales to 100% width on small screens with equal 3-way split pills.
+  4. **Safe Area Insets for Floating Toasts:**
+     - Added `bottom: calc(20px + env(safe-area-inset-bottom, 0px));` to `.sw-update-toast` for iPhone home-indicator safety.
+  5. **Indic Sentence Mini-Legend Wrap:**
+     - Enabled neat multi-line chip wrapping for sentence highlight legend on narrow screens.
+
+---
+
 ## 📊 Live Verification Status
 
-All 20 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 21 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
 ✅ Live Telemetry Stats: 714 Scanned | 676 Neutralized
+✅ Full Mobile UI/UX Polish: iOS Zoom Guard + Safe Area Insets + 2x2 Grid Active
 ✅ Mobile 2x2 App Grid: All 4 Mode Tabs 100% Visible & Ordered on Portrait
 ✅ Service Worker Strategy: Network-First for JS/CSS (No Refresh Needed)
 ✅ Image Clear Input: Unconditional !important Display Reset + Source Removal
@@ -277,6 +296,7 @@ All 20 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

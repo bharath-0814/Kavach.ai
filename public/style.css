@@ -1798,20 +1798,38 @@ input, textarea {
   }
 
   /* Ingestion Textarea & CTA */
+  .editorial-textarea,
   .threat-input {
-    font-size: 0.88rem;
+    font-size: 16px !important; /* Prevents iOS auto-zoom */
     min-height: 110px;
     padding: 10px 12px;
   }
 
   .btn-analyze-gold {
     width: 100%;
-    min-height: 48px;
+    min-height: 50px;
     font-size: 0.95rem;
     font-weight: 700;
     padding: 12px 16px;
     justify-content: center;
     border-radius: 6px;
+  }
+
+  /* Image Dropzone on Mobile */
+  .image-dropzone-container {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .image-dropzone-content {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.65rem !important;
+  }
+
+  .dropzone-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
   }
 
   /* Threat Ingestion Inspector on Mobile */
@@ -1824,6 +1842,19 @@ input, textarea {
     box-sizing: border-box;
     overflow: hidden;
     border-radius: 8px;
+  }
+
+  .threat-ingestion-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .threat-mini-legend {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
   }
 
   .threat-ingestion-body {
@@ -1859,7 +1890,7 @@ input, textarea {
   .workbench-field {
     min-width: 0;
     flex: 1 1 auto;
-    font-size: 0.88rem;
+    font-size: 16px !important; /* Prevents iOS auto-zoom */
     padding: 8px 10px;
   }
 
@@ -1869,16 +1900,18 @@ input, textarea {
     min-height: 44px;
   }
 
-  .deobf-threshold-strip {
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: space-between;
+  .sensitivity-presets-pills {
+    width: 100% !important;
+    display: flex !important;
+    box-sizing: border-box !important;
   }
 
-  .threshold-slider-wrap {
-    width: 100%;
-    order: 3;
-    margin-top: 4px;
+  .sensitivity-btn {
+    flex: 1 !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 8px 4px !important;
+    font-size: 0.72rem !important;
   }
 
   /* Live Feed on Mobile */
@@ -1886,6 +1919,10 @@ input, textarea {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
+  }
+
+  .feed-search-input {
+    font-size: 16px !important; /* Prevents iOS auto-zoom */
   }
 
   .filter-pill-list {
@@ -2877,14 +2914,14 @@ body:not(.mode-3d) .spatial-status {
    ========================================================================== */
 .sw-update-toast {
   position: fixed;
-  bottom: 24px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(40px);
   z-index: 99999;
   opacity: 0;
   pointer-events: none;
   transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-  max-width: 92vw;
+  max-width: calc(100vw - 24px);
   width: auto;
 }
 

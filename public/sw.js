@@ -1,5 +1,5 @@
 // Kavach AI — Production Service Worker with Automatic Cache Bumping
-const BUILD_TIMESTAMP = '2026-08-22T23:00:00Z';
+const BUILD_TIMESTAMP = '2026-08-22T23:05:00Z';
 const CACHE_NAME = `kavach-cache-${BUILD_TIMESTAMP}`;
 
 const STATIC_ASSETS = [

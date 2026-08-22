@@ -364,27 +364,66 @@ document.addEventListener('DOMContentLoaded', () => {
     'home', 'house', 'city', 'delhi', 'mumbai', 'bangalore', 'pune', 'chennai'
   ]);
 
-  // Client-side threat dictionary for sandbox (comprehensive 100x lexicon)
+  // Comprehensive Cyber Fraud, Phishing & Smishing Threat Lexicon (All Categories)
   const CLIENT_THREAT_LEXICON = [
-    'block', 'blocked', 'band', 'bandh', 'rok', 'suspend', 'suspended', 
-    'deactivate', 'deactivated', 'expire', 'expired', 'disconnect', 'disconnected', 
-    'terminate', 'terminated', 'freeze', 'frozen', 'hold', 'penalty', 'challan', 
-    'echallan', 'e-challan', 'kyc', 'pan', 'aadhaar', 'aadhar', 'pancard', 
-    'update', 'updated', 'verify', 'verification', 're-kyc', 'submit', 'document', 
-    'biometric', 're-verification', 'otp', 'pin', 'password', 'passcode', 'cvv', 
-    'credential', 'mpin', 'tpin', 'anydesk', 'teamviewer', 'quicksupport', 'rustdesk', 
-    'bank', 'account', 'khata', 'balance', 'yono', 'sbi', 'hdfc', 'icici', 'pnb', 
-    'axis', 'bob', 'kotak', 'paytm', 'phonepe', 'gpay', 'cred', 'bhim', 'netbanking', 
-    'atm', 'creditcard', 'debitcard', 'urgent', 'turant', 'jaldi', 'immediate', 
-    'immediately', 'warning', 'warn', 'hours', 'ghante', 'today', 'tonight', 'warna', 
-    'lottery', 'inam', 'reward', 'cashback', 'bonus', 'refund', 'winner', 'won', 
-    'claim', 'crore', 'lakh', 'prize', 'jackpot', 'kbc', 'task', 'part-time', 
-    'full-time', 'commission', 'investment', 'pre-paid', 'bijli', 'electricity', 
-    'ebill', 'power', 'bill', 'officer', 'substation', 'unpaid', 'overdue', 'meter', 
-    'mparivahan', 'parivahan', 'police', 'cbi', 'cybercell', 'warrant', 'court', 
-    'summons', 'customs', 'arrest', 'trai', 'indiapost', 'parcel', 'courier', 
-    'consignment', 'undelivered', 'sim', 'esim', '5g', 'port', 'simswap', 
-    'click', 'download', 'install', 'apk', 'login', 'portal'
+    // Banking & Financial Credentials
+    'credit', 'creditcard', 'debit', 'debitcard', 'card', 'cards', 'cvv', 'cvv2',
+    'pin', 'mpin', 'tpin', 'password', 'passcode', 'passkey', 'otp', 'one-time-password',
+    'bank', 'banking', 'netbanking', 'account', 'acct', 'khata', 'balance', 'paisa',
+    'rupee', 'rupees', 'cash', 'fund', 'funds', 'transfer', 'neft', 'rtgs', 'imps',
+    'upi', 'vpa', 'mandate', 'autodebit', 'autopay', 'limit', 'overdraft', 'cheque',
+    'sbi', 'yono', 'hdfc', 'icici', 'axis', 'pnb', 'bob', 'kotak', 'canara', 'union',
+    'paytm', 'phonepe', 'gpay', 'googlepay', 'bhim', 'cred', 'mobikwik', 'freecharge',
+    
+    // Account Suspension & Coercion
+    'block', 'blocked', 'blocking', 'blck', 'blcked', 'b4nd', 'band', 'bandh',
+    'suspend', 'suspended', 'suspension', 'deactivate', 'deactivated', 'deactivation',
+    'freeze', 'frozen', 'freezing', 'lock', 'locked', 'terminate', 'terminated',
+    'termination', 'disconnect', 'disconnected', 'disconnection', 'cutoff', 'cut',
+    'hold', 'lapse', 'lapsed', 'expire', 'expired', 'expiry', 'expiring',
+    'penalty', 'fine', 'charges', 'overdue', 'unpaid', 'due', 'bill', 'ebill',
+    
+    // Verification & Identity Theft (KYC / PAN / Aadhaar)
+    'kyc', 're-kyc', 'rekyc', 'pan', 'pancard', 'aadhaar', 'aadhar', 'uidai',
+    'update', 'updated', 'updating', 'updt', 'verify', 'verified', 'verification',
+    'v3rify', 'authenticate', 'authentication', 'authorize', 'authorization',
+    'submit', 'submission', 'upload', 'document', 'documents', 'biometric',
+    'identity', 'credential', 'credentials', 'login', 'signin', 'portal', 'link',
+    
+    // Urgency & Coercive Timelines
+    'urgent', 'urgently', 'urget', 'immediate', 'immediately', 'immed1ate',
+    'turant', 'jaldi', 'aaj', 'kal', 'raat', 'tonight', 'today', 'hours', 'ghante',
+    'minutes', 'warna', 'warning', 'warn', 'alert', 'notice', 'caution', 'deadline',
+    'mandatory', 'compulsory', 'require', 'required', 'action',
+    
+    // Utility & Electricity Scams
+    'bijli', 'electricity', 'power', 'substation', 'meter', 'officer', 'department',
+    'uppcl', 'bses', 'tangedco', 'bescom', 'wbsedcl', 'tatapower', 'adani', 'dhbvn',
+    'connection', 'lineman', 'helpline',
+    
+    // Legal Threat, Extortion & Digital Arrest
+    'police', 'cbi', 'ed', 'cybercell', 'cybercrime', 'crime', 'warrant', 'court',
+    'summons', 'arrest', 'fir', 'investigation', 'narcotics', 'customs', 'seizure',
+    'trai', 'rbi', 'sebi', 'incometax', 'tax', 'challan', 'echallan', 'e-challan',
+    'parivahan', 'mparivahan', 'rto', 'traffic', 'violation',
+    
+    // Postal, Package & Courier Scams
+    'parcel', 'package', 'courier', 'consignment', 'shipment', 'delivery', 'deliver',
+    'undelivered', 'failed', 'returned', 'reschedule', 'address', 'indiapost',
+    'speedpost', 'bluedart', 'dtdc', 'delhivery', 'tracking',
+    
+    // Lottery, Rewards, Cashback & Task Scams
+    'lottery', 'inam', 'prize', 'jackpot', 'winner', 'won', 'winning', 'claim',
+    'reward', 'rewards', 'rewardpoints', 'cashback', 'bonus', 'refund', 'rebate',
+    'crore', 'lakh', 'lakhs', 'kbc', 'lucky', 'draw', 'gift', 'voucher', 'coupon',
+    'task', 'job', 'part-time', 'full-time', 'wfh', 'commission', 'investment',
+    'invest', 'profit', 'trading', 'crypto', 'bitcoin', 'usdt', 'salary', 'income',
+    'earn', 'earning', 'daily', 'ghar-baithe', 'baithe', 'kamana', 'kamaye',
+    
+    // Telecom & Malicious Software / Remote Access
+    'sim', 'simcard', 'esim', '5g', '4g', 'port', 'porting', 'simswap', 'recharge',
+    'validity', 'anydesk', 'teamviewer', 'quicksupport', 'rustdesk', 'airmirror',
+    'screen', 'remote', 'mirror', 'support', 'download', 'install', 'apk', 'app'
   ];
 
   const CLIENT_LEET_MAP = {
@@ -469,9 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const ch = cleanRaw[i];
       const trans = (CLIENT_LEET_MAP[ch.toLowerCase()] || ch).toUpperCase();
       if (i < normUpper.length && trans === normUpper[i]) {
-        origHtml += `<span class="diff-char-clean">${escapeHtml(ch)}</span>`;
-      } else {
         origHtml += `<span class="diff-char-threat">${escapeHtml(ch)}</span>`;
+      } else {
+        origHtml += `<span class="diff-char-mutated">${escapeHtml(ch)}</span>`;
       }
     }
     diffOriginalVal.innerHTML = origHtml;

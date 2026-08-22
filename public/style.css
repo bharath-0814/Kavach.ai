@@ -1072,35 +1072,9 @@ body {
   }
 }
 
-/* Floating 3D Spatial Scroll Controller HUD */
+/* Floating 3D Spatial Scroll Controller HUD (Hidden: Always Active in Background) */
 .spatial-hud {
-  position: fixed;
-  bottom: max(var(--space-4), env(safe-area-inset-bottom));
-  right: max(var(--space-4), env(safe-area-inset-right));
-  z-index: 999;
-  display: none;
-  align-items: center;
-  gap: var(--space-2);
-  background: rgba(14, 14, 20, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  border-radius: 9999px;
-  padding: 4px 10px 4px 6px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(212, 175, 55, 0.1);
-  transition: all 0.25s ease;
-  user-select: none;
-}
-
-@media (min-width: 992px) {
-  .spatial-hud {
-    display: inline-flex;
-  }
-}
-
-.spatial-hud:hover {
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(212, 175, 55, 0.2);
+  display: none !important;
 }
 
 .spatial-toggle-btn {

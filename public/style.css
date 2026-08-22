@@ -1161,3 +1161,294 @@ body:not(.mode-3d) .spatial-status {
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
+
+/* ==========================================================================
+   ROUND 2 UPGRADES: MODE SELECTOR, SIMILAR SCAMS, BATCH RESULTS MATRIX
+   ========================================================================== */
+
+/* Mode Selector Tab Group */
+.mode-tab-group {
+  display: inline-flex;
+  background: rgba(14, 14, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 3px;
+  gap: 4px;
+  margin-bottom: var(--space-4);
+}
+
+.mode-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.mode-tab-btn:hover {
+  color: var(--text-pure);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mode-tab-btn.active {
+  background: var(--gold-glow);
+  color: var(--gold-light);
+  border-color: var(--gold-border);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+}
+
+.mode-pill-tag {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--gold-light);
+  font-size: 0.62rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* FEATURE 1: Similar Past Scams Component */
+.similar-scams-container {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.similar-scams-header {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.similar-count-tag {
+  color: var(--text-faint);
+  font-size: 0.68rem;
+}
+
+.similar-scams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.similar-scam-card {
+  background: rgba(8, 8, 12, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--rose-threat);
+  border-radius: 3px;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+}
+
+.similar-scam-card.suspicious {
+  border-left-color: var(--amber-warn);
+}
+
+.similar-scam-card.safe {
+  border-left-color: var(--emerald-safe);
+}
+
+.similar-scam-card:hover {
+  background: rgba(16, 16, 24, 0.95);
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateX(2px);
+}
+
+.similar-scam-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.similar-scam-msg {
+  font-size: 0.8rem;
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.similar-scam-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.similar-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.similar-badge.high_risk {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--rose-threat);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.similar-badge.suspicious {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--amber-warn);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.similar-badge.safe {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--emerald-safe);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* FEATURE 2: Batch Results Component */
+.batch-results-container {
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.batch-summary-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.batch-summary-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-body);
+}
+
+.batch-summary-pill.rose {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: var(--rose-threat);
+}
+
+.batch-summary-pill.emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--emerald-safe);
+}
+
+.batch-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.batch-item-card {
+  background: rgba(10, 10, 15, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid var(--emerald-safe);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+}
+
+.batch-item-card.high_risk {
+  border-left-color: var(--rose-threat);
+}
+
+.batch-item-card.suspicious {
+  border-left-color: var(--amber-warn);
+}
+
+.batch-item-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(16, 16, 24, 0.95);
+}
+
+.batch-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.batch-item-index {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+.batch-item-msg {
+  font-size: 0.85rem;
+  color: var(--text-pure);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.batch-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.batch-reasoning-toggle {
+  background: transparent;
+  border: none;
+  color: var(--gold-dim);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.batch-reasoning-toggle:hover {
+  color: var(--gold-light);
+}
+
+.batch-reasoning-box {
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 2px solid var(--gold-border);
+  font-size: 0.78rem;
+  color: var(--text-body);
+  border-radius: 2px;
+  line-height: 1.4;
+  display: none;
+}
+

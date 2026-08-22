@@ -117,6 +117,17 @@
         <button class="editorial-btn" id="clearBtn">Clear Input</button>
       </div>
 
+      <!-- Mode Selector Tabs (Feature 2: Single vs Batch) -->
+      <div class="mode-tab-group" role="tablist">
+        <button class="mode-tab-btn active" id="tabSingleMode" data-mode="single" role="tab" aria-selected="true">
+          <span>✉️ Single Message</span>
+        </button>
+        <button class="mode-tab-btn" id="tabBatchMode" data-mode="batch" role="tab" aria-selected="false">
+          <span>📑 Batch Check (Multi-SMS)</span>
+          <span class="mode-pill-tag">Round 2</span>
+        </button>
+      </div>
+
       <div style="position: relative;">
         <textarea 
           id="smsInput" 
@@ -124,34 +135,49 @@
           placeholder="Paste suspicious SMS text here (Hindi, Hinglish, Tamil, Telugu, Leetspeak)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'"></textarea>
         <div class="textarea-footer-strip">
           <span id="charCount">0 characters</span>
-          <span>Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)</span>
+          <span id="engineBadgeText">Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)</span>
         </div>
       </div>
 
-      <!-- Quick Test Scenarios -->
-      <div class="preset-section-label">✦ Empirical Test Scenarios (Click to Load):</div>
-      <div class="preset-chip-list">
-        <button class="preset-tag chip-btn" data-msg="Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? YouTube videos like karo aur screenshot bhejo. Part-time/Full-time job, investment zero hai. WhatsApp par message karein: https://wa.me/919876543210">
-          💼 YouTube Task Scam
-        </button>
-        <button class="preset-tag chip-btn" data-msg="India Post: Your package IN98234 delivery failed due to incorrect address. Please update your address within 24 hours: https://indiapost-update.top/track">
-          📦 India Post Parcel Scam
-        </button>
-        <button class="preset-tag chip-btn" data-msg="Notice: Traffic challan DL-01-AB-1234 fine Rs. 1000 is pending. Download mParivahan.apk to pay immediately or court warrant issued: https://echallan-pay.xyz/mparivahan.apk">
-          🚔 Traffic e-Challan APK
-        </button>
-        <button class="preset-tag chip-btn" data-msg="Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc">
-          🔴 Obfuscated SBI KYC
-        </button>
-        <button class="preset-tag chip-btn" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
-          ⚡ Bijli Cut Threat + 0TPP
-        </button>
-        <button class="preset-tag chip-btn" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
-          🟢 Benign Hinglish Chat
-        </button>
-        <button class="preset-tag chip-btn" data-msg="Your account XX1234 has been credited with Rs. 1500 on 22-Aug-2026. Ref: 98765432.">
-          🟢 Legit Bank Alert
-        </button>
+      <!-- Single Mode Quick Test Scenarios -->
+      <div id="singlePresetsWrap">
+        <div class="preset-section-label">✦ Empirical Test Scenarios (Click to Load):</div>
+        <div class="preset-chip-list">
+          <button class="preset-tag chip-btn" data-msg="Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? YouTube videos like karo aur screenshot bhejo. Part-time/Full-time job, investment zero hai. WhatsApp par message karein: https://wa.me/919876543210">
+            💼 YouTube Task Scam
+          </button>
+          <button class="preset-tag chip-btn" data-msg="India Post: Your package IN98234 delivery failed due to incorrect address. Please update your address within 24 hours: https://indiapost-update.top/track">
+            📦 India Post Parcel Scam
+          </button>
+          <button class="preset-tag chip-btn" data-msg="Notice: Traffic challan DL-01-AB-1234 fine Rs. 1000 is pending. Download mParivahan.apk to pay immediately or court warrant issued: https://echallan-pay.xyz/mparivahan.apk">
+            🚔 Traffic e-Challan APK
+          </button>
+          <button class="preset-tag chip-btn" data-msg="Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc">
+            🔴 Obfuscated SBI KYC
+          </button>
+          <button class="preset-tag chip-btn" data-msg="Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.">
+            ⚡ Bijli Cut Threat + 0TPP
+          </button>
+          <button class="preset-tag chip-btn" data-msg="Bhai kal shaam ko milte hain market me, chai peeyenge.">
+            🟢 Benign Hinglish Chat
+          </button>
+          <button class="preset-tag chip-btn" data-msg="Your account XX1234 has been credited with Rs. 1500 on 22-Aug-2026. Ref: 98765432.">
+            🟢 Legit Bank Alert
+          </button>
+        </div>
+      </div>
+
+      <!-- Batch Mode Quick Presets (Feature 2) -->
+      <div id="batchPresetsWrap" style="display: none;">
+        <div class="preset-section-label">✦ Multi-SMS Batch Presets:</div>
+        <div class="preset-chip-list">
+          <button class="preset-tag chip-btn" id="loadBatchDemoBtn">
+            🚀 Load 4-SMS Demo Batch (YouTube + Bijli + SBI KYC + Benign Chat)
+          </button>
+          <button class="preset-tag chip-btn" id="loadGovBatchBtn">
+            🏛️ Load Gov & APK Scam Batch (eChallan + India Post + Electricity)
+          </button>
+        </div>
       </div>
 
       <button class="btn-analyze-gold" id="scanBtn">
@@ -160,7 +186,7 @@
       </button>
     </section>
 
-    <!-- Results Diagnostic Dashboard -->
+    <!-- Results Diagnostic Dashboard (Single Mode) -->
     <section class="results-container" id="resultsSection">
       <div class="results-split-grid">
 
@@ -241,41 +267,30 @@
             <div id="urlDetails"></div>
           </div>
 
-          <!-- RAG Threat Intelligence & Official Advisory Grounding -->
-          <div id="ragGroundingBox" style="display: none; margin-top: 1rem; padding: 0.85rem; background: rgba(10, 10, 16, 0.9); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--gold-light); font-weight: 700; display: flex; align-items: center; gap: 6px;">
-                <span>🧠</span> RAG Vector Threat Grounding
-              </span>
-              <span id="ragSimilarityBadge" style="font-family: var(--font-mono); font-size: 0.68rem; background: rgba(212,175,55,0.15); color: var(--gold-light); border: 1px solid rgba(212,175,55,0.3); padding: 1px 6px; border-radius: 3px;">
-                98.4% Match
-              </span>
+          <!-- FEATURE 1: Similar Past Scams (Turso Intelligence Retrieval) -->
+          <div id="similarScamsContainer" class="similar-scams-container" style="display: none;">
+            <div class="similar-scams-header">
+              <span>⚡ Similar Scams We've Seen Before (Turso Intelligence):</span>
+              <span id="similarScamsCount" class="similar-count-tag">0 matches</span>
             </div>
-
-            <div id="ragAdvisoryTitle" style="font-size: 0.88rem; font-weight: 700; color: var(--text-pure); margin-bottom: 0.25rem;">
-              --
-            </div>
-
-            <div style="font-size: 0.78rem; color: var(--text-body); margin-bottom: 0.4rem; line-height: 1.4;" id="ragModus">
-              --
-            </div>
-
-            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.4rem; font-family: var(--font-mono); font-size: 0.68rem;">
-              <span id="ragBulletinPill" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan-accent); border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 6px; border-radius: 3px;">
-                Advisory: --
-              </span>
-              <span id="ragLegalPill" style="background: rgba(244, 63, 94, 0.15); color: var(--rose-threat); border: 1px solid rgba(244, 63, 94, 0.3); padding: 2px 6px; border-radius: 3px;">
-                Law: --
-              </span>
-            </div>
-
-            <div id="ragActionBox" style="margin-top: 0.5rem; padding: 0.45rem 0.6rem; background: rgba(16, 185, 129, 0.08); border-left: 2px solid var(--emerald-safe); font-size: 0.75rem; color: #a7f3d0; line-height: 1.4;">
-              <strong>🛡️ Citizen Action:</strong> <span id="ragActionText">--</span>
-            </div>
+            <div class="similar-scams-list" id="similarScamsList"></div>
           </div>
         </div>
 
       </div>
+    </section>
+
+    <!-- FEATURE 2: Batch Analysis Diagnostic Dashboard -->
+    <section class="arch-card batch-results-container" id="batchResultsSection" style="display: none; margin-top: 2rem;">
+      <div class="arch-card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+        <h3 class="arch-card-title">
+          <span>📑 Batch Threat Vector Diagnostic Matrix</span>
+        </h3>
+        <div class="batch-summary-strip" id="batchSummaryStrip">
+          <!-- Summary chips generated dynamically -->
+        </div>
+      </div>
+      <div class="batch-results-list" id="batchResultsList"></div>
     </section>
 
     <!-- Interactive Levenshtein Deobfuscation Workbench -->

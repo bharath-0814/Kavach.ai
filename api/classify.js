@@ -1,7 +1,6 @@
 const { analyzeScamPatterns } = require('../lib/scamPatterns');
 const { callGeminiClassifier, inferScamTypeFromLabels } = require('../lib/geminiClient');
-const { retrieveSimilarThreats } = require('../lib/ragEngine');
-const { logFlag } = require('../lib/db');
+const { logFlag, getSimilarFlags } = require('../lib/db');
 
 /**
  * Enable CORS headers for cross-origin frontend requests.
@@ -47,11 +46,8 @@ module.exports = async function handler(req, res) {
     const ruleResult = analyzeScamPatterns(message);
     const ruleScore = ruleResult.ruleScore;
 
-    // Step 2: Retrieve Semantically Similar Threat Vectors & Advisories (RAG)
-    const ragRetrieval = retrieveSimilarThreats(message, 3);
-
-    // Step 3: Call Gemini Flash API (augmented with retrieved RAG context)
-    const geminiResult = await callGeminiClassifier(message, ruleResult, ragRetrieval.rag_context_str);
+    // Step 2: Call Gemini 2.5 Flash API (with retries and fallback)
+    const geminiResult = await callGeminiClassifier(message, ruleResult);
     const geminiConfidence = geminiResult.confidence;
 
     // Step 3: Combine scores: 40% Rule Engine + 60% Gemini AI
@@ -80,7 +76,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Step 6: Log result to Turso database asynchronously
-    await logFlag({
+    const logRes = await logFlag({
       message,
       risk_score: finalScore,
       verdict,
@@ -88,7 +84,20 @@ module.exports = async function handler(req, res) {
       scam_type: scamType
     });
 
-    // Step 7: Return JSON Response
+    // Step 7: Retrieve similar past scams from Turso threat intelligence feed
+    let similarFlags = [];
+    try {
+      similarFlags = await getSimilarFlags({
+        scam_type: scamType,
+        trigger_phrases: combinedPhrases,
+        exclude_id: logRes?.id || null,
+        limit: 3
+      });
+    } catch (simErr) {
+      console.warn('Failed to retrieve similar flags:', simErr.message);
+    }
+
+    // Step 8: Return JSON Response
     return res.status(200).json({
       success: true,
       message,
@@ -96,6 +105,7 @@ module.exports = async function handler(req, res) {
       verdict,
       scam_type: scamType,
       trigger_phrases: combinedPhrases,
+      similar_flags: similarFlags,
       breakdown: {
         rule_score: ruleScore,
         gemini_confidence: geminiConfidence,
@@ -104,11 +114,6 @@ module.exports = async function handler(req, res) {
         url_analysis: ruleResult.urlAnalysis,
         ai_fallback_used: geminiResult.fallback,
         model_used: geminiResult.model_used || 'rule_heuristics'
-      },
-      rag_grounding: {
-        has_match: ragRetrieval.has_match,
-        best_match: ragRetrieval.best_match,
-        top_matches: ragRetrieval.top_matches
       },
       reasoning: geminiResult.reasoning,
       timestamp: new Date().toISOString()

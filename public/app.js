@@ -265,6 +265,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnText = document.getElementById('btnText');
   const btnIcon = document.getElementById('btnIcon');
 
+  // Round 2 Elements: Mode Switcher, Similar Scams, Batch Mode
+  const tabSingleMode = document.getElementById('tabSingleMode');
+  const tabBatchMode = document.getElementById('tabBatchMode');
+  const singlePresetsWrap = document.getElementById('singlePresetsWrap');
+  const batchPresetsWrap = document.getElementById('batchPresetsWrap');
+  const loadBatchDemoBtn = document.getElementById('loadBatchDemoBtn');
+  const loadGovBatchBtn = document.getElementById('loadGovBatchBtn');
+  const engineBadgeText = document.getElementById('engineBadgeText');
+
+  const similarScamsContainer = document.getElementById('similarScamsContainer');
+  const similarScamsList = document.getElementById('similarScamsList');
+  const similarScamsCount = document.getElementById('similarScamsCount');
+
+  const batchResultsSection = document.getElementById('batchResultsSection');
+  const batchSummaryStrip = document.getElementById('batchSummaryStrip');
+  const batchResultsList = document.getElementById('batchResultsList');
+
+  let currentScanMode = 'single'; // 'single' | 'batch'
+
   const resultsSection = document.getElementById('resultsSection');
   const verdictBadge = document.getElementById('verdictBadge');
   const scoreCircle = document.getElementById('scoreCircle');
@@ -397,38 +416,136 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial sandbox run
   runSandbox('BLCK');
 
-  // Character counter
+  // Mode Switching Logic (Feature 2)
+  function updateModeUI() {
+    if (currentScanMode === 'single') {
+      if (tabSingleMode) {
+        tabSingleMode.classList.add('active');
+        tabSingleMode.setAttribute('aria-selected', 'true');
+      }
+      if (tabBatchMode) {
+        tabBatchMode.classList.remove('active');
+        tabBatchMode.setAttribute('aria-selected', 'false');
+      }
+
+      if (singlePresetsWrap) singlePresetsWrap.style.display = 'block';
+      if (batchPresetsWrap) batchPresetsWrap.style.display = 'none';
+
+      smsInput.placeholder = "Paste suspicious SMS text here (Hindi, Hinglish, Tamil, Telugu, Leetspeak)... e.g. 'Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc'";
+      btnText.textContent = 'Execute Threat Vector Analysis';
+      if (engineBadgeText) engineBadgeText.textContent = 'Engine: Deterministic Heuristic (40%) + Multi-Model Gemini Flash (60%)';
+      updateInputCount();
+    } else {
+      if (tabSingleMode) {
+        tabSingleMode.classList.remove('active');
+        tabSingleMode.setAttribute('aria-selected', 'false');
+      }
+      if (tabBatchMode) {
+        tabBatchMode.classList.add('active');
+        tabBatchMode.setAttribute('aria-selected', 'true');
+      }
+
+      if (singlePresetsWrap) singlePresetsWrap.style.display = 'none';
+      if (batchPresetsWrap) batchPresetsWrap.style.display = 'block';
+
+      smsInput.placeholder = "Paste multiple SMS messages here (1 message per line or separated by double newlines)...\n\nExample:\nMessage 1: Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? WhatsApp pe message karein\nMessage 2: Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant call karein aur 0TPP batayein\nMessage 3: Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE\nMessage 4: Bhai kal shaam ko milte hain market me, chai peeyenge.";
+      btnText.textContent = 'Execute Batch Threat Analysis';
+      if (engineBadgeText) engineBadgeText.textContent = 'Engine: Multi-Message Batch Processing & Threat Correlation';
+      updateInputCount();
+    }
+  }
+
+  function updateInputCount() {
+    const text = smsInput.value;
+    if (currentScanMode === 'single') {
+      charCount.textContent = `${text.length} characters`;
+    } else {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+      charCount.textContent = `${lines.length} message${lines.length !== 1 ? 's' : ''} detected`;
+    }
+  }
+
+  if (tabSingleMode) {
+    tabSingleMode.addEventListener('click', () => {
+      currentScanMode = 'single';
+      updateModeUI();
+    });
+  }
+
+  if (tabBatchMode) {
+    tabBatchMode.addEventListener('click', () => {
+      currentScanMode = 'batch';
+      updateModeUI();
+    });
+  }
+
+  // Batch Presets
+  if (loadBatchDemoBtn) {
+    loadBatchDemoBtn.addEventListener('click', () => {
+      const sampleBatch = [
+        "Hello sir, kya aap ghar baithe daily Rs 3000-5000 kamana chahte hain? YouTube videos like karo aur screenshot bhejo. Part-time job zero investment: https://wa.me/919876543210",
+        "Aapka bijli connection aaj raat 9 baje bandh ho jayega. Turant is number pe call karein aur 0TPP batayein.",
+        "Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc",
+        "Bhai kal shaam ko milte hain market me, chai peeyenge."
+      ].join('\n\n');
+      smsInput.value = sampleBatch;
+      updateInputCount();
+      runBatchClassification(sampleBatch);
+    });
+  }
+
+  if (loadGovBatchBtn) {
+    loadGovBatchBtn.addEventListener('click', () => {
+      const govBatch = [
+        "Notice: Traffic challan DL-01-AB-1234 fine Rs. 1000 is pending. Download mParivahan.apk to pay immediately: https://echallan-pay.xyz/mparivahan.apk",
+        "India Post: Your package IN98234 delivery failed due to incorrect address. Please update your address within 24 hours: https://indiapost-update.top/track",
+        "Dear consumer, your electricity power will be disconnected at 9:30 PM due to unpaid bill. Call electricity officer now: 9876543210"
+      ].join('\n\n');
+      smsInput.value = govBatch;
+      updateInputCount();
+      runBatchClassification(govBatch);
+    });
+  }
+
+  // Character counter & message counter
   smsInput.addEventListener('input', () => {
-    charCount.textContent = `${smsInput.value.length} characters`;
+    updateInputCount();
   });
 
   // Clear button
   clearBtn.addEventListener('click', () => {
     smsInput.value = '';
-    charCount.textContent = '0 characters';
+    updateInputCount();
     resultsSection.style.display = 'none';
+    if (batchResultsSection) batchResultsSection.style.display = 'none';
     smsInput.focus();
   });
 
-  // Preset chips
+  // Preset chips (Single mode)
   presetChips.forEach(chip => {
     chip.addEventListener('click', () => {
       const msg = chip.getAttribute('data-msg');
-      smsInput.value = msg;
-      charCount.textContent = `${msg.length} characters`;
-      runClassification(msg);
+      if (msg) {
+        smsInput.value = msg;
+        updateInputCount();
+        runClassification(msg);
+      }
     });
   });
 
-  // Scan Button Click
+  // Scan Button Click (Single / Batch Router)
   scanBtn.addEventListener('click', () => {
     const text = smsInput.value.trim();
     if (!text) {
-      alert('Please enter or paste an SMS message to analyze.');
+      alert('Please enter or paste SMS message(s) to analyze.');
       smsInput.focus();
       return;
     }
-    runClassification(text);
+    if (currentScanMode === 'single') {
+      runClassification(text);
+    } else {
+      runBatchClassification(text);
+    }
   });
 
   // Copy JSON Button
@@ -442,11 +559,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Main Classification Function
+  // Main Classification Function (Single Mode)
   async function runClassification(message) {
     scanBtn.disabled = true;
     btnText.textContent = 'Analyzing Threat...';
     btnIcon.textContent = '⏳';
+    if (batchResultsSection) batchResultsSection.style.display = 'none';
 
     try {
       const res = await fetch('/api/classify', {
@@ -568,41 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Populate RAG Threat Intelligence & Advisory Grounding
-    const ragGrounding = data.rag_grounding;
-    const ragBox = document.getElementById('ragGroundingBox');
-    const ragSimilarityBadge = document.getElementById('ragSimilarityBadge');
-    const ragAdvisoryTitle = document.getElementById('ragAdvisoryTitle');
-    const ragModus = document.getElementById('ragModus');
-    const ragBulletinPill = document.getElementById('ragBulletinPill');
-    const ragLegalPill = document.getElementById('ragLegalPill');
-    const ragActionText = document.getElementById('ragActionText');
-
-    if (ragBox && ragGrounding && ragGrounding.has_match && ragGrounding.best_match && verdict !== 'safe') {
-      const match = ragGrounding.best_match;
-      ragBox.style.display = 'block';
-      if (ragSimilarityBadge) {
-        ragSimilarityBadge.textContent = `${Math.round(match.similarity * 100)}% Vector Match`;
-      }
-      if (ragAdvisoryTitle) {
-        ragAdvisoryTitle.textContent = `🚨 ${match.title}`;
-      }
-      if (ragModus) {
-        ragModus.textContent = match.modus_operandi;
-      }
-      if (ragBulletinPill) {
-        ragBulletinPill.textContent = `📋 ${match.i4c_advisory || match.cert_in_bulletin}`;
-      }
-      if (ragLegalPill) {
-        ragLegalPill.textContent = `⚖️ ${match.legal_sections ? match.legal_sections[0] : 'IT Act § 66D'}`;
-      }
-      if (ragActionText) {
-        ragActionText.textContent = match.action_plan || 'Do not engage. Report immediately to 1930.';
-      }
-    } else if (ragBox) {
-      ragBox.style.display = 'none';
-    }
-
     // Deobfuscation Box
     if (deobfRaw) deobfRaw.textContent = `"${message}"`;
     if (deobfClean) {
@@ -614,8 +697,160 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         deobfClean.textContent = 'Clean / Standard Text (No Levenshtein Obfuscation Detected)';
       }
+    // FEATURE 1: Render Similar Past Scams from Turso Threat Intelligence Feed
+    if (similarScamsContainer && similarScamsList) {
+      if (data.similar_flags && data.similar_flags.length > 0) {
+        similarScamsContainer.style.display = 'block';
+        if (similarScamsCount) {
+          similarScamsCount.textContent = `${data.similar_flags.length} historical match${data.similar_flags.length > 1 ? 'es' : ''}`;
+        }
+        similarScamsList.innerHTML = data.similar_flags.map(flag => {
+          const scorePct = Math.round((flag.risk_score || 0) * 100);
+          const badgeClass = flag.verdict === 'high_risk' ? 'high_risk' : (flag.verdict === 'suspicious' ? 'suspicious' : 'safe');
+          const badgeText = flag.verdict === 'high_risk' ? '🚨 HIGH RISK' : (flag.verdict === 'suspicious' ? '⚠️ SUSPICIOUS' : '✅ SAFE');
+          const timeStr = flag.created_at ? new Date(flag.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recent';
+          const truncated = flag.message.length > 120 ? flag.message.substring(0, 120) + '...' : flag.message;
+
+          return `
+            <div class="similar-scam-card ${badgeClass}">
+              <div class="similar-scam-top">
+                <span class="similar-badge ${badgeClass}">${badgeText} • ${scorePct}% Risk</span>
+                <span style="color: var(--gold-light); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600;">${escapeHtml(flag.scam_type || 'THREAT')}</span>
+              </div>
+              <div class="similar-scam-msg">"${escapeHtml(truncated)}"</div>
+              <div class="similar-scam-meta">
+                <span>🕒 ${timeStr}</span>
+                ${flag.trigger_phrases && flag.trigger_phrases.length > 0 ? `<span>• Triggers: ${escapeHtml(flag.trigger_phrases.slice(0, 3).join(', '))}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        similarScamsContainer.style.display = 'none';
+      }
     }
   }
+
+  // FEATURE 2: Batch Classification Function
+  async function runBatchClassification(rawText) {
+    const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) {
+      alert('Please enter at least one message for batch analysis.');
+      return;
+    }
+
+    scanBtn.disabled = true;
+    btnText.textContent = `Analyzing ${lines.length} Messages in Batch...`;
+    btnIcon.textContent = '⏳';
+    resultsSection.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/classify-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: lines })
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server returned status ${res.status}`);
+      }
+
+      const data = await res.json();
+      renderBatchResults(data);
+
+      // Trigger 3D WebGL Hologram Pulse
+      if (typeof pulse3dShield === 'function') {
+        pulse3dShield(data.scams_detected > 0 ? 'high_risk' : 'safe');
+      }
+
+      // Refresh live threat feed & live stats
+      fetchRecentFlags();
+      fetchStats();
+    } catch (err) {
+      console.error('Batch classification error:', err);
+      alert('Batch classification failed: ' + err.message);
+    } finally {
+      scanBtn.disabled = false;
+      btnText.textContent = 'Execute Batch Threat Analysis';
+      btnIcon.textContent = '🛡️';
+    }
+  }
+
+  // Render Batch Results Dashboard
+  function renderBatchResults(data) {
+    if (!batchResultsSection || !batchResultsList) return;
+
+    const { total, scams_detected, results } = data;
+    const safeCount = total - scams_detected;
+
+    // Summary Strip
+    if (batchSummaryStrip) {
+      batchSummaryStrip.innerHTML = `
+        <span class="batch-summary-pill">Total: <strong>${total}</strong> Messages</span>
+        <span class="batch-summary-pill rose">🚨 <strong>${scams_detected}</strong> Scams Blocked</span>
+        <span class="batch-summary-pill emerald">✅ <strong>${safeCount}</strong> Clean / Safe</span>
+        <span class="batch-summary-pill" style="color: var(--cyan-accent); border-color: rgba(56, 189, 248, 0.3);">⚡ Sub-45ms / Msg</span>
+      `;
+    }
+
+    // Results List
+    batchResultsList.innerHTML = results.map(item => {
+      const scorePct = Math.round((item.risk_score || 0) * 100);
+      const isHighRisk = item.verdict === 'high_risk';
+      const isSuspicious = item.verdict === 'suspicious';
+      const badgeClass = isHighRisk ? 'high_risk' : (isSuspicious ? 'suspicious' : 'safe');
+      const badgeText = isHighRisk ? '🚨 HIGH RISK' : (isSuspicious ? '⚠️ SUSPICIOUS' : '✅ SAFE');
+
+      return `
+        <div class="batch-item-card ${badgeClass}">
+          <div class="batch-item-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="batch-item-index">#${item.index}</span>
+              <span class="threat-verdict-pill ${badgeClass}" style="font-size: 0.72rem; padding: 2px 8px;">
+                ${badgeText} (${scorePct}%)
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold-light); font-weight: 600;">
+                ${escapeHtml(item.scam_type || 'GENERAL')}
+              </span>
+            </div>
+          </div>
+
+          <div class="batch-item-msg">"${escapeHtml(item.message)}"</div>
+
+          <div class="batch-item-footer">
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint);">Top Trigger:</span>
+              <span class="threat-tag" style="padding: 2px 6px; font-size: 0.68rem;">${escapeHtml(item.top_trigger || 'None')}</span>
+              ${item.trigger_phrases && item.trigger_phrases.length > 1 ? `
+                <span class="threat-tag" style="padding: 2px 6px; font-size: 0.68rem;">${escapeHtml(item.trigger_phrases[1])}</span>
+              ` : ''}
+            </div>
+
+            <button class="batch-reasoning-toggle" onclick="toggleBatchReasoning(${item.index})">
+              <span>View AI Reasoning ▼</span>
+            </button>
+          </div>
+
+          <div class="batch-reasoning-box" id="batchReasoning_${item.index}">
+            <strong style="color: var(--gold-light);">AI Diagnostic Reasoning:</strong> ${escapeHtml(item.reasoning || 'Heuristic rules + Gemini Flash evaluation.')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    batchResultsSection.style.display = 'block';
+    batchResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Global toggle for batch reasoning accordion
+  window.toggleBatchReasoning = function(index) {
+    const box = document.getElementById(`batchReasoning_${index}`);
+    if (box) {
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+  };
 
   // Fetch Live DB Stats
   async function fetchStats() {

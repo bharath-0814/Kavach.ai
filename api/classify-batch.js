@@ -52,91 +52,90 @@ module.exports = async function handler(req, res) {
 
     // Cap batch size to 10 messages for demo performance & rate limit protection
     const batchList = messages.slice(0, 10);
-    const results = [];
-    let scamsDetected = 0;
 
-    for (let i = 0; i < batchList.length; i++) {
-      const msg = batchList[i];
-      try {
-        // Step 1: Run Deterministic Levenshtein & Regex Rule Engine
-        const ruleResult = analyzeScamPatterns(msg);
-        const ruleScore = ruleResult.ruleScore;
+    const processedResults = await Promise.all(
+      batchList.map(async (msg, i) => {
+        try {
+          // Step 1: Run Deterministic Levenshtein & Regex Rule Engine
+          const ruleResult = analyzeScamPatterns(msg);
+          const ruleScore = ruleResult.ruleScore;
 
-        // Step 2: Call Gemini AI (with retries and fallback)
-        const geminiResult = await callGeminiClassifier(msg, ruleResult);
-        const geminiConfidence = geminiResult.confidence;
+          // Step 2: Call Gemini AI (with retries and fallback)
+          const geminiResult = await callGeminiClassifier(msg, ruleResult);
+          const geminiConfidence = geminiResult.confidence;
 
-        // Step 3: Combine scores: 40% Rule + 60% Gemini AI
-        const rawFinalScore = (ruleScore * 0.4) + (geminiConfidence * 0.6);
-        const finalScore = Number(Math.min(Math.max(rawFinalScore, 0.0), 1.0).toFixed(4));
+          // Step 3: Combine scores: 40% Rule + 60% Gemini AI
+          const rawFinalScore = (ruleScore * 0.4) + (geminiConfidence * 0.6);
+          const finalScore = Number(Math.min(Math.max(rawFinalScore, 0.0), 1.0).toFixed(4));
 
-        // Step 4: Determine Verdict
-        let verdict = 'safe';
-        if (finalScore >= 0.65) {
-          verdict = 'high_risk';
-          scamsDetected++;
-        } else if (finalScore >= 0.35) {
-          verdict = 'suspicious';
-          scamsDetected++;
-        }
-
-        // Step 5: Merge trigger phrases & determine scam type
-        const combinedPhrases = Array.from(new Set([
-          ...(ruleResult.triggerPhrases || []),
-          ...(geminiResult.trigger_phrases || [])
-        ]));
-
-        let scamType = geminiResult.scam_type;
-        if (verdict === 'safe') {
-          scamType = 'BENIGN';
-        } else if (!scamType || scamType === 'BENIGN') {
-          scamType = inferScamTypeFromLabels(ruleResult.matchedLabels);
-        }
-
-        // Step 6: Log result to Turso database asynchronously
-        await logFlag({
-          message: msg,
-          risk_score: finalScore,
-          verdict,
-          trigger_phrases: combinedPhrases,
-          scam_type: scamType
-        }).catch(err => console.warn('Batch logFlag warning:', err.message));
-
-        results.push({
-          index: i + 1,
-          message: msg,
-          risk_score: finalScore,
-          verdict,
-          scam_type: scamType,
-          top_trigger: combinedPhrases[0] || 'None',
-          trigger_phrases: combinedPhrases,
-          reasoning: geminiResult.reasoning,
-          breakdown: {
-            rule_score: ruleScore,
-            gemini_confidence: geminiConfidence
+          // Step 4: Determine Verdict
+          let verdict = 'safe';
+          if (finalScore >= 0.65) {
+            verdict = 'high_risk';
+          } else if (finalScore >= 0.35) {
+            verdict = 'suspicious';
           }
-        });
-      } catch (itemErr) {
-        console.error(`Error classifying batch item ${i + 1}:`, itemErr);
-        results.push({
-          index: i + 1,
-          message: msg,
-          risk_score: 0.5,
-          verdict: 'suspicious',
-          scam_type: 'ERROR',
-          top_trigger: 'Analysis Error',
-          trigger_phrases: [],
-          reasoning: 'Classification error: ' + itemErr.message,
-          breakdown: { rule_score: 0.5, gemini_confidence: 0.5 }
-        });
-      }
-    }
+
+          // Step 5: Merge trigger phrases & determine scam type
+          const combinedPhrases = Array.from(new Set([
+            ...(ruleResult.triggerPhrases || []),
+            ...(geminiResult.trigger_phrases || [])
+          ]));
+
+          let scamType = geminiResult.scam_type;
+          if (verdict === 'safe') {
+            scamType = 'BENIGN';
+          } else if (!scamType || scamType === 'BENIGN') {
+            scamType = inferScamTypeFromLabels(ruleResult.matchedLabels);
+          }
+
+          // Step 6: Log result to Turso database asynchronously
+          logFlag({
+            message: msg,
+            risk_score: finalScore,
+            verdict,
+            trigger_phrases: combinedPhrases,
+            scam_type: scamType
+          }).catch(err => console.warn('Batch logFlag warning:', err.message));
+
+          return {
+            index: i + 1,
+            message: msg,
+            risk_score: finalScore,
+            verdict,
+            scam_type: scamType,
+            top_trigger: combinedPhrases[0] || 'None',
+            trigger_phrases: combinedPhrases,
+            reasoning: geminiResult.reasoning,
+            breakdown: {
+              rule_score: ruleScore,
+              gemini_confidence: geminiConfidence
+            }
+          };
+        } catch (itemErr) {
+          console.error(`Error classifying batch item ${i + 1}:`, itemErr);
+          return {
+            index: i + 1,
+            message: msg,
+            risk_score: 0.5,
+            verdict: 'suspicious',
+            scam_type: 'ERROR',
+            top_trigger: 'Analysis Error',
+            trigger_phrases: [],
+            reasoning: 'Classification error: ' + itemErr.message,
+            breakdown: { rule_score: 0.5, gemini_confidence: 0.5 }
+          };
+        }
+      })
+    );
+
+    const scamsDetected = processedResults.filter(r => r.verdict === 'high_risk' || r.verdict === 'suspicious').length;
 
     return res.status(200).json({
       success: true,
-      total: results.length,
+      total: processedResults.length,
       scams_detected: scamsDetected,
-      results,
+      results: processedResults,
       timestamp: new Date().toISOString()
     });
 

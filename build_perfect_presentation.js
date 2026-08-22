@@ -5,10 +5,10 @@ async function buildPerfectPresentation() {
   const pptx = new pptxgen();
   pptx.layout = 'LAYOUT_16x9'; // 13.333 x 7.5 inches
 
-  // Color Palette Constants
+  // Color Palette Constants (Luxury Obsidian & Cyber Accents)
   const BG_DARK = '08080A';
   const CARD_BG = '12121A';
-  const CARD_BORDER = '222230';
+  const CARD_BORDER = '20202E';
   const CARD_BG_ALT = '161622';
   
   const TEXT_WHITE = 'F8FAFC';
@@ -27,48 +27,48 @@ async function buildPerfectPresentation() {
   const FONT_SANS = 'Arial';
   const FONT_MONO = 'Consolas';
 
-  // Absolute asset paths
+  // Asset paths
   const LOGO_PATH = path.join(__dirname, 'assets', 'acm_logo.png');
   const HERO_IMG_PATH = path.join(__dirname, 'assets', 'hero_metrics.png');
   const INGEST_IMG_PATH = path.join(__dirname, 'assets', 'ingestion_terminal.png');
   const WORKBENCH_IMG_PATH = path.join(__dirname, 'assets', 'workbench_feed.png');
 
-  // Helper: Setup uniform dark background & header across all slides
+  // Header Helper: Pinned cleanly in top 1.05 inches with transparent logo
   function setupHeader(slide, categoryTag, titleText) {
     slide.background = { color: BG_DARK };
 
-    // ACM Logo at top-left
+    // Transparent ACM Diamond Logo (Cleanly sized & aligned)
     slide.addImage({
       path: LOGO_PATH,
-      x: 0.6, y: 0.35, w: 0.65, h: 0.65
+      x: 0.6, y: 0.28, w: 0.52, h: 0.52
     });
 
     // Category Tag
     slide.addText(categoryTag, {
-      x: 1.4, y: 0.35, w: 10.5, h: 0.25,
-      fontSize: 9, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
+      x: 1.25, y: 0.28, w: 11.4, h: 0.2,
+      fontSize: 8.5, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
     });
 
     // Main Slide Title
     slide.addText(titleText, {
-      x: 1.4, y: 0.65, w: 11.2, h: 0.45,
-      fontSize: 18, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
+      x: 1.25, y: 0.52, w: 11.4, h: 0.4,
+      fontSize: 16, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
     });
 
-    // Subtle 1px Header Separator Line
+    // Subtle 1px Header Line
     slide.addShape(pptx.ShapeType.line, {
-      x: 0.6, y: 1.2, w: 12.13, h: 0,
-      line: { color: '20202C', width: 1 }
+      x: 0.6, y: 1.05, w: 12.13, h: 0,
+      line: { color: '1C1C28', width: 1 }
     });
   }
 
-  // Helper: Rectangular Card Shape
+  // Helper: Card Shape
   function addCard(slide, x, y, w, h, bg = CARD_BG, border = CARD_BORDER) {
     slide.addShape(pptx.ShapeType.rect, {
       x, y, w, h,
       fill: { color: bg },
       line: { color: border, width: 1 },
-      rectRadius: 0.05
+      rectRadius: 0.04
     });
   }
 
@@ -79,33 +79,33 @@ async function buildPerfectPresentation() {
     const slide = pptx.addSlide();
     setupHeader(slide, '⚡ ELICIT ACM HACKATHON • TEAM NULL POINTERS • CYBERSECURITY TRACK', 'Kavach AI (कवच) — Vernacular SMS Phishing Defense');
 
-    // Left Column: Hook + Pitch + Team Grid
-    addCard(slide, 0.6, 1.4, 6.6, 5.6);
-    
+    // Left Column: Hook + Pitch + Team Roster Grid (Budget: y: 1.25 to 6.6)
+    addCard(slide, 0.6, 1.22, 6.6, 5.4);
+
     slide.addText('Over ₹1,750+ Crore Lost to SMS Fraud in India', {
-      x: 0.85, y: 1.6, w: 6.1, h: 0.35,
-      fontSize: 14, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
-    });
-    
-    slide.addText('80%+ of smishing attacks in India now write Hindi in English letters ("bijli disconnect", "khata block"), completely bypassing standard telecom and English NLP firewalls.', {
-      x: 0.85, y: 2.0, w: 6.1, h: 0.65,
-      fontSize: 10, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 14
+      x: 0.85, y: 1.38, w: 6.1, h: 0.3,
+      fontSize: 13, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
 
-    slide.addText('🛡️ The Kavach Solution:', {
-      x: 0.85, y: 2.7, w: 6.1, h: 0.25,
-      fontSize: 10.5, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
-    });
-    
-    slide.addText('India’s first dual-engine defense shield fusing deterministic Levenshtein deobfuscation (<15ms) with Google Gemini Flash AI (60%) for real-time vernacular fraud interception in <45ms.', {
-      x: 0.85, y: 2.95, w: 6.1, h: 0.55,
-      fontSize: 9.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
+    slide.addText('80%+ of smishing attacks in India now write Hindi in English letters ("bijli disconnect", "khata block"), bypassing standard telecom and English NLP firewalls.', {
+      x: 0.85, y: 1.72, w: 6.1, h: 0.45,
+      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12
     });
 
-    // Team Null Pointers Section
+    slide.addText('🛡️ The Kavach Solution: Dual-Engine Vernacular Defense', {
+      x: 0.85, y: 2.25, w: 6.1, h: 0.22,
+      fontSize: 9, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
+    });
+
+    slide.addText('Fuses deterministic Levenshtein deobfuscation (<15ms) with Google Gemini Flash AI (60%) for real-time fraud interception in <45ms.', {
+      x: 0.85, y: 2.50, w: 6.1, h: 0.35,
+      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
+    });
+
+    // Team Null Pointers Section Header
     slide.addText('👥 TEAM NULL POINTERS', {
-      x: 0.85, y: 3.65, w: 6.1, h: 0.25,
-      fontSize: 9, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
+      x: 0.85, y: 2.95, w: 6.1, h: 0.2,
+      fontSize: 8, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
     });
 
     const team = [
@@ -119,39 +119,40 @@ async function buildPerfectPresentation() {
       const col = i % 2;
       const row = Math.floor(i / 2);
       const tx = 0.85 + (col * 3.1);
-      const ty = 4.0 + (row * 1.35);
+      const ty = 3.25 + (row * 1.55);
 
-      addCard(slide, tx, ty, 2.95, 1.25, CARD_BG_ALT, '28283C');
+      addCard(slide, tx, ty, 2.95, 1.42, CARD_BG_ALT, '242436');
       slide.addText(t.name, {
-        x: tx + 0.1, y: ty + 0.1, w: 2.75, h: 0.35,
-        fontSize: 9.5, fontFace: FONT_SANS, color: TEXT_WHITE, bold: true
+        x: tx + 0.12, y: ty + 0.12, w: 2.7, h: 0.32,
+        fontSize: 9, fontFace: FONT_SANS, color: TEXT_WHITE, bold: true
       });
       slide.addText(t.role, {
-        x: tx + 0.1, y: ty + 0.45, w: 2.75, h: 0.35,
+        x: tx + 0.12, y: ty + 0.48, w: 2.7, h: 0.35,
         fontSize: 7.5, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
       });
       slide.addText(t.focus, {
-        x: tx + 0.1, y: ty + 0.8, w: 2.75, h: 0.35,
+        x: tx + 0.12, y: ty + 0.88, w: 2.7, h: 0.42,
         fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_FAINT
       });
     });
 
-    // Right Column: Live App Screenshot with Metrics
-    addCard(slide, 7.4, 1.4, 5.33, 5.6);
+    // Right Column: Live App Screenshot & Telemetry (Budget: y: 1.25 to 6.6)
+    addCard(slide, 7.4, 1.22, 5.33, 5.4);
+
     slide.addImage({
       path: HERO_IMG_PATH,
-      x: 7.55, y: 1.55, w: 5.03, h: 2.8,
+      x: 7.55, y: 1.38, w: 5.03, h: 2.6,
       sizing: { type: 'contain' }
     });
 
     slide.addText('✦ Live Production Telemetry:', {
-      x: 7.6, y: 4.5, w: 4.9, h: 0.3,
-      fontSize: 11, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 7.55, y: 4.15, w: 4.9, h: 0.25,
+      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
-    
-    slide.addText('• 202+ Indian threat keywords & regional expressions seeded.\n• 99.4% threat detection accuracy across 12 fraud vectors.\n• Mean classification latency under 45ms with 0-downtime AI cascade.\n• Live on Vercel: https://kavach-ai-ten.vercel.app/', {
-      x: 7.6, y: 4.85, w: 4.9, h: 1.9,
-      fontSize: 9, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 14
+
+    slide.addText('• 202+ Indian threat keywords & regional expressions seeded in Turso Cloud.\n• 99.4% threat detection accuracy across 12 fraud vectors.\n• Mean classification latency under 45ms with 0-downtime AI cascade.\n• Production URL: https://kavach-ai-ten.vercel.app/', {
+      x: 7.55, y: 4.45, w: 4.9, h: 1.9,
+      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
     });
   }
 
@@ -162,7 +163,7 @@ async function buildPerfectPresentation() {
     const slide = pptx.addSlide();
     setupHeader(slide, '🚨 ATTACK VECTOR ANALYSIS • PROBLEM STATEMENT', 'The Transliterated Vernacular Smishing Epidemic');
 
-    // Left Column: Key Problem Metrics & Insights
+    // Left Column: 3 Stat Cards
     const statCards = [
       { val: '₹1,750+ Crore', lbl: 'Lost by Indian citizens to cyber financial fraud in 2024 (I4C Data)', col: ACCENT_ROSE },
       { val: '80%+', lbl: 'Smishing messages now use transliterated Hindi with leetspeak mutations', col: ACCENT_AMBER },
@@ -170,23 +171,23 @@ async function buildPerfectPresentation() {
     ];
 
     statCards.forEach((st, idx) => {
-      const cy = 1.4 + (idx * 1.8);
+      const cy = 1.22 + (idx * 1.8);
       addCard(slide, 0.6, cy, 5.4, 1.65);
       slide.addText(st.val, {
-        x: 0.85, y: cy + 0.15, w: 4.9, h: 0.5,
-        fontSize: 22, fontFace: FONT_MONO, color: st.col, bold: true
+        x: 0.85, y: cy + 0.15, w: 4.9, h: 0.45,
+        fontSize: 20, fontFace: FONT_MONO, color: st.col, bold: true
       });
       slide.addText(st.lbl, {
-        x: 0.85, y: cy + 0.75, w: 4.9, h: 0.75,
-        fontSize: 9.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
+        x: 0.85, y: cy + 0.65, w: 4.9, h: 0.85,
+        fontSize: 9, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12
       });
     });
 
     // Right Column: Realistic Attack Examples in India
-    addCard(slide, 6.2, 1.4, 6.53, 5.6);
+    addCard(slide, 6.2, 1.22, 6.53, 5.4);
     slide.addText('📱 Realistic Vernacular Attack Scenarios:', {
-      x: 6.45, y: 1.6, w: 6.0, h: 0.35,
-      fontSize: 13, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 6.45, y: 1.4, w: 6.0, h: 0.3,
+      fontSize: 12, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
 
     const examples = [
@@ -208,18 +209,18 @@ async function buildPerfectPresentation() {
     ];
 
     examples.forEach((ex, idx) => {
-      const ey = 2.05 + (idx * 1.55);
+      const ey = 1.8 + (idx * 1.55);
       slide.addText(ex.title, {
-        x: 6.45, y: ey, w: 6.0, h: 0.25,
-        fontSize: 9.5, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
+        x: 6.45, y: ey, w: 6.0, h: 0.22,
+        fontSize: 9, fontFace: FONT_MONO, color: ACCENT_CYAN, bold: true
       });
       slide.addText(ex.msg, {
-        x: 6.45, y: ey + 0.25, w: 6.0, h: 0.45,
-        fontSize: 8.5, fontFace: FONT_MONO, color: TEXT_WHITE, italic: true
+        x: 6.45, y: ey + 0.24, w: 6.0, h: 0.45,
+        fontSize: 8, fontFace: FONT_MONO, color: TEXT_WHITE, italic: true
       });
       slide.addText(`Impact: ${ex.reason}`, {
-        x: 6.45, y: ey + 0.72, w: 6.0, h: 0.45,
-        fontSize: 8, fontFace: FONT_SANS, color: TEXT_FAINT
+        x: 6.45, y: ey + 0.72, w: 6.0, h: 0.42,
+        fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_FAINT
       });
     });
   }
@@ -234,60 +235,60 @@ async function buildPerfectPresentation() {
     // Comparison Table
     const tableData = [
       [
-        { text: 'Threat Vector / Attack Pattern', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 9 } },
-        { text: 'Telecom DND / SMS Gateways', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 9 } },
-        { text: 'Standard English ML Models', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 9 } },
-        { text: '🛡️ Kavach AI (Our Approach)', options: { bold: true, color: ACCENT_GOLD_LIGHT, fill: '1A1A26', fontSize: 9 } }
+        { text: 'Threat Vector / Attack Pattern', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
+        { text: 'Telecom DND / SMS Gateways', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
+        { text: 'Standard English ML Models', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
+        { text: '🛡️ Kavach AI (Our Approach)', options: { bold: true, color: ACCENT_GOLD_LIGHT, fill: '1A1A26', fontSize: 8.5 } }
       ],
       [
-        { text: 'Transliterated Hinglish ("bijli cut", "khata bandh")', options: { color: TEXT_MUTED, fontSize: 8.5 } },
-        { text: '❌ Blind (0% understanding)', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '❌ Poor semantic capture', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '✅ Native Vernacular Engine (200+ Lexicon)', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8.5 } }
+        { text: 'Transliterated Hinglish ("bijli cut", "khata bandh")', options: { color: TEXT_MUTED, fontSize: 8 } },
+        { text: '❌ Blind (0% understanding)', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '❌ Poor semantic capture', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '✅ Native Vernacular Engine (200+ Lexicon)', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
       ],
       [
-        { text: 'Adversarial Leetspeak ("BLCK", "0TPP", "K-Y-C")', options: { color: TEXT_MUTED, fontSize: 8.5 } },
-        { text: '❌ Bypassed completely', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '❌ Tokenizer splits string', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '✅ 3-Step Levenshtein Normalizer (<15ms)', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8.5 } }
+        { text: 'Adversarial Leetspeak ("BLCK", "0TPP", "K-Y-C")', options: { color: TEXT_MUTED, fontSize: 8 } },
+        { text: '❌ Bypassed completely', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '❌ Tokenizer splits string', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '✅ 3-Step Levenshtein Normalizer (<15ms)', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
       ],
       [
-        { text: 'Part-Time Task Scams ("ghar baithe kamaye")', options: { color: TEXT_MUTED, fontSize: 8.5 } },
-        { text: '❌ Treated as promo SMS', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '❌ Low risk classification', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '✅ Deterministic Fraud Signatures', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8.5 } }
+        { text: 'Part-Time Task Scams ("ghar baithe kamaye")', options: { color: TEXT_MUTED, fontSize: 8 } },
+        { text: '❌ Treated as promo SMS', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '❌ Low risk classification', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '✅ Deterministic Fraud Signatures', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
       ],
       [
-        { text: 'Detection Latency', options: { color: TEXT_MUTED, fontSize: 8.5 } },
-        { text: '200ms - 500ms', options: { color: TEXT_FAINT, fontSize: 8.5 } },
-        { text: '1200ms - 3000ms', options: { color: ACCENT_AMBER, fontSize: 8.5 } },
-        { text: '⚡ <45ms Sub-Second Speed', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8.5 } }
+        { text: 'Detection Latency', options: { color: TEXT_MUTED, fontSize: 8 } },
+        { text: '200ms - 500ms', options: { color: TEXT_FAINT, fontSize: 8 } },
+        { text: '1200ms - 3000ms', options: { color: ACCENT_AMBER, fontSize: 8 } },
+        { text: '⚡ <45ms Sub-Second Speed', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
       ],
       [
-        { text: 'Explainable AI Threat Triggers', options: { color: TEXT_MUTED, fontSize: 8.5 } },
-        { text: '❌ Opaque binary block', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '❌ Generic percentage only', options: { color: ACCENT_ROSE, fontSize: 8.5 } },
-        { text: '✅ Exact Trigger Phrases & AI Reasoning', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8.5 } }
+        { text: 'Explainable AI Threat Triggers', options: { color: TEXT_MUTED, fontSize: 8 } },
+        { text: '❌ Opaque binary block', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '❌ Generic percentage only', options: { color: ACCENT_ROSE, fontSize: 8 } },
+        { text: '✅ Exact Trigger Phrases & AI Reasoning', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
       ]
     ];
 
     slide.addTable(tableData, {
-      x: 0.6, y: 1.4, w: 12.13, h: 3.2,
+      x: 0.6, y: 1.22, w: 12.13, h: 3.1,
       border: { pt: '1', color: CARD_BORDER },
       align: 'left',
       valign: 'middle'
     });
 
     // Concrete Evasion Proof Box (Bottom)
-    addCard(slide, 0.6, 4.8, 12.13, 2.2, '10141E', '1E2D3D');
+    addCard(slide, 0.6, 4.6, 12.13, 2.0, '10141E', '1E2D3D');
     slide.addText('💡 Concrete Evasion Proof ("The Aha! Moment"):', {
-      x: 0.85, y: 4.95, w: 11.6, h: 0.3,
-      fontSize: 11, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 0.85, y: 4.75, w: 11.6, h: 0.25,
+      fontSize: 10.5, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
     
     slide.addText('Raw Input: "Y0UR SB1 ACC0UNT WILL BLCK T0DAY. UPDATE K-Y-C IMMED1ATE: http://bit.ly/sbi-kyc"\n• Traditional Filter: PASS (0% keywords match standard English dictionary; "BLCK" and "SB1" are non-words).\n• Kavach AI: 100% HIGH RISK (Normalized: "block", "sbi", "kyc" | Malicious shortener flagged in 35ms).', {
-      x: 0.85, y: 5.3, w: 11.6, h: 1.4,
-      fontSize: 9.5, fontFace: FONT_MONO, color: TEXT_WHITE, lineSpacing: 14
+      x: 0.85, y: 5.05, w: 11.6, h: 1.35,
+      fontSize: 9, fontFace: FONT_MONO, color: TEXT_WHITE, lineSpacing: 13
     });
   }
 
@@ -298,7 +299,7 @@ async function buildPerfectPresentation() {
     const slide = pptx.addSlide();
     setupHeader(slide, '🛡️ SOLUTION OVERVIEW • CORE DEFENSE PILLARS', 'Kavach AI: Dual-Engine Defense Architecture');
 
-    // Left Column: 4 Architectural Pillars
+    // Left Column: 4 Architectural Pillars (Budget: y: 1.22 to 6.6)
     const pillars = [
       {
         num: '01',
@@ -330,7 +331,7 @@ async function buildPerfectPresentation() {
       const col = idx % 2;
       const row = Math.floor(idx / 2);
       const px = 0.6 + (col * 3.1);
-      const py = 1.4 + (row * 2.75);
+      const py = 1.22 + (row * 2.75);
 
       addCard(slide, px, py, 2.95, 2.6);
       slide.addText(p.num, {
@@ -339,29 +340,29 @@ async function buildPerfectPresentation() {
       });
       slide.addText(p.title, {
         x: px + 0.8, y: py + 0.2, w: 2.0, h: 0.55,
-        fontSize: 10, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
+        fontSize: 9.5, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
       });
       slide.addText(p.desc, {
         x: px + 0.15, y: py + 0.85, w: 2.65, h: 1.6,
-        fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12
+        fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
       });
     });
 
     // Right Column: Ingestion Terminal Screenshot
-    addCard(slide, 7.0, 1.4, 5.73, 5.6);
+    addCard(slide, 7.0, 1.22, 5.73, 5.4);
     slide.addImage({
       path: INGEST_IMG_PATH,
-      x: 7.15, y: 1.55, w: 5.43, h: 3.2,
+      x: 7.15, y: 1.38, w: 5.43, h: 3.1,
       sizing: { type: 'contain' }
     });
 
     slide.addText('✦ Live Threat Ingestion Terminal:', {
-      x: 7.2, y: 4.9, w: 5.3, h: 0.3,
-      fontSize: 11, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 7.2, y: 4.65, w: 5.3, h: 0.25,
+      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
     slide.addText('• Instant preset loading for YouTube scams, e-Challan APKs, SBI KYC, and Bijli cut threats.\n• Sub-pixel responsive input field supporting multi-dialect Indian text.\n• Dual-engine scoring trigger with real-time feedback.', {
-      x: 7.2, y: 5.25, w: 5.3, h: 1.5,
-      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
+      x: 7.2, y: 4.95, w: 5.3, h: 1.5,
+      fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12
     });
   }
 
@@ -383,18 +384,18 @@ async function buildPerfectPresentation() {
 
     steps.forEach((st, idx) => {
       const sx = 0.6 + (idx * 2.45);
-      addCard(slide, sx, 1.4, 2.35, 2.2);
+      addCard(slide, sx, 1.22, 2.35, 2.1);
       slide.addText(st.step, {
-        x: sx + 0.15, y: 1.55, w: 2.05, h: 0.25,
-        fontSize: 8.5, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
+        x: sx + 0.15, y: 1.35, w: 2.05, h: 0.22,
+        fontSize: 8, fontFace: FONT_MONO, color: ACCENT_GOLD, bold: true
       });
       slide.addText(st.title, {
-        x: sx + 0.15, y: 1.85, w: 2.05, h: 0.45,
-        fontSize: 10, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
+        x: sx + 0.15, y: 1.62, w: 2.05, h: 0.42,
+        fontSize: 9.5, fontFace: FONT_SERIF, color: TEXT_WHITE, bold: true
       });
       slide.addText(st.text, {
-        x: sx + 0.15, y: 2.35, w: 2.05, h: 1.1,
-        fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
+        x: sx + 0.15, y: 2.10, w: 2.05, h: 1.1,
+        fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
       });
     });
 
@@ -410,16 +411,16 @@ async function buildPerfectPresentation() {
       const col = idx % 2;
       const row = Math.floor(idx / 2);
       const bx = 0.6 + (col * 6.15);
-      const by = 3.8 + (row * 1.6);
+      const by = 3.6 + (row * 1.55);
 
-      addCard(slide, bx, by, 5.98, 1.45);
+      addCard(slide, bx, by, 5.98, 1.4);
       slide.addText(sb.title, {
-        x: bx + 0.2, y: by + 0.15, w: 5.58, h: 0.25,
-        fontSize: 9.5, fontFace: FONT_SERIF, color: ACCENT_CYAN, bold: true
+        x: bx + 0.2, y: by + 0.12, w: 5.58, h: 0.25,
+        fontSize: 9, fontFace: FONT_SERIF, color: ACCENT_CYAN, bold: true
       });
       slide.addText(sb.items, {
-        x: bx + 0.2, y: by + 0.45, w: 5.58, h: 0.9,
-        fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
+        x: bx + 0.2, y: by + 0.40, w: 5.58, h: 0.85,
+        fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
       });
     });
   }
@@ -434,76 +435,76 @@ async function buildPerfectPresentation() {
     // Left Column: Benchmark Table
     const demoData = [
       [
-        { text: 'Attack Vector', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
-        { text: 'Latency', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
-        { text: 'Risk Score', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } },
-        { text: 'Verdict', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8.5 } }
+        { text: 'Attack Vector', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8 } },
+        { text: 'Latency', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8 } },
+        { text: 'Risk Score', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8 } },
+        { text: 'Verdict', options: { bold: true, color: TEXT_WHITE, fill: '1A1A26', fontSize: 8 } }
       ],
       [
-        { text: 'YouTube Task Scam', options: { color: TEXT_WHITE, fontSize: 8 } },
-        { text: '38ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } },
-        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } }
+        { text: 'YouTube Task Scam', options: { color: TEXT_WHITE, fontSize: 7.5 } },
+        { text: '38ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } },
+        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } }
       ],
       [
-        { text: 'Bijli Cut Threat', options: { color: TEXT_WHITE, fontSize: 8 } },
-        { text: '42ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } },
-        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } }
+        { text: 'Bijli Cut Threat', options: { color: TEXT_WHITE, fontSize: 7.5 } },
+        { text: '42ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } },
+        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } }
       ],
       [
-        { text: 'SBI KYC Leetspeak', options: { color: TEXT_WHITE, fontSize: 8 } },
-        { text: '35ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } },
-        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } }
+        { text: 'SBI KYC Leetspeak', options: { color: TEXT_WHITE, fontSize: 7.5 } },
+        { text: '35ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } },
+        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } }
       ],
       [
-        { text: 'Traffic e-Challan APK', options: { color: TEXT_WHITE, fontSize: 8 } },
-        { text: '44ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } },
-        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 8 } }
+        { text: 'Traffic e-Challan APK', options: { color: TEXT_WHITE, fontSize: 7.5 } },
+        { text: '44ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '100%', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } },
+        { text: '🚨 HIGH RISK', options: { color: ACCENT_ROSE, bold: true, fontSize: 7.5 } }
       ],
       [
-        { text: 'Benign Hindi Chat', options: { color: TEXT_WHITE, fontSize: 8 } },
-        { text: '28ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '0%', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } },
-        { text: '✅ SAFE & VERIFIED', options: { color: ACCENT_EMERALD, bold: true, fontSize: 8 } }
+        { text: 'Benign Hindi Chat', options: { color: TEXT_WHITE, fontSize: 7.5 } },
+        { text: '28ms', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '0%', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } },
+        { text: '✅ SAFE & VERIFIED', options: { color: ACCENT_EMERALD, bold: true, fontSize: 7.5 } }
       ]
     ];
 
     slide.addTable(demoData, {
-      x: 0.6, y: 1.4, w: 5.6, h: 3.2,
+      x: 0.6, y: 1.22, w: 5.6, h: 2.8,
       border: { pt: '1', color: CARD_BORDER },
       align: 'left',
       valign: 'middle'
     });
 
     // Live Links Card
-    addCard(slide, 0.6, 4.8, 5.6, 2.2, '10141E', '1E2D3D');
+    addCard(slide, 0.6, 4.2, 5.6, 2.4, '10141E', '1E2D3D');
     slide.addText('🌐 Production Deployment Links:', {
-      x: 0.85, y: 4.95, w: 5.1, h: 0.3,
-      fontSize: 10.5, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 0.85, y: 4.35, w: 5.1, h: 0.25,
+      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
     slide.addText('• Live Web App: https://kavach-ai-ten.vercel.app/\n• Open Source Code: https://github.com/bharath-0814/Kavach.ai\n• Cloud Database: Turso Cloud LibSQL (AWS Mumbai)\n• Multi-Model Pool: Gemini 3.5, 3.7 & Flash-Latest', {
-      x: 0.85, y: 5.3, w: 5.1, h: 1.5,
-      fontSize: 8.5, fontFace: FONT_MONO, color: TEXT_MUTED, lineSpacing: 13
+      x: 0.85, y: 4.65, w: 5.1, h: 1.7,
+      fontSize: 8, fontFace: FONT_MONO, color: TEXT_MUTED, lineSpacing: 12
     });
 
     // Right Column: Workbench & Threat Feed Screenshot
-    addCard(slide, 6.4, 1.4, 6.33, 5.6);
+    addCard(slide, 6.4, 1.22, 6.33, 5.4);
     slide.addImage({
       path: WORKBENCH_IMG_PATH,
-      x: 6.55, y: 1.55, w: 6.03, h: 4.0,
+      x: 6.55, y: 1.38, w: 6.03, h: 3.8,
       sizing: { type: 'contain' }
     });
 
     slide.addText('✦ Live Deobfuscation Workbench & Cloud Threat Feed:', {
-      x: 6.6, y: 5.7, w: 5.9, h: 0.25,
-      fontSize: 9.5, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
+      x: 6.6, y: 5.45, w: 5.9, h: 0.25,
+      fontSize: 9, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true
     });
     slide.addText('Real-time Levenshtein distance matching + Turso Cloud audit trail with top-11 pagination.', {
-      x: 6.6, y: 6.0, w: 5.9, h: 0.7,
-      fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED
+      x: 6.6, y: 5.75, w: 5.9, h: 0.65,
+      fontSize: 7.5, fontFace: FONT_SANS, color: TEXT_MUTED
     });
   }
 
@@ -515,27 +516,27 @@ async function buildPerfectPresentation() {
     setupHeader(slide, '🚀 HACKATHON ROUND 2 COMMITMENT • FUTURE ADVANCEMENTS', 'On-Device RAG & Privacy-Preserving Self-Learning');
 
     // Left Column: Edge-Native RAG
-    addCard(slide, 0.6, 1.4, 5.9, 5.6);
+    addCard(slide, 0.6, 1.22, 5.9, 5.4);
     slide.addText('🧠 1. Edge-Native RAG over Local Vector DB', {
-      x: 0.85, y: 1.65, w: 5.4, h: 0.35,
-      fontSize: 12.5, fontFace: FONT_SERIF, color: ACCENT_CYAN, bold: true
+      x: 0.85, y: 1.45, w: 5.4, h: 0.3,
+      fontSize: 11.5, fontFace: FONT_SERIF, color: ACCENT_CYAN, bold: true
     });
 
     slide.addText('• On-Device Vector Embeddings: An ultra-compact local vector database (SQLite-VSS / local HNSW index) stores semantic embeddings of known scam tactics, fraudulent APK signatures, and vernacular evasion patterns.\n\n• Sub-10ms Cosine Similarity: When an SMS arrives, the app performs a localized vector similarity lookup completely offline.\n\n• Contextual Threat Augmentation: An on-device quantized Small Language Model (SLM) retrieves matching threat tactics and explains the exact scam modus operandi without touching the cloud.\n\n• 100% Offline Capability: Operates seamlessly in flight mode or remote rural areas with zero internet connectivity.', {
-      x: 0.85, y: 2.1, w: 5.4, h: 4.6,
-      fontSize: 9, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 14
+      x: 0.85, y: 1.85, w: 5.4, h: 4.6,
+      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
     });
 
     // Right Column: Privacy-Preserving Federated Self-Learning
-    addCard(slide, 6.83, 1.4, 5.9, 5.6);
+    addCard(slide, 6.83, 1.22, 5.9, 5.4);
     slide.addText('🔒 2. Privacy-First Federated Self-Learning', {
-      x: 7.08, y: 1.65, w: 5.4, h: 0.35,
-      fontSize: 12.5, fontFace: FONT_SERIF, color: ACCENT_EMERALD, bold: true
+      x: 7.08, y: 1.45, w: 5.4, h: 0.3,
+      fontSize: 11.5, fontFace: FONT_SERIF, color: ACCENT_EMERALD, bold: true
     });
 
     slide.addText('• 100% DPDP Act 2023 Compliance: Personal SMS messages are never uploaded to any remote server, guaranteeing absolute citizen privacy.\n\n• Localized Dialect Adaptation: As users flag or verify emerging regional dialect SMS on their phones, the local model continuously adapts to user dialect habits.\n\n• Federated Weight Aggregation: Only encrypted mathematical gradient delta updates (not user text) are periodically synced across devices to improve the collective Indic vocabulary across India.\n\n• Hardware Secure Enclave: Executed strictly inside Apple Neural Engine / Android NNAPI.', {
-      x: 7.08, y: 2.1, w: 5.4, h: 4.6,
-      fontSize: 9, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 14
+      x: 7.08, y: 1.85, w: 5.4, h: 4.6,
+      fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 13
     });
   }
 
@@ -578,31 +579,31 @@ async function buildPerfectPresentation() {
       const col = idx % 2;
       const row = Math.floor(idx / 2);
       const ux = 0.6 + (col * 6.15);
-      const uy = 1.4 + (row * 2.2);
+      const uy = 1.22 + (row * 2.15);
 
-      addCard(slide, ux, uy, 5.98, 2.05);
+      addCard(slide, ux, uy, 5.98, 2.0);
       slide.addText(`${uc.icon} ${uc.title}`, {
-        x: ux + 0.2, y: uy + 0.2, w: 5.58, h: 0.35,
-        fontSize: 11, fontFace: FONT_SERIF, color: uc.col, bold: true
+        x: ux + 0.2, y: uy + 0.18, w: 5.58, h: 0.32,
+        fontSize: 10.5, fontFace: FONT_SERIF, color: uc.col, bold: true
       });
       slide.addText(uc.desc, {
-        x: ux + 0.2, y: uy + 0.6, w: 5.58, h: 1.3,
-        fontSize: 8.5, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 12
+        x: ux + 0.2, y: uy + 0.55, w: 5.58, h: 1.3,
+        fontSize: 8, fontFace: FONT_SANS, color: TEXT_MUTED, lineSpacing: 11
       });
     });
 
     // Quantified Impact Summary (Bottom)
-    addCard(slide, 0.6, 5.85, 12.13, 1.15, '10141E', '1E2D3D');
+    addCard(slide, 0.6, 5.7, 12.13, 0.95, '10141E', '1E2D3D');
     slide.addText('🎯 Quantified National Impact: 90%+ Reduction in vernacular smishing financial losses • Sub-45ms Zero Latency Overhead on legitimate banking OTPs • 100% Privacy Compliance under Indian DPDP Act 2023.', {
-      x: 0.85, y: 6.05, w: 11.6, h: 0.75,
-      fontSize: 10, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true, align: 'center'
+      x: 0.85, y: 5.85, w: 11.6, h: 0.65,
+      fontSize: 9.5, fontFace: FONT_SERIF, color: ACCENT_GOLD_LIGHT, bold: true, align: 'center'
     });
   }
 
   // Save Presentation
   const outputPath = path.join(__dirname, 'public', 'Kavach_AI_Master_Pitch_Deck.pptx');
   await pptx.writeFile({ fileName: outputPath });
-  console.log(`✅ Master presentation created at: ${outputPath}`);
+  console.log(`✅ Master presentation created successfully at: ${outputPath}`);
 }
 
 buildPerfectPresentation().catch(console.error);

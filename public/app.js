@@ -657,29 +657,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // URL Inspection
+    // URL Forensic Heuristics Inspection
     const urlAnalysis = breakdown?.url_analysis;
     if (urlBox && urlDetails) {
       if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
         urlBox.style.display = 'block';
         let badgesHtml = '';
+
+        if (urlAnalysis.isAllowlisted) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald); color: var(--accent-emerald);">✅ Verified Official Allowlist Domain</span>';
+        }
+        if (urlAnalysis.hasBrandMismatch) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.2); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Domain Spoofing / Entity Mismatch</span>';
+        }
         if (urlAnalysis.hasShortener) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: var(--accent-amber);">⚠️ Shortener Detected</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: var(--accent-amber);">⚠️ URL Shortener Masking</span>';
         }
         if (urlAnalysis.hasSuspiciousTld) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.15); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Suspicious TLD</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.2); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 High-Risk TLD (.xyz / .top)</span>';
         }
         if (urlAnalysis.hasApkDownload) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.15); border-color: var(--accent-rose); color: var(--accent-rose);">⚠️ Malicious APK Download</span>';
+          badgesHtml += '<span class="threat-tag" style="background: rgba(244, 63, 94, 0.25); border-color: var(--accent-rose); color: var(--accent-rose);">🚨 Malicious APK Download Payload</span>';
         }
-        if (!urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
-          badgesHtml += '<span class="threat-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald); color: var(--accent-emerald);">Standard Web Link</span>';
+        if (!urlAnalysis.isAllowlisted && !urlAnalysis.hasBrandMismatch && !urlAnalysis.hasShortener && !urlAnalysis.hasSuspiciousTld && !urlAnalysis.hasApkDownload) {
+          badgesHtml += '<span class="threat-tag" style="background: rgba(56, 189, 248, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan);">External Web Link</span>';
         }
 
         urlDetails.innerHTML = `
-          <div style="margin-bottom: 0.35rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">${badgesHtml}</div>
-          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-cyan); word-break: break-all;">
-            ${urlAnalysis.urls.join(', ')}
+          <div style="margin-bottom: 0.45rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">${badgesHtml}</div>
+          <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-cyan); word-break: break-all; margin-bottom: 0.25rem;">
+            ${urlAnalysis.urls.map(u => `🔗 <span>${escapeHtml(u)}</span>`).join('<br/>')}
           </div>
+          ${urlAnalysis.domainVerdict ? `
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint); margin-top: 0.3rem;">
+              Verdict: <span style="color: var(--gold-light);">${escapeHtml(urlAnalysis.domainVerdict)}</span>
+            </div>
+          ` : ''}
         `;
       } else {
         urlBox.style.display = 'none';

@@ -247,6 +247,24 @@
             </div>
           </div>
 
+          <!-- Inline Leetspeak & Threat Trigger Ingestion Inspector (Image 1) -->
+          <div class="threat-ingestion-card" id="threatIngestionCard">
+            <div class="threat-ingestion-header">
+              <span class="threat-ingestion-tag">SMS threat ingestion</span>
+            </div>
+            <div class="threat-ingestion-body" id="highlightedMessageDisplay">
+              Awaiting SMS analysis...
+            </div>
+            <div class="threat-ingestion-footer">
+              <span class="risk-index-label">Risk index</span>
+              <div class="risk-index-bar-track">
+                <div class="risk-index-bar-fill" id="riskIndexProgress" style="width: 0%;"></div>
+              </div>
+              <span class="risk-index-pct" id="riskIndexPct">0%</span>
+              <span class="threat-verdict-pill safe" id="riskIndexVerdict">safe</span>
+            </div>
+          </div>
+
           <!-- Reasoning Callout -->
           <div class="reasoning-panel" id="aiReasoning">
             Awaiting analysis...
@@ -296,45 +314,56 @@
       <div class="batch-results-list" id="batchResultsList"></div>
     </section>
 
-    <!-- Interactive Levenshtein Deobfuscation Workbench -->
+    <!-- 02 / Side-by-side diff view for the deobfuscation workbench (Image 2) -->
     <section class="arch-card" id="sandbox" style="margin-top: 2rem;">
       <div class="arch-card-header">
         <h3 class="arch-card-title">
-          <span>02 / Interactive Levenshtein Deobfuscation Workbench</span>
+          <span>3. Side-by-side diff view for the deobfuscation workbench</span>
         </h3>
       </div>
-      <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 1rem;">
-        Type any obfuscated keyword, leetspeak token, or vernacular permutation to see 3-step normalization and distance calculation in real-time:
-      </p>
 
-      <div class="workbench-input-row">
-        <input 
-          type="text" 
-          id="sandboxInput" 
-          class="workbench-field" 
-          placeholder="Try typing: BLCK, 0TPP, K-Y-C, b4nd, updte, immed1ate..." 
-          value="BLCK">
-        <button class="editorial-btn" id="testWordBtn" style="padding: 0.65rem 1rem;">
-          Test Word
-        </button>
-      </div>
+      <div class="deobf-diff-card">
+        <div class="deobf-diff-header">
+          <span class="deobf-diff-tag">Levenshtein deobfuscation</span>
+        </div>
 
-      <div class="workbench-grid">
-        <div class="workbench-tile">
-          <div class="tile-label">1. Leetspeak Translation</div>
-          <div class="tile-val" id="sbLeet">block</div>
+        <div class="workbench-input-row" style="margin-bottom: 1.25rem;">
+          <input 
+            type="text" 
+            id="sandboxInput" 
+            class="workbench-field" 
+            placeholder="Type sample: 0TPP, BLCK, K-Y-C, SB1, urget, updte..." 
+            value="0TPP">
+          <button class="editorial-btn" id="testWordBtn" style="padding: 0.65rem 1.25rem;">
+            Test Word
+          </button>
         </div>
-        <div class="workbench-tile">
-          <div class="tile-label">2. Nearest Threat Keyword</div>
-          <div class="tile-val" id="sbThreat">block</div>
+
+        <!-- Side-by-Side Diff Columns (Image 2) -->
+        <div class="deobf-diff-columns">
+          <div class="deobf-diff-col">
+            <div class="deobf-col-label">Original input</div>
+            <div class="deobf-col-val" id="diffOriginalVal">
+              <span class="diff-char-mutated">0</span><span class="diff-char-threat">TPP</span>
+            </div>
+          </div>
+
+          <div class="deobf-diff-col">
+            <div class="deobf-col-label">Normalized</div>
+            <div class="deobf-col-val" id="diffNormalizedVal">
+              <span class="diff-char-clean">OTP</span>
+            </div>
+          </div>
         </div>
-        <div class="workbench-tile">
-          <div class="tile-label">3. Levenshtein Distance</div>
-          <div class="tile-val" style="color: var(--emerald-safe);" id="sbDist">d = 1</div>
-        </div>
-        <div class="workbench-tile">
-          <div class="tile-label">4. Security Action</div>
-          <div class="tile-val" style="color: var(--rose-threat);" id="sbVerdict">Flagged Threat</div>
+
+        <!-- Match Threshold Interactive Slider (Image 2) -->
+        <div class="deobf-threshold-strip">
+          <span class="threshold-label">Match threshold</span>
+          <div class="threshold-slider-wrap">
+            <input type="range" id="thresholdSlider" min="0" max="4" value="2" step="1" class="cyber-slider">
+          </div>
+          <span class="threshold-readout" id="thresholdReadout">d = 1</span>
+          <span class="threshold-status-badge flagged" id="thresholdStatusBadge">flagged</span>
         </div>
       </div>
     </section>

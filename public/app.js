@@ -317,13 +317,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedCountInfo = document.getElementById('feedCountInfo');
   const presetChips = document.querySelectorAll('.preset-tag, .chip-btn, .preset-chip');
 
-  // Sandbox Elements
+  // Side-by-Side Diff Workbench Elements (Image 2 Style)
   const sandboxInput = document.getElementById('sandboxInput');
   const testWordBtn = document.getElementById('testWordBtn');
-  const sbLeet = document.getElementById('sbLeet');
-  const sbThreat = document.getElementById('sbThreat');
-  const sbDist = document.getElementById('sbDist');
-  const sbVerdict = document.getElementById('sbVerdict');
+  const diffOriginalVal = document.getElementById('diffOriginalVal');
+  const diffNormalizedVal = document.getElementById('diffNormalizedVal');
+  const thresholdSlider = document.getElementById('thresholdSlider');
+  const thresholdReadout = document.getElementById('thresholdReadout');
+  const thresholdStatusBadge = document.getElementById('thresholdStatusBadge');
+
+  // Inline Threat Ingestion Inspector Elements (Image 1 Style)
+  const highlightedMessageDisplay = document.getElementById('highlightedMessageDisplay');
+  const riskIndexProgress = document.getElementById('riskIndexProgress');
+  const riskIndexPct = document.getElementById('riskIndexPct');
+  const riskIndexVerdict = document.getElementById('riskIndexVerdict');
 
   let currentAnalysisData = null;
   let cachedFlags = [];
@@ -404,48 +411,46 @@ document.addEventListener('DOMContentLoaded', () => {
     return matrix[b.length][a.length];
   }
 
-  function runSandbox(rawWord) {
+  // Side-by-Side Diff Workbench Logic (Image 2 Style)
+  function renderDiffWorkbench(rawWord, threshold = 2) {
+    if (!diffOriginalVal || !diffNormalizedVal) return;
     if (!rawWord || !rawWord.trim()) {
-      sbLeet.textContent = '""';
-      sbThreat.textContent = 'None';
-      sbDist.textContent = 'd = -';
-      sbVerdict.innerHTML = '<span style="color: var(--text-faint);">Awaiting Input...</span>';
+      diffOriginalVal.innerHTML = '<span style="color: var(--text-faint);">--</span>';
+      diffNormalizedVal.innerHTML = '<span style="color: var(--text-faint);">--</span>';
+      if (thresholdReadout) thresholdReadout.textContent = 'd = -';
+      if (thresholdStatusBadge) {
+        thresholdStatusBadge.className = 'threshold-status-badge clean';
+        thresholdStatusBadge.textContent = 'awaiting';
+      }
       return;
     }
+
     const cleanRaw = rawWord.trim();
+    const thresh = Number(threshold);
 
-    // 1. Separation collapse (e.g. k-y-c -> kyc, s.b.i -> sbi, b l c k -> blck)
+    // 1. Separation collapse & Leet translation
     let collapsed = cleanRaw.replace(/(?<=\b[a-zA-Z0-9])[.\-_/|\\](?=[a-zA-Z0-9]\b)/g, '').replace(/\s+/g, '');
-
-    // 2. Leet translation
     let leet = '';
     for (let i = 0; i < collapsed.length; i++) {
       const c = collapsed[i].toLowerCase();
       leet += CLIENT_LEET_MAP[c] || c;
     }
-    sbLeet.textContent = `"${leet}"`;
 
     const lowerInput = cleanRaw.toLowerCase();
 
-    // 3. Safe Word Check (Protects benign conversational vocabulary from false-positive matches)
+    // Check safe words
     if (CLIENT_SAFE_WORDS.has(lowerInput) || CLIENT_SAFE_WORDS.has(leet)) {
-      sbThreat.textContent = 'None (Safe Word)';
-      sbDist.textContent = 'Protected by Whitelist';
-      sbVerdict.innerHTML = '<span style="color: var(--accent-emerald);">🟢 Safe Conversational Word</span>';
+      diffOriginalVal.innerHTML = `<span class="diff-char-clean">${escapeHtml(cleanRaw)}</span>`;
+      diffNormalizedVal.innerHTML = `<span class="diff-char-clean">${escapeHtml(lowerInput)}</span>`;
+      if (thresholdReadout) thresholdReadout.textContent = 'd = 0';
+      if (thresholdStatusBadge) {
+        thresholdStatusBadge.className = 'threshold-status-badge clean';
+        thresholdStatusBadge.textContent = 'safe';
+      }
       return;
     }
 
-    // 4. Adaptive Thresholding based on Token Length
-    let maxAllowedDistance = 1;
-    if (leet.length <= 3) {
-      maxAllowedDistance = 0; // 3-letter tokens (kyc, otp, sbi, pan) require exact match
-    } else if (leet.length <= 5) {
-      maxAllowedDistance = 1; // 4-5 letter tokens (blck, urget, updat) allow distance <= 1
-    } else {
-      maxAllowedDistance = 2; // 6+ letter tokens allow distance <= 2
-    }
-
-    // 5. Precise Levenshtein Search across Lexicon
+    // Levenshtein search for nearest threat
     let bestMatch = 'None';
     let minDist = Infinity;
 
@@ -457,29 +462,60 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (minDist === 0) {
-      sbThreat.textContent = `"${bestMatch}"`;
-      sbDist.textContent = `d = 0 (Exact Threat Match)`;
-      sbVerdict.innerHTML = '<span style="color: var(--accent-rose);">🚨 Direct Threat Match</span>';
-    } else if (minDist <= maxAllowedDistance) {
-      sbThreat.textContent = `"${bestMatch}"`;
-      sbDist.textContent = `d = ${minDist} (Adaptive Limit ≤ ${maxAllowedDistance})`;
-      sbVerdict.innerHTML = '<span style="color: var(--accent-rose);">🚨 Obfuscation Caught</span>';
-    } else {
-      sbThreat.textContent = bestMatch !== 'None' ? `"${bestMatch}"` : 'None';
-      sbDist.textContent = `d = ${minDist} (Exceeds Max Limit ${maxAllowedDistance})`;
-      sbVerdict.innerHTML = '<span style="color: var(--accent-emerald);">🟢 Safe / Unmatched</span>';
+    // Diff highlighting for original input (Image 2 style)
+    let origHtml = '';
+    const normUpper = bestMatch.toUpperCase();
+    for (let i = 0; i < cleanRaw.length; i++) {
+      const ch = cleanRaw[i];
+      const trans = (CLIENT_LEET_MAP[ch.toLowerCase()] || ch).toUpperCase();
+      if (i < normUpper.length && trans === normUpper[i]) {
+        origHtml += `<span class="diff-char-clean">${escapeHtml(ch)}</span>`;
+      } else {
+        origHtml += `<span class="diff-char-threat">${escapeHtml(ch)}</span>`;
+      }
+    }
+    diffOriginalVal.innerHTML = origHtml;
+
+    // Normalized Threat Display in Green (Image 2 style)
+    diffNormalizedVal.innerHTML = `<span class="diff-char-clean">${escapeHtml(bestMatch.toUpperCase())}</span>`;
+
+    if (thresholdReadout) {
+      thresholdReadout.textContent = `d = ${minDist}`;
+    }
+
+    if (thresholdStatusBadge) {
+      if (minDist <= thresh) {
+        thresholdStatusBadge.className = 'threshold-status-badge flagged';
+        thresholdStatusBadge.textContent = 'flagged';
+      } else {
+        thresholdStatusBadge.className = 'threshold-status-badge clean';
+        thresholdStatusBadge.textContent = 'clean';
+      }
     }
   }
 
-  sandboxInput.addEventListener('input', () => {
-    runSandbox(sandboxInput.value);
-  });
-  testWordBtn.addEventListener('click', () => {
-    runSandbox(sandboxInput.value);
-  });
-  // Initial sandbox run
-  runSandbox('BLCK');
+  if (sandboxInput) {
+    sandboxInput.addEventListener('input', () => {
+      const thresh = thresholdSlider ? thresholdSlider.value : 2;
+      renderDiffWorkbench(sandboxInput.value, thresh);
+    });
+  }
+
+  if (testWordBtn) {
+    testWordBtn.addEventListener('click', () => {
+      const thresh = thresholdSlider ? thresholdSlider.value : 2;
+      renderDiffWorkbench(sandboxInput.value, thresh);
+    });
+  }
+
+  if (thresholdSlider) {
+    thresholdSlider.addEventListener('input', () => {
+      renderDiffWorkbench(sandboxInput.value, thresholdSlider.value);
+    });
+  }
+
+  // Initial workbench run
+  renderDiffWorkbench('0TPP', 2);
 
   // Mode Switching Logic (Feature 2)
   function updateModeUI() {
@@ -748,6 +784,54 @@ document.addEventListener('DOMContentLoaded', () => {
     aiScoreVal.textContent = `${aiPercent}%`;
     aiBar.style.width = `${aiPercent}%`;
 
+    // Render Inline Highlighted Threat Text (Image 1 Style)
+    const urlAnalysis = breakdown?.url_analysis;
+    if (highlightedMessageDisplay) {
+      let rawMsg = message || data.message || (smsInput ? smsInput.value : '');
+      let highlightedHtml = escapeHtml(rawMsg);
+
+      // Collect all triggers, fuzzy matches, and URLs
+      const triggers = (trigger_phrases || []).slice();
+      if (breakdown?.fuzzy_matches) {
+        breakdown.fuzzy_matches.forEach(fm => {
+          if (fm.original && !triggers.includes(fm.original)) triggers.push(fm.original);
+        });
+      }
+
+      // Sort by length descending to prevent partial match conflicts
+      triggers.sort((a, b) => b.length - a.length);
+
+      triggers.forEach((trig, idx) => {
+        if (!trig || trig.trim().length === 0) return;
+        const escapedTrig = escapeHtml(trig).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const colorClass = (idx % 2 === 0) ? 'red' : 'amber';
+        const regex = new RegExp(`(${escapedTrig})`, 'gi');
+        highlightedHtml = highlightedHtml.replace(regex, `<span class="inline-threat-tag ${colorClass}">$1</span>`);
+      });
+
+      if (urlAnalysis?.urls) {
+        urlAnalysis.urls.forEach(u => {
+          const escapedU = escapeHtml(u).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`(${escapedU})`, 'gi');
+          highlightedHtml = highlightedHtml.replace(regex, `<span class="inline-threat-tag amber">$1</span>`);
+        });
+      }
+
+      highlightedMessageDisplay.innerHTML = highlightedHtml || 'Awaiting SMS analysis...';
+    }
+
+    if (riskIndexProgress) {
+      riskIndexProgress.style.width = `${percentage}%`;
+      riskIndexProgress.style.background = verdict === 'high_risk' ? '#f43f5e' : (verdict === 'suspicious' ? '#f59e0b' : '#10b981');
+    }
+    if (riskIndexPct) {
+      riskIndexPct.textContent = `${percentage}%`;
+    }
+    if (riskIndexVerdict) {
+      riskIndexVerdict.className = `threat-verdict-pill ${verdict}`;
+      riskIndexVerdict.textContent = verdict === 'high_risk' ? 'high risk' : verdict;
+    }
+
     aiReasoning.textContent = reasoning || 'No reasoning details available.';
 
     // Trigger phrases
@@ -771,7 +855,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // URL Inspection
     // URL Forensic Heuristics Inspection
-    const urlAnalysis = breakdown?.url_analysis;
     if (urlBox && urlDetails) {
       if (urlAnalysis && urlAnalysis.urls && urlAnalysis.urls.length > 0) {
         urlBox.style.display = 'block';

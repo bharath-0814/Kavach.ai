@@ -331,20 +331,53 @@ document.addEventListener('DOMContentLoaded', () => {
   let feedVisibleLimit = 10;
   const FEED_PAGE_STEP = 10;
 
-  // Client-side threat dictionary for sandbox
+  // Client-side Safe Words Protection Dictionary (prevents false-positive matches on benign vocabulary)
+  const CLIENT_SAFE_WORDS = new Set([
+    'on', 'in', 'at', 'to', 'is', 'it', 'as', 'an', 'be', 'or', 'by', 'of',
+    'we', 'me', 'us', 'up', 'my', 'do', 'go', 'so', 'no', 'if', 'he', 'ok',
+    'your', 'you', 'will', 'with', 'from', 'this', 'that', 'have', 'here',
+    'there', 'where', 'when', 'what', 'which', 'who', 'how', 'why', 'can',
+    'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some',
+    'such', 'than', 'too', 'very', 'just', 'now', 'then', 'also', 'about',
+    'dear', 'user', 'hello', 'sir', 'madam', 'name', 'time', 'date', 'call',
+    'bhai', 'bro', 'yaar', 'dost', 'chai', 'khana', 'peena', 'milte', 'milna',
+    'market', 'aaj', 'kal', 'parso', 'ghar', 'room', 'office', 'kya', 'kyun',
+    'kaise', 'kab', 'kahan', 'kidhar', 'hota', 'hoga', 'hogi', 'karte', 'kare',
+    'karna', 'karo', 'karein', 'kijiye', 'ap', 'aap', 'apka', 'aapka', 'apke', 'aapke',
+    'apni', 'aapni', 'meri', 'mera', 'mere', 'tera', 'teri', 'tere', 'hum',
+    'hamara', 'hamari', 'unka', 'unki', 'unke', 'inka', 'inki', 'inke', 'sab',
+    'kuch', 'aur', 'par', 'pe', 'mein', 'se', 'ko', 'ke', 'ka', 'ki', 'hai',
+    'hain', 'tha', 'the', 'thi', 'raha', 'rahe', 'rahi', 'gaya', 'gaye', 'gayi',
+    'bhi', 'to', 'hi', 'mat', 'na', 'nahi', 'nahin', 'badhai', 'shubh', 'kripya',
+    'dhanyawad', 'please', 'pls', 'thanks', 'thank', 'okay', 'good', 'morning',
+    'night', 'afternoon', 'evening', 'welcome', 'great', 'fine', 'sure', 'yes',
+    'chahte', 'job', 'work', 'daily', 'videos', 'photo', 'income', 'earning',
+    'baithe', 'kamana', 'kamaye', 'like', 'subscribe', 'channel', 'message',
+    'send', 'share', 'contact', 'whatsapp', 'telegram', 'youtube', 'car', 'bike',
+    'home', 'house', 'city', 'delhi', 'mumbai', 'bangalore', 'pune', 'chennai'
+  ]);
+
+  // Client-side threat dictionary for sandbox (comprehensive 100x lexicon)
   const CLIENT_THREAT_LEXICON = [
     'block', 'blocked', 'band', 'bandh', 'rok', 'suspend', 'suspended', 
     'deactivate', 'deactivated', 'expire', 'expired', 'disconnect', 'disconnected', 
-    'terminate', 'freeze', 'frozen', 'penalty', 'challan', 'kyc', 'pan', 'aadhaar', 
-    'aadhar', 'pancard', 'update', 'updated', 'verify', 'verification', 're-kyc', 
-    'submit', 'document', 'otp', 'pin', 'password', 'passcode', 'cvv', 'credential',
-    'bank', 'account', 'khata', 'paisa', 'balance', 'yono', 'sbi', 'hdfc', 'icici', 
-    'pnb', 'axis', 'bob', 'paytm', 'phonepe', 'gpay', 'urgent', 'turant', 'jaldi', 
-    'immediate', 'immediately', 'warning', 'warn', 'hours', 'ghante', 'today',
+    'terminate', 'terminated', 'freeze', 'frozen', 'hold', 'penalty', 'challan', 
+    'echallan', 'e-challan', 'kyc', 'pan', 'aadhaar', 'aadhar', 'pancard', 
+    'update', 'updated', 'verify', 'verification', 're-kyc', 'submit', 'document', 
+    'biometric', 're-verification', 'otp', 'pin', 'password', 'passcode', 'cvv', 
+    'credential', 'mpin', 'tpin', 'anydesk', 'teamviewer', 'quicksupport', 'rustdesk', 
+    'bank', 'account', 'khata', 'balance', 'yono', 'sbi', 'hdfc', 'icici', 'pnb', 
+    'axis', 'bob', 'kotak', 'paytm', 'phonepe', 'gpay', 'cred', 'bhim', 'netbanking', 
+    'atm', 'creditcard', 'debitcard', 'urgent', 'turant', 'jaldi', 'immediate', 
+    'immediately', 'warning', 'warn', 'hours', 'ghante', 'today', 'tonight', 'warna', 
     'lottery', 'inam', 'reward', 'cashback', 'bonus', 'refund', 'winner', 'won', 
-    'claim', 'crore', 'lakh', 'prize', 'bijli', 'electricity', 'ebill', 'power', 
-    'bill', 'officer', 'police', 'cbi', 'trai', 'customs', 'click', 'download', 
-    'install', 'link', 'apk', 'login'
+    'claim', 'crore', 'lakh', 'prize', 'jackpot', 'kbc', 'task', 'part-time', 
+    'full-time', 'commission', 'investment', 'pre-paid', 'bijli', 'electricity', 
+    'ebill', 'power', 'bill', 'officer', 'substation', 'unpaid', 'overdue', 'meter', 
+    'mparivahan', 'parivahan', 'police', 'cbi', 'cybercell', 'warrant', 'court', 
+    'summons', 'customs', 'arrest', 'trai', 'indiapost', 'parcel', 'courier', 
+    'consignment', 'undelivered', 'sim', 'esim', '5g', 'port', 'simswap', 
+    'click', 'download', 'install', 'apk', 'login', 'portal'
   ];
 
   const CLIENT_LEET_MAP = {
@@ -372,11 +405,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function runSandbox(rawWord) {
-    if (!rawWord || !rawWord.trim()) return;
+    if (!rawWord || !rawWord.trim()) {
+      sbLeet.textContent = '""';
+      sbThreat.textContent = 'None';
+      sbDist.textContent = 'd = -';
+      sbVerdict.innerHTML = '<span style="color: var(--text-faint);">Awaiting Input...</span>';
+      return;
+    }
     const cleanRaw = rawWord.trim();
 
-    // 1. Separation collapse
-    let collapsed = cleanRaw.replace(/(?<=\b[a-zA-Z0-9])[.\-_/|\\](?=[a-zA-Z0-9]\b)/g, '');
+    // 1. Separation collapse (e.g. k-y-c -> kyc, s.b.i -> sbi, b l c k -> blck)
+    let collapsed = cleanRaw.replace(/(?<=\b[a-zA-Z0-9])[.\-_/|\\](?=[a-zA-Z0-9]\b)/g, '').replace(/\s+/g, '');
 
     // 2. Leet translation
     let leet = '';
@@ -386,7 +425,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     sbLeet.textContent = `"${leet}"`;
 
-    // 3. Levenshtein search
+    const lowerInput = cleanRaw.toLowerCase();
+
+    // 3. Safe Word Check (Protects benign conversational vocabulary from false-positive matches)
+    if (CLIENT_SAFE_WORDS.has(lowerInput) || CLIENT_SAFE_WORDS.has(leet)) {
+      sbThreat.textContent = 'None (Safe Word)';
+      sbDist.textContent = 'Protected by Whitelist';
+      sbVerdict.innerHTML = '<span style="color: var(--accent-emerald);">🟢 Safe Conversational Word</span>';
+      return;
+    }
+
+    // 4. Adaptive Thresholding based on Token Length
+    let maxAllowedDistance = 1;
+    if (leet.length <= 3) {
+      maxAllowedDistance = 0; // 3-letter tokens (kyc, otp, sbi, pan) require exact match
+    } else if (leet.length <= 5) {
+      maxAllowedDistance = 1; // 4-5 letter tokens (blck, urget, updat) allow distance <= 1
+    } else {
+      maxAllowedDistance = 2; // 6+ letter tokens allow distance <= 2
+    }
+
+    // 5. Precise Levenshtein Search across Lexicon
     let bestMatch = 'None';
     let minDist = Infinity;
 
@@ -398,12 +457,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    sbThreat.textContent = `"${bestMatch}"`;
-    sbDist.textContent = `d = ${minDist} (${minDist <= 2 ? 'Match ≤ 2' : 'No Match'})`;
-
-    if (minDist <= 2) {
+    if (minDist === 0) {
+      sbThreat.textContent = `"${bestMatch}"`;
+      sbDist.textContent = `d = 0 (Exact Threat Match)`;
+      sbVerdict.innerHTML = '<span style="color: var(--accent-rose);">🚨 Direct Threat Match</span>';
+    } else if (minDist <= maxAllowedDistance) {
+      sbThreat.textContent = `"${bestMatch}"`;
+      sbDist.textContent = `d = ${minDist} (Adaptive Limit ≤ ${maxAllowedDistance})`;
       sbVerdict.innerHTML = '<span style="color: var(--accent-rose);">🚨 Obfuscation Caught</span>';
     } else {
+      sbThreat.textContent = bestMatch !== 'None' ? `"${bestMatch}"` : 'None';
+      sbDist.textContent = `d = ${minDist} (Exceeds Max Limit ${maxAllowedDistance})`;
       sbVerdict.innerHTML = '<span style="color: var(--accent-emerald);">🟢 Safe / Unmatched</span>';
     }
   }

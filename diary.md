@@ -268,17 +268,35 @@ This document serves as the chronological production diary recording all enginee
 
 ---
 
+---
+
+### Milestone 22: Precision 4-Column Segmented App Bar with Corner Micro-Badges
+- **Problem:** In the 2x2 grid, inline badge pills of mismatched lengths caused the 4th tab's badge (`Safe DB`) to clip past the card's right border (`SAI DI`).
+- **Solution:**
+  1. **Precision 4-Column Equal Segmented Bar:**
+     - Converted the mode selector into a sleek **4-segment single-row app bar** (`grid-template-columns: repeat(4, 1fr); gap: 4px;`).
+     - **Col 1:** `✉️ Single`
+     - **Col 2:** `📑 Batch` *(with floating corner `R2` badge)*
+     - **Col 3:** `📷 QR/Img` *(with floating corner `New` badge)*
+     - **Col 4:** `🌐 URL Scan` *(with floating corner `Safe` badge)*
+  2. **Floating Top-Right Corner Micro-Badges (`.tab-badge`):**
+     - Relocated badges to the top-right corner of each button tile, keeping button labels perfectly centered and eliminating all horizontal text crowding or edge truncation.
+  3. **100% Symmetrical Balance Across All Viewports:**
+     - Every tab occupies exactly 25% width with `min-height: 50px`, centered icons, and glowing active states.
+
+---
+
 ## 📊 Live Verification Status
 
-All 21 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
+All 22 milestones have been syntax-tested, regression-checked, committed to Git, and verified live on production Vercel servers:
 
 ```text
 === PRODUCTION VERIFICATION SUMMARY ===
 ✅ Syntax Checks: 0 Errors (node -c across all client and API files)
 ✅ Live Threat Feed: HTTP 200 (Count: 10)
-✅ Live Telemetry Stats: 714 Scanned | 676 Neutralized
-✅ Full Mobile UI/UX Polish: iOS Zoom Guard + Safe Area Insets + 2x2 Grid Active
-✅ Mobile 2x2 App Grid: All 4 Mode Tabs 100% Visible & Ordered on Portrait
+✅ Live Telemetry Stats: 718 Scanned | 680 Neutralized
+✅ Mode Selector App Bar: Precision 4-Column Segmented Control (Zero Truncation)
+✅ Full Mobile UI/UX Polish: iOS Zoom Guard + Safe Area Insets Active
 ✅ Service Worker Strategy: Network-First for JS/CSS (No Refresh Needed)
 ✅ Image Clear Input: Unconditional !important Display Reset + Source Removal
 ✅ Similar Scams Intelligence: Rich Cyber Cards + Trigger Chips + Load & Test Active
@@ -296,6 +314,7 @@ All 21 milestones have been syntax-tested, regression-checked, committed to Git,
 
 ---
 *Last updated: 2026-08-22 — Kavach AI Core Engineering Team*
+
 
 
 

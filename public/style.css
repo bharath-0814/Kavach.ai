@@ -1720,40 +1720,87 @@ input, textarea {
     font-size: 1.05rem;
   }
 
-  /* Mode Tabs 2x2 Mobile App Grid (All 4 Tabs 100% Visible & Ordered) */
+  /* Mode Tabs 4-Column Segmented App Bar (100% Symmetrical & Visible on All Screens) */
   .mode-tab-group {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: repeat(4, 1fr) !important;
     width: 100% !important;
-    gap: 8px !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
+    gap: 4px !important;
+    background: rgba(10, 11, 17, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 8px !important;
+    padding: 4px !important;
     margin-bottom: 1rem !important;
+    box-sizing: border-box !important;
   }
 
   .mode-tab-btn {
     display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
-    padding: 10px 8px !important;
-    background: rgba(14, 15, 22, 0.95) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    gap: 3px !important;
+    padding: 7px 2px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
     border-radius: 6px !important;
-    font-size: 0.76rem !important;
-    font-weight: 700 !important;
-    min-height: 44px !important;
+    min-height: 50px !important;
     text-align: center !important;
     box-sizing: border-box !important;
     width: 100% !important;
+    position: relative !important;
+    transition: all 0.18s ease !important;
+  }
+
+  .mode-tab-btn .tab-icon {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+  }
+
+  .mode-tab-btn .tab-label {
+    font-family: var(--font-mono) !important;
+    font-size: 0.67rem !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
   }
 
   .mode-tab-btn.active {
-    background: rgba(212, 175, 55, 0.18) !important;
-    border-color: var(--gold-primary) !important;
+    background: rgba(212, 175, 55, 0.16) !important;
+    border-color: rgba(212, 175, 55, 0.5) !important;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.2) !important;
+  }
+
+  .mode-tab-btn.active .tab-label {
     color: var(--gold-light) !important;
-    box-shadow: 0 0 12px rgba(212, 175, 55, 0.25) !important;
+  }
+
+  .tab-badge {
+    position: absolute !important;
+    top: 2px !important;
+    right: 2px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.5rem !important;
+    font-weight: 800 !important;
+    padding: 1px 3px !important;
+    border-radius: 3px !important;
+    line-height: 1 !important;
+    background: rgba(212, 175, 55, 0.25) !important;
+    color: var(--gold-light) !important;
+    border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  }
+
+  .tab-badge.new {
+    background: rgba(56, 189, 248, 0.25) !important;
+    color: #7dd3fc !important;
+    border-color: rgba(56, 189, 248, 0.4) !important;
+  }
+
+  .tab-badge.db {
+    background: rgba(244, 63, 94, 0.25) !important;
+    color: #fda4af !important;
+    border-color: rgba(244, 63, 94, 0.4) !important;
   }
 
   .textarea-footer-strip {
@@ -2195,10 +2242,11 @@ body:not(.mode-3d) .spatial-status {
   box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
 }
 
+.tab-badge,
 .mode-pill-tag {
   background: rgba(212, 175, 55, 0.2);
   color: var(--gold-light);
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   padding: 1px 5px;
   border-radius: 3px;
   border: 1px solid rgba(212, 175, 55, 0.35);
@@ -2207,12 +2255,14 @@ body:not(.mode-3d) .spatial-status {
   font-weight: 700;
 }
 
+.tab-badge.new,
 .mode-pill-tag.new {
   background: rgba(56, 189, 248, 0.2);
   color: var(--cyan-accent);
   border-color: rgba(56, 189, 248, 0.4);
 }
 
+.tab-badge.db,
 .mode-pill-tag.db {
   background: rgba(244, 63, 94, 0.2);
   color: var(--rose-threat);

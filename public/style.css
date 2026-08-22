@@ -972,3 +972,192 @@ body {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   3D SPATIAL SCROLL & PARALLAX PERSPECTIVE ENGINE (LAPTOP / DESKTOP)
+   ========================================================================== */
+
+/* Base Spatial Viewport */
+.spatial-viewport {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 3D Mode Activated (Enabled on Laptop / Desktop screens >= 992px) */
+@media (min-width: 992px) {
+  body.mode-3d {
+    perspective: 1500px;
+    perspective-origin: 50% 50vh;
+    overflow-x: hidden;
+  }
+
+  body.mode-3d .spatial-viewport {
+    transform-style: preserve-3d;
+    transition: transform 0.12s cubic-bezier(0.15, 0.9, 0.25, 1);
+  }
+
+  /* 3D Layered Depth on Structural Elements */
+  body.mode-3d .hero-editorial,
+  body.mode-3d .arch-card,
+  body.mode-3d .results-container,
+  body.mode-3d .editorial-footer {
+    transform-style: preserve-3d;
+    transform: translate3d(0, 0, var(--card-z, 0px)) rotateX(var(--card-pitch, 0deg)) rotateY(var(--card-yaw, 0deg));
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+    will-change: transform, box-shadow;
+  }
+
+  /* Deep Architectural 3D Shadows */
+  body.mode-3d .arch-card {
+    box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 
+                0 0 24px rgba(212, 175, 55, var(--glow-alpha, 0.04));
+  }
+
+  /* Subtle 3D Card Hover Float */
+  body.mode-3d .arch-card:hover {
+    box-shadow: 0 28px 64px -12px rgba(0, 0, 0, 0.85), 
+                0 0 32px rgba(212, 175, 55, 0.12);
+    border-color: rgba(212, 175, 55, 0.4);
+  }
+
+  /* High-Elevation Floating UI Layers */
+  body.mode-3d .metric-strip {
+    transform: translateZ(24px);
+    transform-style: preserve-3d;
+  }
+
+  body.mode-3d .metric-cell {
+    transform-style: preserve-3d;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  }
+
+  body.mode-3d .metric-cell:hover {
+    transform: translateZ(28px) scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(212, 175, 55, 0.18);
+  }
+
+  body.mode-3d .arch-card-header,
+  body.mode-3d .btn-analyze-gold,
+  body.mode-3d .verdict-box,
+  body.mode-3d .diagnostics-box,
+  body.mode-3d .preset-chip-list,
+  body.mode-3d .table-container {
+    transform: translateZ(16px);
+    transform-style: preserve-3d;
+  }
+
+  body.mode-3d .verdict-tag,
+  body.mode-3d .gauge-box,
+  body.mode-3d .scam-category-tag {
+    transform: translateZ(22px);
+  }
+
+  /* Dynamic Specular Light Shimmer Tracking Cursor */
+  body.mode-3d .arch-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(400px circle at var(--specular-x, 50%) var(--specular-y, 50%), rgba(212, 175, 55, 0.08), transparent 70%);
+    pointer-events: none;
+    opacity: var(--specular-opacity, 0);
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  body.mode-3d .arch-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Floating 3D Spatial Scroll Controller HUD */
+.spatial-hud {
+  position: fixed;
+  bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  right: max(var(--space-4), env(safe-area-inset-right));
+  z-index: 999;
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(14, 14, 20, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 9999px;
+  padding: 4px 10px 4px 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(212, 175, 55, 0.1);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+@media (min-width: 992px) {
+  .spatial-hud {
+    display: inline-flex;
+  }
+}
+
+.spatial-hud:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(212, 175, 55, 0.2);
+}
+
+.spatial-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-pure);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.spatial-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald-safe);
+  box-shadow: 0 0 8px var(--emerald-safe);
+  transition: all 0.2s ease;
+}
+
+body:not(.mode-3d) .spatial-indicator-dot {
+  background: var(--text-faint);
+  box-shadow: none;
+}
+
+.spatial-status {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border-radius: 3px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--emerald-safe);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  transition: all 0.2s ease;
+}
+
+body:not(.mode-3d) .spatial-status {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--text-faint);
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+.spatial-telemetry {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--gold-light);
+  padding-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}

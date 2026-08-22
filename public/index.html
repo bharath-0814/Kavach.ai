@@ -29,6 +29,9 @@
     <div class="grid-col-line"></div>
   </div>
 
+  <!-- 3D Spatial Scroll Viewport Container -->
+  <div id="spatialViewport" class="spatial-viewport">
+
   <!-- Editorial Top Navigation -->
   <header class="container">
     <nav class="editorial-nav">
@@ -384,6 +387,18 @@
       Powered by Google Gemini Flash • LibSQL / Turso Cloud Serverless SQLite • Vercel Serverless PWA
     </p>
   </footer>
+
+  </div> <!-- End #spatialViewport -->
+
+  <!-- Floating 3D Spatial Scroll Controller HUD (Laptop/Desktop View) -->
+  <div id="spatialHud" class="spatial-hud" role="region" aria-label="3D Spatial Controls">
+    <button id="toggle3dBtn" class="spatial-toggle-btn" title="Toggle 3D Spatial Scroll (Press 3 or D)">
+      <span class="spatial-indicator-dot"></span>
+      <span class="spatial-btn-label">3D Spatial View</span>
+      <span id="spatialStatusBadge" class="spatial-status">ON</span>
+    </button>
+    <div class="spatial-telemetry" id="spatialTelemetry">Pitch: 0.0° • Z: +0px</div>
+  </div>
 
   <script src="app.js"></script>
 </body>

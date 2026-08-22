@@ -1,45 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Interactive Subtle Particle Background Canvas
+  // Interactive 3D Particle Constellation Background Canvas
   const canvas = document.getElementById('bgCanvas');
   if (canvas) {
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
     const particles = [];
-    const particleCount = Math.min(width > 768 ? 45 : 25, 50);
+    const particleCount = Math.min(width > 768 ? 55 : 25, 60);
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 1.5 + 0.5
+        x: (Math.random() - 0.5) * width * 1.5,
+        y: (Math.random() - 0.5) * height * 1.5,
+        z: Math.random() * 1000 + 100,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        size: Math.random() * 1.8 + 0.8
       });
     }
 
+    let scrollVel = 0;
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      scrollVel = (currentScrollY - lastScrollY) * 0.15;
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
     function renderParticles() {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(212, 175, 55, 0.35)';
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.05)';
+      scrollVel *= 0.92; // Damping
+
+      const fov = 400;
+      const cx = width / 2;
+      const cy = height / 2;
+      const projected = [];
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
+        p.y += p.vy - (scrollVel * 0.4);
+        p.z -= scrollVel * 1.2;
 
+        if (p.z <= 50) p.z = 1100;
+        if (p.z > 1100) p.z = 50;
+
+        const scale = fov / (fov + p.z);
+        const px = cx + p.x * scale;
+        const py = cy + p.y * scale;
+
+        if (px < -50 || px > width + 50 || py < -50 || py > height + 50) {
+          p.x = (Math.random() - 0.5) * width * 1.5;
+          p.y = (Math.random() - 0.5) * height * 1.5;
+        }
+
+        projected.push({ x: px, y: py, scale, size: p.size * scale });
+      }
+
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.45)';
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.06)';
+
+      for (let i = 0; i < projected.length; i++) {
+        const p = projected[i];
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.6, p.size), 0, Math.PI * 2);
         ctx.fill();
 
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
+        for (let j = i + 1; j < projected.length; j++) {
+          const p2 = projected[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 120) {
+          if (dist < 110) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
@@ -47,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       }
+
       requestAnimationFrame(renderParticles);
     }
     renderParticles();
@@ -601,4 +633,155 @@ document.addEventListener('DOMContentLoaded', () => {
     if (installPwaBtn) installPwaBtn.style.display = 'none';
     console.log('Kavach PWA successfully installed!');
   });
+
+  // =========================================================================
+  // 3D SPATIAL SCROLL & PARALLAX PERSPECTIVE CONTROLLER (LAPTOP / DESKTOP)
+  // =========================================================================
+  const toggle3dBtn = document.getElementById('toggle3dBtn');
+  const spatialStatusBadge = document.getElementById('spatialStatusBadge');
+  const spatialTelemetry = document.getElementById('spatialTelemetry');
+  const spatialCards = document.querySelectorAll('.hero-editorial, .arch-card, .results-container, .editorial-footer');
+
+  let is3dEnabled = window.innerWidth >= 992;
+
+  function update3dUIState() {
+    if (is3dEnabled && window.innerWidth >= 992) {
+      document.body.classList.add('mode-3d');
+      if (spatialStatusBadge) {
+        spatialStatusBadge.textContent = 'ON';
+        spatialStatusBadge.style.color = 'var(--emerald-safe)';
+        spatialStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        spatialStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+      }
+    } else {
+      document.body.classList.remove('mode-3d');
+      if (spatialStatusBadge) {
+        spatialStatusBadge.textContent = 'OFF';
+        spatialStatusBadge.style.color = 'var(--text-faint)';
+        spatialStatusBadge.style.borderColor = 'rgba(100, 116, 139, 0.3)';
+        spatialStatusBadge.style.background = 'rgba(100, 116, 139, 0.15)';
+      }
+      spatialCards.forEach(card => {
+        card.style.removeProperty('--card-pitch');
+        card.style.removeProperty('--card-yaw');
+        card.style.removeProperty('--card-z');
+        card.style.removeProperty('--glow-alpha');
+      });
+      if (spatialTelemetry) {
+        spatialTelemetry.textContent = '3D Inactive (Press 3)';
+      }
+    }
+  }
+
+  if (toggle3dBtn) {
+    toggle3dBtn.addEventListener('click', () => {
+      is3dEnabled = !is3dEnabled;
+      update3dUIState();
+      requestSpatialUpdate();
+    });
+  }
+
+  // Keyboard shortcut: Press '3' or 'D' to toggle 3D mode
+  window.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === '3' || e.key === 'd' || e.key === 'D') {
+      is3dEnabled = !is3dEnabled;
+      update3dUIState();
+      requestSpatialUpdate();
+    }
+  });
+
+  // 3D Spatial Calculation Loop with requestAnimationFrame
+  let scrollTicking = false;
+
+  function updateSpatialTransform() {
+    if (!is3dEnabled || window.innerWidth < 992) {
+      scrollTicking = false;
+      return;
+    }
+
+    const vh = window.innerHeight;
+    const viewCenterY = vh / 2;
+
+    let dominantPitch = 0;
+    let dominantZ = 0;
+
+    spatialCards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const cardCenterY = rect.top + rect.height / 2;
+      const distFromCenter = cardCenterY - viewCenterY;
+      const normalizedDist = Math.max(-1, Math.min(1, distFromCenter / (vh * 0.65)));
+
+      // Dynamic 3D Pitch: tilts slightly as it enters, flattens at eye level
+      const pitch = (normalizedDist * 5.5).toFixed(2);
+      // Dynamic Z-Depth: in center focus (+22px), off center (-35px)
+      const depthZ = ((1 - Math.abs(normalizedDist)) * 32 - 12).toFixed(1);
+      // Center glow alpha
+      const glowAlpha = Math.max(0.02, (1 - Math.abs(normalizedDist)) * 0.12).toFixed(3);
+
+      card.style.setProperty('--card-pitch', `${pitch}deg`);
+      card.style.setProperty('--card-z', `${depthZ}px`);
+      card.style.setProperty('--glow-alpha', `${glowAlpha}`);
+
+      // Track most prominent card for HUD telemetry
+      if (Math.abs(distFromCenter) < vh * 0.35) {
+        dominantPitch = pitch;
+        dominantZ = depthZ;
+      }
+    });
+
+    // Update Telemetry HUD
+    if (spatialTelemetry) {
+      const sign = dominantPitch >= 0 ? '+' : '';
+      const zSign = dominantZ >= 0 ? '+' : '';
+      spatialTelemetry.textContent = `Pitch: ${sign}${dominantPitch}° • Z: ${zSign}${dominantZ}px`;
+    }
+
+    scrollTicking = false;
+  }
+
+  function requestSpatialUpdate() {
+    if (!scrollTicking) {
+      requestAnimationFrame(updateSpatialTransform);
+      scrollTicking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestSpatialUpdate, { passive: true });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 992 && is3dEnabled) {
+      is3dEnabled = false;
+      update3dUIState();
+    } else if (window.innerWidth >= 992 && !is3dEnabled) {
+      is3dEnabled = true;
+      update3dUIState();
+    }
+    requestSpatialUpdate();
+  });
+
+  // Interactive 3D Cursor Specular Light on Cards
+  spatialCards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+      if (!is3dEnabled || window.innerWidth < 992) return;
+      const rect = card.getBoundingClientRect();
+      const localX = e.clientX - rect.left;
+      const localY = e.clientY - rect.top;
+      const percentX = ((localX / rect.width) * 100).toFixed(1);
+      const percentY = ((localY / rect.height) * 100).toFixed(1);
+
+      const yaw = (((localX / rect.width) - 0.5) * 3.2).toFixed(2);
+
+      card.style.setProperty('--specular-x', `${percentX}%`);
+      card.style.setProperty('--specular-y', `${percentY}%`);
+      card.style.setProperty('--card-yaw', `${yaw}deg`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--card-yaw', '0deg');
+    });
+  });
+
+  // Initial trigger on load
+  update3dUIState();
+  requestSpatialUpdate();
 });

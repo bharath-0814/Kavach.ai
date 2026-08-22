@@ -1234,27 +1234,73 @@ document.addEventListener('DOMContentLoaded', () => {
         if (similarScamsCount) {
           similarScamsCount.textContent = `${data.similar_flags.length} historical match${data.similar_flags.length > 1 ? 'es' : ''}`;
         }
-        similarScamsList.innerHTML = data.similar_flags.map(flag => {
+        similarScamsList.innerHTML = data.similar_flags.map((flag, idx) => {
           const scorePct = Math.round((flag.risk_score || 0) * 100);
           const badgeClass = flag.verdict === 'high_risk' ? 'high_risk' : (flag.verdict === 'suspicious' ? 'suspicious' : 'safe');
           const badgeText = flag.verdict === 'high_risk' ? '🚨 HIGH RISK' : (flag.verdict === 'suspicious' ? '⚠️ SUSPICIOUS' : '✅ SAFE');
           const timeStr = flag.created_at ? new Date(flag.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recent';
-          const truncated = flag.message.length > 120 ? flag.message.substring(0, 120) + '...' : flag.message;
+          const cleanMsg = flag.message || '';
+          const truncated = cleanMsg.length > 130 ? cleanMsg.substring(0, 130) + '...' : cleanMsg;
+
+          // Clean discrete trigger tags
+          let triggerChipsHtml = '';
+          if (flag.trigger_phrases && flag.trigger_phrases.length > 0) {
+            const cleanTriggers = flag.trigger_phrases
+              .map(t => typeof t === 'string' ? t.trim() : '')
+              .filter(t => t.length > 0 && t.length < 35)
+              .slice(0, 3);
+
+            if (cleanTriggers.length > 0) {
+              triggerChipsHtml = cleanTriggers.map(t => {
+                const isLink = t.startsWith('http') || t.includes('.top') || t.includes('.xyz') || t.includes('.apk') || t.includes('wa.me');
+                return `<span class="similar-trigger-pill ${isLink ? 'link' : 'phrase'}">${isLink ? '🔗 ' : '🚨 '}${escapeHtml(t)}</span>`;
+              }).join('');
+            }
+          }
 
           return `
             <div class="similar-scam-card ${badgeClass}">
               <div class="similar-scam-top">
-                <span class="similar-badge ${badgeClass}">${badgeText} • ${scorePct}% Risk</span>
-                <span style="color: var(--gold-light); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600;">${escapeHtml(flag.scam_type || 'THREAT')}</span>
+                <div class="similar-scam-badges">
+                  <span class="similar-badge ${badgeClass}">${badgeText} • ${scorePct}%</span>
+                  <span class="similar-category-pill">${escapeHtml(flag.scam_type || 'THREAT')}</span>
+                </div>
+                <div class="similar-scam-actions">
+                  <span class="similar-time">🕒 ${timeStr}</span>
+                  <button type="button" class="similar-load-btn" data-scam-idx="${idx}">
+                    ⚡ Load & Test
+                  </button>
+                </div>
               </div>
-              <div class="similar-scam-msg">"${escapeHtml(truncated)}"</div>
-              <div class="similar-scam-meta">
-                <span>🕒 ${timeStr}</span>
-                ${flag.trigger_phrases && flag.trigger_phrases.length > 0 ? `<span>• Triggers: ${escapeHtml(flag.trigger_phrases.slice(0, 3).join(', '))}</span>` : ''}
+              <div class="similar-scam-msg-box">
+                <span class="similar-quote-icon">“</span>
+                <span class="similar-quote-text">${escapeHtml(truncated)}</span>
               </div>
+              ${triggerChipsHtml ? `
+                <div class="similar-scam-triggers-row">
+                  <span class="triggers-mini-label">MATCHED SIGNATURES:</span>
+                  <div class="triggers-mini-list">${triggerChipsHtml}</div>
+                </div>
+              ` : ''}
             </div>
           `;
         }).join('');
+
+        // Wire up "Load & Test" button click handlers
+        similarScamsList.querySelectorAll('.similar-load-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            triggerHaptic('light');
+            const idx = parseInt(btn.getAttribute('data-scam-idx'), 10);
+            const targetFlag = data.similar_flags[idx];
+            if (targetFlag && targetFlag.message) {
+              smsInput.value = targetFlag.message;
+              updateInputCount();
+              window.scrollTo({ top: smsInput.offsetTop - 80, behavior: 'smooth' });
+              runClassification(targetFlag.message);
+            }
+          });
+        });
       } else {
         similarScamsContainer.style.display = 'none';
       }

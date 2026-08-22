@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedSearchInput = document.getElementById('feedSearchInput');
   const feedFilterChips = document.querySelectorAll('.filter-btn-item, .filter-pill, .filter-btn');
   const loadMoreFeedBtn = document.getElementById('loadMoreFeedBtn');
+  const viewAllFeedBtn = document.getElementById('viewAllFeedBtn');
   const feedCountInfo = document.getElementById('feedCountInfo');
   const presetChips = document.querySelectorAll('.preset-tag, .chip-btn, .preset-chip');
 
@@ -327,8 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentAnalysisData = null;
   let cachedFlags = [];
   let activeFilterType = 'ALL';
-  let showAllLogs = false;
-  const INITIAL_FEED_LIMIT = 11;
+  let feedVisibleLimit = 10;
+  const FEED_PAGE_STEP = 10;
 
   // Client-side threat dictionary for sandbox
   const CLIENT_THREAT_LEXICON = [
@@ -886,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch Recent Flags from Turso Cloud DB
   async function fetchRecentFlags() {
     try {
-      const res = await fetch('/api/recent-flags?limit=25');
+      const res = await fetch('/api/recent-flags?limit=100');
       if (!res.ok) throw new Error('Failed to fetch flags');
       const json = await res.json();
       cachedFlags = json.data || [];
@@ -933,32 +934,44 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       if (feedCountInfo) feedCountInfo.textContent = '0 logs';
       if (loadMoreFeedBtn) loadMoreFeedBtn.style.display = 'none';
+      if (viewAllFeedBtn) viewAllFeedBtn.style.display = 'none';
       return;
     }
 
     const totalCount = flags.length;
-    const itemsToDisplay = showAllLogs ? flags : flags.slice(0, INITIAL_FEED_LIMIT);
+    const itemsToDisplay = flags.slice(0, feedVisibleLimit);
+    const displayedCount = itemsToDisplay.length;
 
     // Update count info text
     if (feedCountInfo) {
-      if (totalCount > INITIAL_FEED_LIMIT) {
-        feedCountInfo.textContent = showAllLogs 
-          ? `Showing all ${totalCount} logs` 
-          : `Showing top ${Math.min(INITIAL_FEED_LIMIT, totalCount)} of ${totalCount} logs`;
+      if (displayedCount < totalCount) {
+        feedCountInfo.textContent = `Showing top ${displayedCount} of ${totalCount} logs`;
       } else {
-        feedCountInfo.textContent = `Showing ${totalCount} log${totalCount === 1 ? '' : 's'}`;
+        feedCountInfo.textContent = `Showing all ${totalCount} log${totalCount === 1 ? '' : 's'}`;
       }
     }
 
-    // Update Load More button
+    // Update Load More & View All buttons
     if (loadMoreFeedBtn) {
-      if (totalCount > INITIAL_FEED_LIMIT) {
+      if (displayedCount < totalCount) {
         loadMoreFeedBtn.style.display = 'inline-flex';
-        loadMoreFeedBtn.innerHTML = showAllLogs 
-          ? '<span>▲ Show Less (Top 11)</span>' 
-          : `<span>⚡ View All (${totalCount}) Logs</span>`;
+        const remaining = totalCount - displayedCount;
+        const nextBatch = Math.min(FEED_PAGE_STEP, remaining);
+        loadMoreFeedBtn.innerHTML = `<span>➕ Load ${nextBatch} More Logs (+${nextBatch})</span>`;
+      } else if (totalCount > 10) {
+        loadMoreFeedBtn.style.display = 'inline-flex';
+        loadMoreFeedBtn.innerHTML = '<span>▲ Show Less (Top 10)</span>';
       } else {
         loadMoreFeedBtn.style.display = 'none';
+      }
+    }
+
+    if (viewAllFeedBtn) {
+      if (displayedCount < totalCount && totalCount > 10) {
+        viewAllFeedBtn.style.display = 'inline-flex';
+        viewAllFeedBtn.innerHTML = `<span>⚡ View All (${totalCount}) Logs</span>`;
+      } else {
+        viewAllFeedBtn.style.display = 'none';
       }
     }
 
@@ -986,10 +999,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  // Load More / Show Less Toggle
+  // Progressive Load More / Reset Toggle
   if (loadMoreFeedBtn) {
     loadMoreFeedBtn.addEventListener('click', () => {
-      showAllLogs = !showAllLogs;
+      const currentFilteredTotal = (activeFilterType !== 'ALL' || (feedSearchInput?.value || '').trim())
+        ? cachedFlags.filter(f => {
+            const matchesType = activeFilterType === 'ALL' || f.scam_type === activeFilterType;
+            const q = (feedSearchInput?.value || '').toLowerCase().trim();
+            const matchesQuery = !q || (f.message || '').toLowerCase().includes(q) || (f.scam_type || '').toLowerCase().includes(q);
+            return matchesType && matchesQuery;
+          }).length
+        : cachedFlags.length;
+
+      if (feedVisibleLimit >= currentFilteredTotal) {
+        // Reset to top 10
+        feedVisibleLimit = 10;
+      } else {
+        // Increment by 10
+        feedVisibleLimit += FEED_PAGE_STEP;
+      }
+      filterAndRenderFeed();
+    });
+  }
+
+  // View All Logs Button
+  if (viewAllFeedBtn) {
+    viewAllFeedBtn.addEventListener('click', () => {
+      feedVisibleLimit = 9999;
       filterAndRenderFeed();
     });
   }
@@ -1005,6 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
       feedFilterChips.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeFilterType = btn.getAttribute('data-type');
+      feedVisibleLimit = 10; // Reset to 10 on filter switch
       filterAndRenderFeed();
     });
   });
@@ -1012,6 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Search input in Feed
   if (feedSearchInput) {
     feedSearchInput.addEventListener('input', () => {
+      feedVisibleLimit = 10; // Reset to 10 on new search query
       filterAndRenderFeed();
     });
   }

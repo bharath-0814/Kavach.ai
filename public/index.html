@@ -387,10 +387,15 @@
       </div>
 
       <div class="table-pagination-footer">
-        <span id="feedCountInfo">Showing top 11 logs</span>
-        <button class="editorial-btn" id="loadMoreFeedBtn">
-          <span>⚡ View All Logs</span>
-        </button>
+        <span id="feedCountInfo">Showing top 10 logs</span>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <button class="editorial-btn" id="loadMoreFeedBtn">
+            <span>➕ Load 10 More Logs</span>
+          </button>
+          <button class="editorial-btn" id="viewAllFeedBtn" style="color: var(--cyan-accent); border-color: rgba(56, 189, 248, 0.3);">
+            <span>⚡ View All Logs</span>
+          </button>
+        </div>
       </div>
     </section>
 

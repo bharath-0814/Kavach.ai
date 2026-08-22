@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const limit = Math.min(Math.max(parseInt(req.query?.limit, 10) || 10, 1), 50);
+    const limit = Math.min(Math.max(parseInt(req.query?.limit, 10) || 100, 1), 500);
     const scamType = req.query?.scam_type || null;
     const flags = await getRecentFlags(limit, scamType);
 

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let pulse3dShield = null;
   const webglCanvas = document.getElementById('webglCanvas');
 
-  if (typeof THREE !== 'undefined' && webglCanvas) {
+  if (typeof THREE !== 'undefined' && webglCanvas && window.innerWidth >= 992) {
     try {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);

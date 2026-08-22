@@ -1280,22 +1280,52 @@ body {
 }
 
 /* ==========================================================================
-   MOBILE RESPONSIVENESS & ZERO-OVERFLOW BREAKPOINTS
+   DEDICATED MOBILE-FIRST UI/UX ARCHITECTURE & ZERO-GPU STATIC BACKGROUND
    ========================================================================== */
+
+/* 1. Disable WebGL & 3D on Tablets / Phones (Saves 100% GPU / Battery) */
+@media (max-width: 991px) {
+  #webglCanvas,
+  .structural-grid {
+    display: none !important;
+  }
+
+  body {
+    background-color: #07080c !important;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.16) 0%, transparent 60%),
+      radial-gradient(circle at 100% 35%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 0% 75%, rgba(244, 63, 94, 0.08) 0%, transparent 50%),
+      linear-gradient(rgba(212, 175, 55, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212, 175, 55, 0.035) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px, 28px 28px !important;
+    background-attachment: scroll !important;
+  }
+}
+
+/* 2. Tablet & Large Mobile Screen Enhancements (<= 960px) */
 @media (max-width: 960px) {
   .results-split-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .philosophy-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .metric-strip {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .metric-strip .metric-cell:last-child {
+    grid-column: span 2;
   }
 }
 
+/* 3. Dedicated Mobile App Experience (<= 768px) */
 @media (max-width: 768px) {
   html, body {
     max-width: 100vw;
@@ -1303,55 +1333,198 @@ body {
   }
 
   .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 12px;
+    padding-right: 12px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
+  /* Compact Mobile App Bar */
   .editorial-nav {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--space-3);
-    padding: 0.75rem 0.5rem;
+    gap: 10px;
+    padding: 10px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .brand-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .nav-links-group {
+    display: flex;
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
+    padding: 4px 2px 8px;
+    gap: 6px;
+    scrollbar-width: none;
   }
 
   .nav-links-group::-webkit-scrollbar {
     display: none;
   }
 
+  .nav-item {
+    font-size: 0.76rem;
+    padding: 5px 10px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+  }
+
+  .nav-item:hover, .nav-item:focus {
+    background: rgba(212, 175, 55, 0.12);
+    border-color: var(--gold-primary);
+    color: var(--gold-light);
+  }
+
+  /* Mobile Hero Section */
+  .hero-editorial {
+    padding: 1.25rem 0 1rem;
+  }
+
+  .editorial-headline {
+    font-size: 1.75rem;
+    line-height: 1.18;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .editorial-lead {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: #94a3b8;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Mobile Ingestion Console Card */
   .arch-card {
-    padding: 1rem;
+    padding: 1.15rem 1rem;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
   }
 
-  .deobf-diff-card,
+  .arch-card-header {
+    margin-bottom: 1rem;
+  }
+
+  .arch-card-title {
+    font-size: 1.05rem;
+  }
+
+  /* Mode Tabs Full Width 50/50 */
+  .mode-tab-group {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .mode-tab-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 9px 8px;
+    font-size: 0.78rem;
+  }
+
+  /* Horizontal Swipeable Preset Scenarios Carousel */
+  .preset-chip-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 2px 2px 10px;
+    margin-bottom: 1rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .preset-chip-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .preset-tag {
+    flex-shrink: 0;
+    white-space: nowrap;
+    width: auto;
+    min-height: 36px;
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .preset-tag:hover, .preset-tag:active {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--gold-primary);
+  }
+
+  /* Ingestion Textarea & CTA */
+  .threat-input {
+    font-size: 0.88rem;
+    min-height: 110px;
+    padding: 10px 12px;
+  }
+
+  .btn-analyze-gold {
+    width: 100%;
+    min-height: 48px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 16px;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  /* Threat Ingestion Inspector on Mobile */
   .threat-ingestion-card,
+  .deobf-diff-card,
   .batch-results-container {
-    padding: 1rem;
+    padding: 1.15rem 1rem;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    border-radius: 8px;
   }
 
+  .threat-ingestion-body {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    word-break: break-word;
+  }
+
+  .threat-ingestion-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .risk-index-bar-track {
+    min-width: 100%;
+    height: 8px;
+  }
+
+  /* Diagnostics Section on Mobile */
   .engine-meter-row {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 
+  /* Deobfuscation Workbench on Mobile */
   .workbench-input-row {
     gap: 6px;
     width: 100%;
@@ -1366,17 +1539,63 @@ body {
   }
 
   #testWordBtn {
-    padding: 8px 12px;
+    padding: 8px 14px;
     font-size: 0.78rem;
     min-height: 44px;
   }
-}
 
-@media (max-width: 480px) {
-  .brand-wrap {
-    gap: 6px;
+  .deobf-threshold-strip {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
   }
 
+  .threshold-slider-wrap {
+    width: 100%;
+    order: 3;
+    margin-top: 4px;
+  }
+
+  /* Live Feed on Mobile */
+  .feed-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .filter-pill-list {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 6px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .filter-pill-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn-item {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+
+  .feed-search-input {
+    width: 100%;
+  }
+
+  .table-pagination-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+/* 4. Small Mobile Phones (<= 480px) */
+@media (max-width: 480px) {
   .brand-title-en {
     font-size: 1.15rem;
   }
@@ -1399,56 +1618,12 @@ body {
     padding: 10px 8px;
   }
 
-  .metric-val {
-    font-size: 1.15rem;
+  .metric-number {
+    font-size: 1.2rem;
   }
 
-  .preset-chip-list {
-    flex-direction: column;
-  }
-
-  .preset-tag {
-    width: 100%;
-    min-height: 38px;
-    font-size: 0.72rem;
-  }
-
-  .btn-analyze-gold {
-    width: 100%;
-    font-size: 0.92rem;
-    padding: 12px 14px;
-  }
-
-  .deobf-threshold-strip {
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: space-between;
-  }
-
-  .threshold-slider-wrap {
-    width: 100%;
-    order: 3;
-    margin-top: 4px;
-  }
-
-  .threat-ingestion-footer {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .threat-ingestion-body {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    word-break: break-word;
-  }
-
-  .feed-filter-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .feed-search-input {
-    width: 100%;
+  .metric-title {
+    font-size: 0.62rem;
   }
 }
 
